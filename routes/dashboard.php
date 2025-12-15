@@ -64,7 +64,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Products Management
         Route::resource('/products', AdminProductController::class);
         Route::get('/product/trash', [AdminProductController::class, 'trash'])->name('product.trash');
-        Route::get('/product/trash/{id}/delete', [AdminProductController::class, 'trashForceDelete'])->name('product.trash.force.delete');
+        Route::delete('/product/trash/{id}/delete', [AdminProductController::class, 'trashForceDelete'])->name('product.trash.force.delete');
+        Route::get('/product/trash/{id}/restore', [AdminProductController::class, 'trashRestore'])->name('product.trash.restore');
         Route::post('/products/{product}/stock', [AdminProductController::class, 'updateStock'])->name('products.stock.update');
         Route::post('/products/{product}/images', [AdminProductController::class, 'uploadImages'])->name('products.images.upload');
         Route::delete('/products/{product}/images/{image}', [AdminProductController::class, 'deleteImage'])->name('products.images.delete');

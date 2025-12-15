@@ -54,18 +54,17 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
-                                    <a href="{{ route('products.show', $product->slug) }}"
-                                        class="text-white px-4 py-2 rounded bg-green-500 hover:text-white mr-3">View</a>
-                                    @if (Str::limit($product->description, 3, '...'))
-                                        <a href="{{ route('admin.products.edit', $product->id) }}"
-                                            class="text-white px-4 py-2 rounded bg-orange-500 hover:text-white">Edit</a>
-                                    @endif
-                                    <form method="POST" action="{{ route('admin.products.destroy', $product) }}">
+                                    <a href="{{ route('admin.product.trash.restore', $product->id) }}"
+                                        class="text-white px-4 py-2 rounded bg-orange-500 hover:text-white"><i
+                                            class="fa fa-refresh" aria-hidden="true"></i> Restore</a>
+
+                                    <form method="POST"
+                                        action="{{ route('admin.product.trash.force.delete', $product->id) }}">
                                         @csrf
                                         @method('DELETE')
                                         <button
                                             class="bg-red-500 px-4 p-2 text-white rounded hover:bg-red-600 hover:text-white cursor-pointer"><i
-                                                class="fa fa-trash" aria-hidden="true"></i> Delete</button>
+                                                class="fa fa-trash" aria-hidden="true"></i> Delete Permanently</button>
                                     </form>
                                 </td>
                             </tr>
@@ -77,7 +76,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
-                                    <p class="mt-2">No orders yet</p>
+                                    <p class="mt-2">No trashed products</p>
                                 </td>
                             </tr>
                         @endforelse

@@ -65,7 +65,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-        return back()->with("success", 'Product moved to trash');
+        return back()->with("success", 'Product moved to trash!');
     }
     /**
      * Trashed products
@@ -76,8 +76,14 @@ class ProductController extends Controller
         $products = Product::onlyTrashed()->paginate(10);
         return view('dashboard.admin.products.trash', compact('products'));
     }
-    public function trashForceDelete(Product $product)
+    public function trashForceDelete(string $id)
     {
-        return $product;
+        Product::withTrashed()->where('id', $id)->forceDelete();
+        return back()->with('success', 'product deleted successfully!');
+    }
+    public function trashRestore(string $id)
+    {
+        Product::withTrashed()->where('id', $id)->restore();
+        return back()->with('success', 'product restored successfully!');
     }
 }
