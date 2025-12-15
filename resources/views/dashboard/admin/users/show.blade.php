@@ -59,7 +59,7 @@
                 <div class="mt-8">
                     <a href="{{ route('admin.users.edit', $user) }}"
                         class="w-full bg-red-600 text-white text-center px-4 py-2.5 rounded-lg font-medium hover:bg-red-700 transition">
-                        Edit Profile
+                      <i class="fas fa-user-edit"></i>  Edit Profile
                     </a>
                 </div>
             </div>

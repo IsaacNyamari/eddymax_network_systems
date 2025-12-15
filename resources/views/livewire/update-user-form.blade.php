@@ -68,7 +68,7 @@
         <!-- Submit -->
         <div class="mt-6">
             <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition">
-                Update User
+              <i class="fa fa-check" aria-hidden="true"></i>  Update User
             </button>
         </div>
     </form>
