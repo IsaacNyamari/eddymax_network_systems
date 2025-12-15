@@ -70,10 +70,14 @@ class ProductController extends Controller
     /**
      * Trashed products
      */
-    public function trashedProducts()
+    public function trash()
     {
         // Get trashed products
-        $products = Product::onlyTrashed()->latest()->paginate(10); // paginate for dashboard view
-        return "hello";
+        $products = Product::onlyTrashed()->paginate(10);
+        return view('dashboard.admin.products.trash', compact('products'));
+    }
+    public function trashForceDelete(Product $product)
+    {
+        return $product;
     }
 }
