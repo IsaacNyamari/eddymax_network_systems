@@ -2,10 +2,9 @@
 
 @section('title', 'Products')
 @section('content')
-
-    <!-- Recent Peoducts & Top Products -->
+    <!-- Recent Products & Top Products -->
     <div class="grid grid-row-1 lg:grid-row-2 gap-6">
-        <!-- Recent Peoducts -->
+        <!-- Recent Products -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
@@ -83,7 +82,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
-                                    <p class="mt-2">No orders yet</p>
+                                    <p class="mt-2">No products yet</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -94,10 +93,5 @@
             </div>
             <nav class="px-5 py-2">{{ $products->links() }}</nav>
         </div>
-
-
     </div>
-
-
-
 @endsection

@@ -68,7 +68,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('admin.users.show', $user->id) }}"
+                                    <a href="{{ route('admin.users.show', $user) }}"
                                        class="text-red-600 hover:text-red-900 mr-3">View</a>
                                     <a href="{{ route('admin.users.edit', $user->id) }}"
                                        class="text-green-600 hover:text-green-900">Edit</a>
