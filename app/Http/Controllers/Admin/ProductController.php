@@ -74,6 +74,6 @@ class ProductController extends Controller
     {
         // Get trashed products
         $products = Product::onlyTrashed()->latest()->paginate(10); // paginate for dashboard view
-        return $products;
+        return "hello";
     }
 }
