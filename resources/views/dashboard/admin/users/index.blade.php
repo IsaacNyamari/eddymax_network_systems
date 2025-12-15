@@ -39,7 +39,8 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
+                                        <div
+                                            class="flex-shrink-0 h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
                                             <span class="text-sm font-medium text-gray-700">
                                                 {{ substr($user->name ?? 'U', 0, 1) }}
                                             </span>
@@ -59,28 +60,29 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                        {{ $user->is_active
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-gray-100 text-gray-800' }}">
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                        {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
                                         {{ $user->is_active ? 'Active' : 'Inactive' }}
                                     </span>
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="{{ route('admin.users.show', $user) }}"
-                                       class="text-red-600 hover:text-red-900 mr-3">View</a>
+                                        class="text-white bg-red-500 rounded px-4 py-2 hover:text-white mr-3"><i
+                                            class="fa fa-eye" aria-hidden="true"></i> View</a>
                                     <a href="{{ route('admin.users.edit', $user->id) }}"
-                                       class="text-green-600 hover:text-green-900">Edit</a>
+                                        class="text-white bg-green-500 rounded px-4 py-2 hover:text-white"> <i
+                                            class="fa fa-edit" aria-hidden="true"></i> Edit</a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="5" class="px-6 py-8 text-center text-gray-500">
                                     <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor"
-                                         viewBox="0 0 24 24">
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M12 4v16m8-8H4" />
+                                            d="M12 4v16m8-8H4" />
                                     </svg>
                                     <p class="mt-2">No users found</p>
                                 </td>
