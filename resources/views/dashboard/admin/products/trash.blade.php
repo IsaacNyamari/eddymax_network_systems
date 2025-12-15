@@ -1,6 +1,6 @@
 @extends('dashboard.layouts.dashboard')
 
-@section('title', 'Products')
+@section('title', 'Trash')
 @section('content')
 
     <!-- Recent Peoducts & Top Products -->
@@ -9,17 +9,11 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-semibold text-gray-900">Active Products</h2>
-                    <div class="float-end flex gap-3">
-                        <a href="{{ route('admin.product.trash') }}"
-                            class="text-sm text-white bg-red-600 px-4 rounded py-2 hover:text-white font-medium">
-                            <i class="fas fa-trash-alt"></i> Trash
-                        </a>
-                        <a href="{{ route('admin.products.create') }}"
-                            class="text-sm text-white bg-green-600 px-4 rounded py-2 hover:text-white font-medium">
-                            + New
-                        </a>
-                    </div>
+                    <h2 class="text-lg font-semibold text-gray-900">Trashed Products</h2>
+                    <a href="{{ route('admin.products.index') }}"
+                        class="text-sm text-white bg-green-600 px-4 rounded py-2 hover:text-white font-medium">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back
+                    </a>
                 </div>
             </div>
             <div class="overflow-x-auto">
@@ -97,7 +91,4 @@
 
 
     </div>
-
-
-
 @endsection

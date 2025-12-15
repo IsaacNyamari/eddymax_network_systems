@@ -11,6 +11,7 @@ use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Customer\AddressController as CustomerAddressController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TrashController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -61,8 +62,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
 
         // Products Management
+        Route::get('/product/trash', [TrashController::class, 'trash'])->name('product.trash');
         Route::resource('/products', AdminProductController::class);
-        Route::get('/products/trash', [AdminProductController::class, 'trashedProducts'])->name('products.trash');
         Route::post('/products/{product}/stock', [AdminProductController::class, 'updateStock'])->name('products.stock.update');
         Route::post('/products/{product}/images', [AdminProductController::class, 'uploadImages'])->name('products.images.upload');
         Route::delete('/products/{product}/images/{image}', [AdminProductController::class, 'deleteImage'])->name('products.images.delete');

@@ -40,7 +40,7 @@ class ProductController extends Controller
     public function show(string $slug)
     {
         $product = Product::where('slug', trim($slug))->first();
-
+        
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->take(4)

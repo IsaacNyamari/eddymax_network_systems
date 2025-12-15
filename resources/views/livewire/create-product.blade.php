@@ -1,4 +1,5 @@
 <div>
+    
     <form wire:submit.prevent="save">
         <div>
             <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
