@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@custom-variant dark (&:where(.dark, .light *));
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+}
+
+/* Optional: Different colors for different actions */
+.toast-added {
+    border-left-color: #10b981;
+}
+
+.toast-removed {
+    border-left-color: #3b82f6;
+}
+
+.toast-updated {
+    border-left-color: #f59e0b;
+}
