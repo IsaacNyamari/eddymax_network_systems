@@ -48,7 +48,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::all();
-        return view('dashboard.admin.products.edit', compact('product','categories'));
+        return view('dashboard.admin.products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -62,8 +62,18 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        return back()->with("success", 'Product moved to trash');
+    }
+    /**
+     * Trashed products
+     */
+    public function trashedProducts()
+    {
+        // Get trashed products
+        $products = Product::onlyTrashed()->latest()->paginate(10); // paginate for dashboard view
+        return $products;
     }
 }

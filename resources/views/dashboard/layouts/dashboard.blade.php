@@ -14,7 +14,9 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Additional Dashboard CSS -->
     <style>
         .sidebar-active {
@@ -37,7 +39,7 @@
             <div class="flex flex-col flex-grow pt-5 bg-white overflow-y-auto border-r">
                 <!-- Logo -->
                 <div class="flex items-center flex-shrink-0 px-4">
-                    <a href="{{ route('dashboard') }}"   class="text-xl font-bold text-gray-900">
+                    <a href="{{ route('dashboard') }}" class="text-xl font-bold text-gray-900">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 </div>
@@ -46,7 +48,7 @@
                 <div class="mt-5 flex-grow flex flex-col">
                     <nav class="flex-1 px-2 space-y-1">
                         <!-- Dashboard Link -->
-                        <a href="{{ route('dashboard') }}"  
+                        <a href="{{ route('dashboard') }}"
                             class="{{ request()->routeIs('dashboard') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                             <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,7 +59,7 @@
 
                         <!-- Customer Links -->
                         @hasrole('customer')
-                            <a href="{{ route('customer.orders.index') }}"  
+                            <a href="{{ route('customer.orders.index') }}"
                                 class="{{ request()->routeIs('customer.orders.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -66,7 +68,7 @@
                                 My Orders
                             </a>
 
-                            <a href="{{ route('customer.profile.edit') }}"  
+                            <a href="{{ route('customer.profile.edit') }}"
                                 class="{{ request()->routeIs('customer.profile.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -84,7 +86,7 @@
                                 </h3>
                             </div>
 
-                            <a href="{{ route('admin.orders.index') }}"  
+                            <a href="{{ route('admin.orders.index') }}"
                                 class="{{ request()->routeIs('admin.orders.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -93,7 +95,7 @@
                                 Orders
                             </a>
 
-                            <a href="{{ route('admin.products.index') }}"  
+                            <a href="{{ route('admin.products.index') }}"
                                 class="{{ request()->routeIs('admin.products.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -102,7 +104,7 @@
                                 Products
                             </a>
 
-                            <a href="{{ route('admin.users.index') }}"  
+                            <a href="{{ route('admin.users.index') }}"
                                 class="{{ request()->routeIs('admin.users.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -111,7 +113,7 @@
                                 Users
                             </a>
 
-                            <a href="{{ route('admin.categories.index') }}"  
+                            <a href="{{ route('admin.categories.index') }}"
                                 class="{{ request()->routeIs('admin.categories.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -120,7 +122,7 @@
                                 Categories
                             </a>
 
-                            <a href="{{ route('admin.reports') }}"  
+                            <a href="{{ route('admin.reports') }}"
                                 class="{{ request()->routeIs('admin.reports') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -186,19 +188,19 @@
                             <div x-show="open" @click.away="open = false"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                                 @hasrole('customer')
-                                    <a href="{{ route('customer.profile.edit') }}"  
+                                    <a href="{{ route('customer.profile.edit') }}"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         Profile Settings
                                     </a>
                                 @endhasrole
                                 @hasrole('admin')
-                                    <a href="{{ route('admin.settings') }}"  
+                                    <a href="{{ route('admin.settings') }}"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         Admin Settings
                                     </a>
                                 @endhasrole
                                 <div class="border-t border-gray-100"></div>
-                                <form method="POST" action="{{ route('logout') }}"  >
+                                <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit"
                                         class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

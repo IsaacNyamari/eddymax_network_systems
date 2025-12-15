@@ -62,6 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Products Management
         Route::resource('/products', AdminProductController::class);
+        Route::get('/products/trash', [AdminProductController::class, 'trashedProducts'])->name('products.trash');
         Route::post('/products/{product}/stock', [AdminProductController::class, 'updateStock'])->name('products.stock.update');
         Route::post('/products/{product}/images', [AdminProductController::class, 'uploadImages'])->name('products.images.upload');
         Route::delete('/products/{product}/images/{image}', [AdminProductController::class, 'deleteImage'])->name('products.images.delete');

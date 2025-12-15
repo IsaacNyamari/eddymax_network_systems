@@ -17,6 +17,13 @@
                 </div>
             </div>
             <div class="overflow-x-auto">
+                @if (session('success'))
+                    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+                        class="mb-4 rounded-lg bg-green-100 text-center border border-green-300 px-4 py-3 text-green-800">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -46,12 +53,20 @@
                                         {{ number_format($product->price, 2) }}</p>
                                 </td>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
                                     <a href="{{ route('products.show', $product->slug) }}"
-                                        class="text-red-600 hover:text-red-900 mr-3">View</a>
+                                        class="text-white px-4 py-2 rounded bg-green-500 hover:text-white mr-3">View</a>
                                     @if (Str::limit($product->description, 3, '...'))
-                                        <a href="#" class="text-green-600 hover:text-green-900">Process</a>
+                                        <a href="{{ route('admin.products.edit', $product->id) }}"
+                                            class="text-white px-4 py-2 rounded bg-orange-500 hover:text-white">Edit</a>
                                     @endif
+                                    <form method="POST" action="{{ route('admin.products.destroy', $product) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button
+                                            class="bg-red-500 px-4 p-2 text-white rounded hover:bg-red-600 hover:text-white cursor-pointer"><i
+                                                class="fa fa-trash" aria-hidden="true"></i> Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty

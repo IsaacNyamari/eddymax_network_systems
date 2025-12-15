@@ -11,6 +11,8 @@ class EditProduct extends Component
     public $product;
     public $categories;
     #[Validate('required|int')]
+    public $category_id;
+    #[Validate('required|int')]
     public $price;
     #[Validate('required|string|min:3')]
     public $name;
@@ -21,12 +23,17 @@ class EditProduct extends Component
     {
         $this->categories = Category::all();
         $this->name = $this->product->name;
-        $this->price = $this->product->price;
+        $this->price = (int) $this->product->price;
         $this->description = $this->product->description;
     }
     public function saveProduct()
     {
-        dd($this->product);
+        $this->validate();
+        $this->product->update([
+            'name' => $this->name,
+            'price' => $this->price,
+            'description' => $this->description,
+        ]);
     }
     public function render()
     {
