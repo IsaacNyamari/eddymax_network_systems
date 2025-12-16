@@ -35,9 +35,10 @@
         </div>
 
         <div class="mt-4">
-            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-            <textarea id="description" wire:model.live="description"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500"
+            <label for="editor" class="block text-sm font-medium text-gray-700">Description</label>
+            <livewire:editor-toolbar />
+            <textarea id="editor" wire:model.live="description"
+                class="mt-0 block w-full border border-gray-300 rounded-bl-lg  rounded-br-lg shadow-sm p-2 focus:ring-red-500"
                 rows="5"></textarea>
             @error('description')
                 <span class="text-red-600 text-sm">{{ $message }}</span>

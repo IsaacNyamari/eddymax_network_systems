@@ -28,11 +28,150 @@
 
 @section('content')
     <!-- Stats Overview -->
-    <livewire:editor-toolbar />
-    <textarea id="editor"
-        class="quill-small mb-10 w-full active:outline-none focus:outline-none rounded-bl-xl rounded-br-xl p-2"
-        style="height: 400px !important">
-    </textarea>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Total Orders -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">Total Orders</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ $stats['totalOrders'] ?? 0 }}</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ $stats['pendingOrders'] ?? 0 }} pending</p>
+                </div>
+                <div class="p-3 bg-blue-50 rounded-xl">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{{ route('admin.orders.index') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                    View Orders →
+                </a>
+            </div>
+        </div>
+
+        <!-- Total Revenue -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">Total Revenue</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">KES {{ number_format($stats['totalRevenue'] ?? 0, 2) }}
+                    </p>
+                    <p class="text-xs text-green-600 mt-1">Today: KES {{ number_format($stats['todayRevenue'] ?? 0, 2) }}
+                    </p>
+                </div>
+                <div class="p-3 bg-green-50 rounded-xl">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{{ route('admin.reports.sales') }}"
+                    class="text-sm text-green-600 hover:text-green-800 font-medium">
+                    Sales Report →
+                </a>
+            </div>
+        </div>
+
+        <!-- Total Products -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">Total Products</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ $stats['totalProducts'] ?? 0 }}</p>
+                    <p class="text-xs text-red-600 mt-1">{{ $stats['lowStockProducts'] ?? 0 }} low stock</p>
+                </div>
+                <div class="p-3 bg-purple-50 rounded-xl">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{{ route('admin.products.index') }}"
+                    class="text-sm text-purple-600 hover:text-purple-800 font-medium">
+                    Manage Products →
+                </a>
+            </div>
+        </div>
+
+        <!-- Total Customers -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">Total Customers</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ $stats['totalCustomers'] ?? 0 }}</p>
+                    <p class="text-xs text-blue-600 mt-1">{{ $stats['newCustomers'] ?? 0 }} new this month</p>
+                </div>
+                <div class="p-3 bg-pink-50 rounded-xl">
+                    <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5 0c-.9 0-1.7.2-2.4.5l-.6.9-1.1-.3c-.3 0-.6.1-.8.3l-.9.8-1.1-.2c-.3 0-.5 0-.8.1l-1.1.1" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{{ route('admin.users.index') }}" class="text-sm text-pink-600 hover:text-pink-800 font-medium">
+                    View Customers →
+                </a>
+            </div>
+        </div>
+
+        <!-- Average Order Value -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">Avg. Order Value</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">KES
+                        {{ number_format($stats['averageOrderValue'] ?? 0, 2) }}</p>
+                    <p class="text-xs {{ $stats['aovChange'] >= 0 ? 'text-green-600' : 'text-red-600' }} mt-1">
+                        {{ $stats['aovChange'] >= 0 ? '↑' : '↓' }} {{ abs($stats['aovChange'] ?? 0) }}%
+                    </p>
+                </div>
+                <div class="p-3 bg-yellow-50 rounded-xl">
+                    <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{{ route('admin.reports') }}" class="text-sm text-yellow-600 hover:text-yellow-800 font-medium">
+                    Analytics →
+                </a>
+            </div>
+        </div>
+
+        <!-- Conversion Rate -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">Conversion Rate</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">
+                        {{ number_format($stats['conversionRate'] ?? 0, 1) }}%</p>
+                    <p class="text-xs {{ $stats['crChange'] >= 0 ? 'text-green-600' : 'text-red-600' }} mt-1">
+                        {{ $stats['crChange'] >= 0 ? '↑' : '↓' }} {{ abs($stats['crChange'] ?? 0) }}%
+                    </p>
+                </div>
+                <div class="p-3 bg-indigo-50 rounded-xl">
+                    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{{ route('admin.settings') }}"
+                    class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                    Settings →
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- Charts and Recent Activity -->
     <div class="grid grid-row-1 lg:grid-row-2 gap-6 mb-8">
@@ -95,7 +234,8 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Recent Orders</h2>
-                    <a href="{{ route('admin.orders.index') }}" class="text-sm text-red-600 hover:text-red-800 font-medium">
+                    <a href="{{ route('admin.orders.index') }}"
+                        class="text-sm text-red-600 hover:text-red-800 font-medium">
                         View all →
                     </a>
                 </div>
