@@ -35,10 +35,10 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug)
+    public function show(int $id)
     {
-        $category = Category::where('slug', $slug)->first();
-        return view('dashboard.admin.categories.edit',compact('category'));
+        $category = Category::where('id', $id)->first();
+        return view('dashboard.admin.categories.edit', compact('category'));
     }
 
     /**

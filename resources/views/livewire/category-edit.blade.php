@@ -6,6 +6,11 @@
             <x-input-label for="name" class="mb-2" value="Category Name" />
             <x-text-input class="w-full" wire:model.live="name" id="name" />
         </div>
+
+        <div class="mb-2">
+            <label for="image">Category Image</label>
+            <x-text-input class="w-full p-2" wire:model.live="image" type="file" id="image" />
+        </div>
         <x-primary-button>Update</x-primary-button>
     </form>
 </div>

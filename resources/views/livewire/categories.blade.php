@@ -37,7 +37,7 @@
                          </span>
                      </td>
                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                         <a href="{{ route('admin.categories.show', $category->slug) }}"
+                         <a href="{{ route('admin.categories.show', $category) }}"
                              class="text-red-600 hover:text-red-900 mr-3">View</a>
                          {{-- @if ($order->status === 'pending')
                              <a href="#" class="text-green-600 hover:text-green-900">Process</a>
