@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Category;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -29,31 +30,33 @@ class CategoryEdit extends Component
         $this->slug = $category->slug;
     }
 
-    public function saveCategory()
+    public function store(Request $request)
     {
-        $this->validate();
+        // Validate the input
+        $validated = $request->validate([
+            'name' => 'required|string|min:3|unique:categories,name',
+            'parent_category' => 'nullable|integer',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+        ]);
 
-        // Update slug based on new name
-        $this->slug = Str::slug($this->name);
+        // Generate slug
+        $slug = Str::slug($validated['name']);
 
+        // Prepare data
         $data = [
-            'name' => $this->name,
-            'slug' => $this->slug,
+            'parent_id' => $validated['parent_category'] ?? null,
+            'name' => $validated['name'],
+            'slug' => $slug,
         ];
 
         // Handle image upload
-        if ($this->image) {
-            // Delete old image if it exists
-            if ($this->category->image && Storage::disk('public')->exists($this->category->image)) {
-                Storage::disk('public')->delete($this->category->image);
-            }
-
-            // Store new image
-            $data['image'] = $this->image->store('products/categories', 'public');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products/categories', 'public');
         }
-
-        $this->category->update($data);
-        session()->flash('success', 'Category updated successfully.');
+        // Create category
+        $category = Category::create($data);
+        return $category;
+        return redirect()->back()->with('success', 'Category created successfully.');
     }
 
     public function render()

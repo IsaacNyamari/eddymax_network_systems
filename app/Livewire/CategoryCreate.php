@@ -34,13 +34,14 @@ class CategoryCreate extends Component
     public function saveCategory()
     {
         $this->validate();
-
         $this->slug = Str::slug($this->name);
 
         $data = [
-            'parent_id' => $this->parent_category ?: null,
-            'name' => $this->name,
-            'slug' => $this->slug,
+            'parent_id' => $this->parent_category !== null && $this->parent_category !== ''
+                ? (int) $this->parent_category
+                : null,
+            'name'      => $this->name,
+            'slug'      => $this->slug,
         ];
 
         if ($this->image) {
@@ -49,11 +50,11 @@ class CategoryCreate extends Component
 
         Category::create($data);
 
-        // Reset form
         $this->reset(['name', 'image', 'parent_category']);
 
         session()->flash('success', 'Category created successfully.');
     }
+
 
     public function render()
     {

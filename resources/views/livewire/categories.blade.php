@@ -19,7 +19,7 @@
              @forelse($categories as $category)
                  <tr class="hover:bg-gray-50">
                      <td class="px-6 py-4 whitespace-nowrap">
-                         <a href="{{ route('admin.categories.show', $category->slug) }}"
+                         <a href="{{ route('admin.categories.show', $category) }}"
                              class="text-red-600 hover:text-red-800 font-medium">
                              {{ $category->name }}
                          </a>
