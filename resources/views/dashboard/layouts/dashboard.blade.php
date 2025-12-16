@@ -17,6 +17,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
     <!-- Additional Dashboard CSS -->
     <style>
         .sidebar-active {
@@ -27,6 +34,13 @@
 
         .sidebar-hover:hover {
             background-color: #f9fafb;
+        }
+
+        .quill-small .ql-editor {
+            min-height: 120px;
+            /* small */
+            max-height: 120px;
+            overflow-y: auto;
         }
     </style>
     @livewireStyles
@@ -237,9 +251,17 @@
         </div>
     </div>
     @livewireScripts
-    <!-- Alpine.js for interactivity -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
+    <script>
+        const quill = new Quill('#editor', {
+            modules: {
+                syntax: true,
+                toolbar: '#toolbar-container',
+            },
+            placeholder: 'Compose an epic...',
+            theme: 'snow',
+        });
+    </script>
     <!-- Additional Scripts -->
     @stack('scripts')
 </body>
