@@ -1,4 +1,4 @@
-<nav class="flex justify-center h-fit bg-[var(--maroon)]">
+<nav class="flex justify-center h-fit bg-[maroon-200]">
     <ul class="flex flex-wrap items-center font-medium text-sm">
         <li class="p-4 lg:px-8">
             <a class="text-slate-800 hover:text-maroon-900 hover:border-b-2 border-separate hover:border-slate-900 transition-all translate-x-10"
