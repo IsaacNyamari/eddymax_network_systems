@@ -69,7 +69,7 @@
                     <p class="text-sm text-gray-500 font-medium">Shipped Orders</p>
                     <p class="text-2xl font-bold text-gray-900 mt-1">{{ $stats['shippedOrders'] ?? 0 }}</p>
                 </div>
-                <div class="p-3 bg-slate-50 rounded-xl">
+                <div class="p-3 bg-blue-50 rounded-xl">
                     <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

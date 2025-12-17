@@ -3,7 +3,7 @@
 @section('content')
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
         <!-- Hero Section -->
-        <div class="relative bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl overflow-hidden shadow-2xl">
+        <div class="relative bg-gradient-to-r from-blue-900 to-blue-800 rounded-xl overflow-hidden shadow-2xl">
             <div class="absolute inset-0">
                 <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80"
                     alt="Networking Equipment" class="w-full h-full object-cover opacity-40" loading="lazy"
@@ -16,7 +16,7 @@
                 <p class="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
                     High-quality routers, switches, access points, and cables with warranty and expert support
                 </p>
-                <a href="{{ route('store.shop') }}"  
+                <a href="{{ route('store.shop') }}"
                     class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold rounded-lg hover:from-red-700 hover:to-red-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <!-- Featured Categories -->
+        {{-- <!-- Featured Categories -->
         <div id="shop">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-bold text-gray-900">Shop by Category</h2>
@@ -41,13 +41,12 @@
             </div>
 
             <livewire:category-carousel />
-        </div>
+        </div> --}}
         <!-- Featured Products -->
         <div>
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-bold text-gray-900">Featured Products</h2>
-                <a href="{{ route('store.shop') }}"  
-                    class="text-red-600 hover:text-red-500 font-semibold flex items-center">
+                <a href="{{ route('store.shop') }}" class="text-red-600 hover:text-red-500 font-semibold flex items-center">
                     View All Products
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -58,7 +57,7 @@
         </div>
 
         <!-- Why Choose Us -->
-        <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 shadow-xl">
+        <div class="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 shadow-xl">
             <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Why Choose
                 {{ config('app.name', 'Eddymax Systems') }}?</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -108,7 +107,7 @@
         </div>
 
         <!-- CTA Section -->
-        <div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-10 text-center text-white shadow-2xl">
+        <div class="bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-10 text-center text-white shadow-2xl">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Upgrade Your Network?</h2>
             <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
                 Get expert consultation and find the perfect networking solution for your needs
