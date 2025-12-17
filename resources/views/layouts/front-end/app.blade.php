@@ -28,6 +28,10 @@
             overflow: hidden;
         }
 
+        h1,h2,h3,h4,h5,h6 {
+            font-family: 'Algerian', serif !important;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 1023px) {
             .fixed[x-show="open"][style*="display: block"] {
@@ -86,8 +90,8 @@
 
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        <x-main-nav />
         <livewire:navigation />
+        <x-main-nav />
         <!-- Page Heading -->
         @if (isset($header))
             <header class="bg-white shadow">

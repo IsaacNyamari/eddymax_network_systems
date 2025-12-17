@@ -107,7 +107,7 @@
         </div>
 
         <!-- CTA Section -->
-        <div class="bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-10 text-center text-white shadow-2xl">
+        <div class="bg-red-600 rounded-2xl p-10 text-center text-white shadow-2xl">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Upgrade Your Network?</h2>
             <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
                 Get expert consultation and find the perfect networking solution for your needs
@@ -123,7 +123,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
-                    +254 712 345 678
+                    +254 723 835 303
                 </a>
             </div>
         </div>

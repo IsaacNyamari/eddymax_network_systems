@@ -46,7 +46,8 @@ class FrontStoreController extends Controller
     public function shop()
     {
         $categories = Category::all();
-        return view('layouts.front-end.products.index', compact('categories'));
+        $parent_categories = Category::whereNull('parent_id')->with(['children'])->get()->count();
+        return view('layouts.front-end.products.index', compact('categories', 'parent_categories'));
     }
     public function cart()
     {

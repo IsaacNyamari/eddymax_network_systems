@@ -46,7 +46,7 @@
 
                     <div class="bg-white rounded-xl shadow-lg p-8 space-y-4">
                         <h2 class="text-2xl font-bold text-gray-900 mb-2">Call Us</h2>
-                        <p class="text-gray-700">+254 712 345 678</p>
+                        <p class="text-gray-700">+254 723 835 303</p>
                     </div>
                 </div>
 

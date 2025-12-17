@@ -11,7 +11,6 @@
         <div class="container mx-auto px-4">
             {{-- Mobile Menu Button --}}
             <div class="flex justify-between items-center py-3 lg:hidden">
-                <div class="text-xl font-bold text-maroon-800">Logo</div>
                 <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-lg text-slate-700 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

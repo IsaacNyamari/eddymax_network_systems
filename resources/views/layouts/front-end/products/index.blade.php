@@ -17,7 +17,7 @@
             <main class="lg:col-span-3 space-y-6">
 
                 <!-- Top Sort Bar -->
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                {{-- <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <p class="text-sm text-gray-500">
                         Browse our latest products
                     </p>
@@ -29,19 +29,12 @@
                         <option value="newest">Newest</option>
                         <option value="popular">Most Popular</option>
                     </select>
-                </div>
+                </div> --}}
 
                 <!-- Products Container -->
                 <div class="p-6 bg-white border gap-5 w-full border-gray-200 rounded-lg">
 
                     @if (!isset($productsSorted))
-                        @livewire('product-list')
-                        @livewire('product-list')
-                        @livewire('product-list')
-                        @livewire('product-list')
-                        @livewire('product-list')
-                        @livewire('product-list')
-                        @livewire('product-list')
                         @livewire('product-list')
                     @elseif ($productsSorted->isEmpty())
                         <div class="flex flex-col items-center justify-center py-20">

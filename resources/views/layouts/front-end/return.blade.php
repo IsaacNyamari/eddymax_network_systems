@@ -80,7 +80,7 @@
                     <ul class="list-disc list-inside text-gray-700">
                         <li>Email: <a href="mailto:support@netequip.co.ke"
                                 class="text-red-600 hover:underline">support@netequip.co.ke</a></li>
-                        <li>Phone: +254 712 345 678</li>
+                        <li>Phone: +254 723 835 303</li>
                         <li>Working Hours: Mon-Fri 9:00 AM - 6:00 PM, Sat 10:00 AM - 4:00 PM</li>
                     </ul>
                 </div>

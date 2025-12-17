@@ -46,7 +46,7 @@
         <div class="space-y-4">
             <h3 class="text-xl font-semibold text-white mb-4">Contact Us</h3>
             <p class="text-white">support@ {{ config('app.name', 'laravel') }}.co.ke</p>
-            <p class="text-white">+254 712 345 678</p>
+            <p class="text-white">+254 723 835 303</p>
             <div class="flex space-x-4 mt-2">
                 <a href="#" class="text-white hover:text-red-600 transition">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

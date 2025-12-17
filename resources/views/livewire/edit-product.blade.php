@@ -19,6 +19,20 @@
                       <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                   @enderror
               </div>
+              {{-- image --}}
+              <div>
+                  <x-input-label for="image">Product Image</x-input-label>
+                  <x-text-input type="file" wire:model.live="image" id="image" class="w-full p-2" />
+                  @error('image')
+                      <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                  @enderror
+                  @if ($image)
+                      <div class="mt-2">
+                          <p class="text-sm text-gray-600">Preview:</p>
+                          <img src="{{ $image->temporaryUrl() }}" class="mt-2 w-32 h-32 object-cover rounded-lg">
+                      </div>
+                  @endif
+              </div>
 
               {{-- PRICE --}}
               <div>
@@ -32,7 +46,8 @@
               {{-- DESCRIPTION --}}
               <div>
                   <x-input-label for="description">Description</x-input-label>
-                  <textarea wire:model.live="description" rows="3"
+                  <x-editor-toolbar />
+                  <textarea wire:model="description" id="editor" rows="3"
                       class="w-full rounded-lg border-gray-300 h-72 focus:border-indigo-500 focus:ring-indigo-500"></textarea>
                   @error('description')
                       <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -54,9 +69,7 @@
                   @enderror
               </div>
 
-              <x-primary-button class="w-fit justify-center">
-                  Update
-              </x-primary-button>
+              <button class="bg-red-600 px-4 py-2 rounded-lg text-white">Update</button>
 
           </form>
 

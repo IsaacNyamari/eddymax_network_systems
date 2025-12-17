@@ -6,7 +6,7 @@
         <!-- Product Hero / Breadcrumb -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
             <h1 class="text-3xl font-bold text-gray-900">{{ $product->name }}</h1>
-            <a href="{{ route('store.shop') }}"  
+            <a href="{{ route('store.shop') }}"
                 class="text-red-600 hover:text-red-500 font-semibold flex items-center mt-4 sm:mt-0">
                 Back to Products
                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +95,7 @@
         <div class="bg-gray-50 p-8 rounded-xl shadow-lg">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Product Details</h2>
             <p class="text-gray-700 leading-relaxed">
-                {{ $product->description }}
+                {!! $product->description !!}
             </p>
         </div>
 
