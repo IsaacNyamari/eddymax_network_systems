@@ -3,7 +3,7 @@
 @section('content')
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
         <!-- Hero Section -->
-        <div class="relative bg-gradient-to-r from-blue-900 to-blue-800 rounded-xl overflow-hidden shadow-2xl">
+        {{-- <div class="relative bg-gradient-to-r from-blue-900 to-blue-800 rounded-xl overflow-hidden shadow-2xl">
             <div class="absolute inset-0">
                 <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80"
                     alt="Networking Equipment" class="w-full h-full object-cover opacity-40" loading="lazy"
@@ -25,7 +25,7 @@
                     Shop Now
                 </a>
             </div>
-        </div>
+        </div> --}}
 
         {{-- <!-- Featured Categories -->
         <div id="shop">
@@ -43,19 +43,179 @@
             <livewire:category-carousel />
         </div> --}}
         <!-- Featured Products -->
-        <div>
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-900">Featured Products</h2>
-                <a href="{{ route('store.shop') }}" class="text-red-600 hover:text-red-500 font-semibold flex items-center">
-                    View All Products
-                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
-            <livewire:product-list />
-        </div>
+        @foreach ($parent_categories as $category)
+            <div class="mb-16">
 
+
+                <!-- Category Banner -->
+                <div class="relative overflow-hidden rounded-2xl mb-10 group cursor-pointer">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-10"></div>
+                    <img src="{{ asset('storage/' . $category['image']) }}"
+                        class="w-full h-[400px] object-cover transform group-hover:scale-105 transition-transform duration-700"
+                        alt="{{ $category->name }}" loading="lazy"
+                        onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'">
+                    <div class="absolute bottom-8 left-8 z-20 text-white max-w-lg">
+                        <h3 class="text-3xl font-bold mb-3">Shop {{ $category->name }}</h3>
+                        <p class="text-lg opacity-90 mb-4">Premium quality products curated for you</p>
+                        <a href="{{ route('store.filter.category', $category->slug) }}"
+                            class="inline-flex items-center bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300">
+                            Shop Now
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <!-- Category Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+                    <div class="mb-4 sm:mb-0">
+                        <h2 class="text-4xl font-bold text-gray-900 mb-2">{{ $category->name }}</h2>
+                        <p class="text-gray-600">Discover our premium collection</p>
+                    </div>
+                    <a href="{{ route('store.filter.category', $category->slug) }}"
+                        class="group relative inline-flex items-center text-lg font-semibold text-red-600 hover:text-red-700 transition-colors duration-300">
+                        <span class="mr-2">Explore Collection</span>
+                        <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                        <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                </div>
+                <!-- Products Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    @foreach ($products as $product)
+                        <div
+                            class="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden">
+
+                            <!-- Product Image Container -->
+                            <div class="relative overflow-hidden">
+                                <div class="aspect-square overflow-hidden">
+                                    <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
+                                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                        loading="lazy"
+                                        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCIgdmlld0JveD0iMCAwIDMyMCAzMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YzZjRmNiIvPjxjaXJjbGUgY3g9IjE2MCIgY3k9IjEyMCIgcj0iNDAiIGZpbGw9IiNlNmU4ZWIiLz48cmVjdCB4PSIxMDAiIHk9IjE4MCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIyMCIgZmlsbD0iI2U2ZThlYiIvPjwvc3ZnPg=='">
+                                </div>
+
+                                <!-- Badge -->
+                                @if ($product['badge'])
+                                    <div class="absolute top-4 left-4">
+                                        @if ($product['badge'] == 'Sale')
+                                            <span
+                                                class="inline-block bg-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-lg">
+                                                🔥 {{ $product['badge'] }}
+                                            </span>
+                                        @elseif($product['badge'] == 'New')
+                                            <span
+                                                class="inline-block bg-emerald-600 text-white px-3 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-lg">
+                                                ✨ {{ $product['badge'] }}
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-block bg-blue-600 text-white px-3 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-lg">
+                                                {{ $product['badge'] }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
+
+                                <!-- Quick Actions -->
+                                <div
+                                    class="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <button
+                                        class="bg-white p-2.5 rounded-full shadow-lg hover:bg-gray-50 transition-colors hover:shadow-xl">
+                                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                        </svg>
+                                    </button>
+                                    <button
+                                        class="bg-white p-2.5 rounded-full shadow-lg hover:bg-gray-50 transition-colors hover:shadow-xl">
+                                        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Product Details -->
+                            <div class="p-4">
+                                <!-- Product Title -->
+                                <a href="{{ route('products.show', $product->slug) }}" class="block mb-2 group/title">
+                                    <h3
+                                        class="font-bold text-gray-900 text-base leading-tight group-hover/title:text-red-600 transition-colors duration-300 line-clamp-2 h-10">
+                                        {{ Str::limit($product['name'], 35, '...') }}
+                                    </h3>
+                                </a>
+
+                                <!-- Price Section -->
+                                <div class="flex items-center justify-between mb-3">
+                                    <div>
+                                        <span class="text-xl font-bold text-gray-900 block">Ksh
+                                            {{ number_format($product['price'], 2) }}</span>
+                                        @if ($product['badge'] == 'Sale')
+                                            <span class="text-xs text-gray-500 line-through">Ksh 15,999</span>
+                                        @endif
+                                    </div>
+                                    <div class="transform group-hover:scale-110 transition-transform duration-300 scale-90">
+                                        <livewire:add-to-cart-button :product="$product" />
+                                    </div>
+                                </div>
+
+                                <!-- Rating and Stock -->
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <div class="flex text-amber-400">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                            @endfor
+                                        </div>
+                                        <span class="text-xs text-gray-600 ml-1">(24)</span>
+                                    </div>
+                                    @if ($product->stock <= 10 && $product->stock > 0)
+                                        <span
+                                            class="text-xs font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full">
+                                            {{ $product->stock }} left
+                                        </span>
+                                    @endif
+                                </div>
+
+                            </div>
+
+                            <!-- Hover Overlay -->
+                            <div
+                                class="absolute inset-0 border-2 border-transparent group-hover:border-red-200 rounded-2xl pointer-events-none transition-all duration-500">
+                            </div>
+                        </div>
+                    @endforeach
+
+                </div>
+
+                <!-- View All Bottom CTA -->
+                <div class="text-center mt-12 pt-8 border-t border-gray-200">
+                    <a href="{{ route('store.filter.category', $category->slug) }}"
+                        class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-full hover:shadow-xl hover:shadow-red-200 transform hover:-translate-y-1 transition-all duration-300 group/cta">
+                        <span class="mr-3">View All {{ $category->name }}</span>
+                        <svg class="w-5 h-5 transform group-hover/cta:translate-x-2 transition-transform" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        @endforeach
         <!-- Why Choose Us -->
         <div class="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 shadow-xl">
             <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Why Choose

@@ -14,8 +14,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(10)->get();
-        return view('dashboard.admin.categories.index',compact('categories'));
+        $categories = Category::orderByRaw('parent_id IS NULL DESC')
+            ->orderBy('name', 'asc')
+            ->paginate(10);
+
+        return view('dashboard.admin.categories.index', compact('categories'));
     }
 
     /**

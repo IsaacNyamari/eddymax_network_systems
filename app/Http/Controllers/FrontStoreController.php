@@ -15,8 +15,9 @@ class FrontStoreController extends Controller
     public function index()
     {
         $categories = Category::withCount('products')->get();
-
-        return view('layouts.front-end.shop', compact('categories'));
+        $products = Product::all();
+        $parent_categories = Category::whereNull('parent_id')->with(['children'])->get();
+        return view('layouts.front-end.shop', compact('categories','products', 'parent_categories'));
     }
 
     /**
@@ -46,8 +47,8 @@ class FrontStoreController extends Controller
     public function shop()
     {
         $categories = Category::all();
-        $parent_categories = Category::whereNull('parent_id')->with(['children'])->get()->count();
-        return view('layouts.front-end.products.index', compact('categories', 'parent_categories'));
+
+        return view('layouts.front-end.products.index', compact('categories'));
     }
     public function cart()
     {

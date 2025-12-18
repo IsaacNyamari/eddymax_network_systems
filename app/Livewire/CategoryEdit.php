@@ -3,12 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\Category;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryEdit extends Component
 {
@@ -17,7 +16,7 @@ class CategoryEdit extends Component
     #[Validate('required|string|min:3')]
     public $name = '';
 
-    #[Validate('nullable|image|mimes:jpg,jpeg,png,webp|max:4096')]
+    #[Validate('nullable|image|mimes:jpg,jpeg,png,webp')]
     public $image;
 
     public $category;
@@ -30,34 +29,28 @@ class CategoryEdit extends Component
         $this->slug = $category->slug;
     }
 
-    public function store(Request $request)
-    {
-        // Validate the input
-        $validated = $request->validate([
-            'name' => 'required|string|min:3|unique:categories,name',
-            'parent_category' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-        ]);
+public function saveCategory()
+{
+    // Validate using Livewire
+    $this->validate();
 
-        // Generate slug
-        $slug = Str::slug($validated['name']);
+    // Generate slug
+    $this->slug = Str::slug($this->name);
 
-        // Prepare data
-        $data = [
-            'parent_id' => $validated['parent_category'] ?? null,
-            'name' => $validated['name'],
-            'slug' => $slug,
-        ];
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products/categories', 'public');
-        }
-        // Create category
-        $category = Category::create($data);
-        return $category;
-        return redirect()->back()->with('success', 'Category created successfully.');
+    // Handle image upload
+    if ($this->image) {
+        $imagePath = $this->image->store('products/categories', 'public');
+        $this->category->image = $imagePath;
     }
+
+    // Update category
+    $this->category->name = $this->name;
+    $this->category->slug = $this->slug;
+    $this->category->save();
+
+    session()->flash('success', 'Category updated successfully.');
+}
+
 
     public function render()
     {
