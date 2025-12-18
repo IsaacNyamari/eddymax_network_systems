@@ -2,7 +2,8 @@
 @section('title', 'My Orders')
 @section('content')
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6  sticky top-0">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Order Status (Created On: {{ $order->created_at->diffForHumans() }})</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Order Status (Created On:
+            {{ $order->created_at->diffForHumans() }})</h3>
 
         <!-- Progress Bar -->
         <div class="mb-6">
@@ -108,7 +109,16 @@
     </div>
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6 w-full">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Products in This Order</h3>
-
+        @if (session('success'))
+            <div class="bg-green-600 text-center py-2 px-4 rounded-lg text-white">
+                {!! session('success') !!}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="bg-red-600 text-center py-2 px-4 rounded-lg text-white">
+                {!! session('error') !!}
+            </div>
+        @endif
         @php
             $products = json_decode($order->products, true) ?? [];
         @endphp
@@ -140,15 +150,54 @@
                             @php
                                 $order_status = $order->status;
                             @endphp
-                            @if ($order_status == 'pending' || $order_status == 'processing')
-                                <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
-                                    Cancel
-                                </button>
-                            @elseif($order_status == 'shipped' || $order_status == 'delivered')
-                                <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
-                                    Return & Refund
-                                </button>
-                            @endif
+
+                            <div x-data="{
+                                showForm: false,
+                                actionType: null
+                            }" class="space-y-3">
+
+                                {{-- Buttons --}}
+                                @if ($order_status === 'pending' || $order_status === 'processing')
+                                    <button type="button" @click="showForm = true; actionType = 'cancel'"
+                                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
+                                        Cancel
+                                    </button>
+                                @endif
+
+                                @if ($order_status === 'shipped' || $order_status === 'delivered')
+                                    <button type="button" @click="showForm = true; actionType = 'return'"
+                                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
+                                        Return & Refund
+                                    </button>
+                                @endif
+
+                                {{-- Shared Form (ONE URL) --}}
+                                <form x-show="showForm" x-transition action="{{ route('customer.orders.cancel', $order) }}"
+                                    method="POST" class="space-y-2">
+                                    @csrf
+
+                                    <x-text-input name="reason" :placeholder="''"
+                                        x-bind:placeholder="actionType === 'cancel'
+                                            ?
+                                            'Reason for cancellation' :
+                                            'Reason for return & refund'"
+                                        class="w-full" required />
+
+                                    <input type="hidden" name="type" :value="actionType">
+
+                                    <div class="flex gap-2">
+                                        <button type="submit"
+                                            class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">
+                                            Submit
+                                        </button>
+
+                                        <button type="button" @click="showForm = false"
+                                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                                            Close
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @endforeach

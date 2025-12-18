@@ -11,6 +11,8 @@ use App\Models\Payment;
 use App\PaymentStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -147,7 +149,7 @@ class CheckoutPage extends Component
             ]);
 
             // Redirect to login page
-            return redirect()->route('login', ['redirect' => route('checkout')]);
+            return redirect()->route('login', ['redirect' => route('store.checkout')]);
         }
 
         // Create new user with random password
@@ -218,29 +220,27 @@ class CheckoutPage extends Component
 
     public function paymentSuccessful($reference)
     {
-        // Get the current user
         $user = Auth::user();
 
-        // Save user address before creating order
         if ($user) {
             $this->saveUserAddress($user->id);
         }
 
-        // Create an order after successful payment
+        // ✅ Create order now
         $order = $this->createOrder($reference);
-        // save payment
+
         Payment::create([
             'order_id' => $order->id,
             'amount' => $this->total,
             'reference' => $reference['reference'],
+            'transaction_code' => $this->verifyPaystackTransaction($reference['reference']),
             'status' => PaymentStatus::PAID->value
         ]);
-        // Notify the frontend (toast)
-        $this->dispatch('show-toast', [
-            'message' => 'Payment successful! Order ID: ' . $order->order_number,
-            'type' => 'success'
-        ]);
-        // Redirect to order confirmation page
+
+        // ✅ NOW clear cart
+        session()->forget('cart');
+        $this->dispatch('cart-updated');
+
         return redirect()->route('customer.orders.show', $order->order_number);
     }
 
@@ -253,6 +253,35 @@ class CheckoutPage extends Component
         ]);
     }
 
+    public function verifyPaystackTransaction(string $reference)
+    {
+        $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+            ->get("https://api.paystack.co/transaction/verify/{$reference}");
+
+        if ($response->failed()) {
+            Log::error('Paystack verification failed', [
+                'reference' => $reference,
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
+
+            return false;
+        }
+
+        $payload = $response->json();
+
+        // Paystack API-level success
+        if (!($payload['status'] ?? false)) {
+            return false;
+        }
+
+        // Transaction-level success
+        if (($payload['data']['status'] ?? '') !== 'success') {
+            return false;
+        }
+
+        return $payload['data']['receipt_number']; // ✅ clean verified data
+    }
 
     protected function createOrder($paymentData)
     {
@@ -260,8 +289,6 @@ class CheckoutPage extends Component
         do {
             $orderNumber = strtoupper(Str::random(9)); // 9 random uppercase letters
         } while (Order::where('order_number', $orderNumber)->exists());
-
-
 
         // Save order to database
         $order = Order::create([
@@ -276,8 +303,6 @@ class CheckoutPage extends Component
 
 
         // Clear cart
-        session()->forget('cart');
-        $this->dispatch('cart-updated');
         return $order;
     }
 

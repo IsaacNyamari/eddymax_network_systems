@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderReturns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +30,21 @@ class OrderController extends Controller
     {
         //
     }
+    public function cancel(Request $request, Order $order)
+    {
+        $data = $request->validate([
+            'reason' => 'required|min:20',
+        ]);
+        $data['order_id'] = $order->id;
 
+        $request_exists = OrderReturns::where('order_id', $data['order_id'])->get()->count();
+        if ($request_exists > 0) {
+
+            return back()->with('error', 'Your ' . $request['type'] . ' request exists for this order.');
+        }
+        OrderReturns::create($data);
+        return back()->with('success', 'Your order ' . $request['type'] . ' request has been made successfully! Awaits confirmation.');
+    }
     /**
      * Store a newly created resource in storage.
      */

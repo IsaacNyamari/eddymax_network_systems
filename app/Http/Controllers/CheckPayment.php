@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class CheckPayment extends Controller
 {
@@ -47,19 +48,32 @@ class CheckPayment extends Controller
     }
     public function verifyPaystackTransaction(string $reference)
     {
-        // return $reference;
         $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
             ->get("https://api.paystack.co/transaction/verify/{$reference}");
 
         if ($response->failed()) {
-            dd([
+            Log::error('Paystack verification failed', [
+                'reference' => $reference,
                 'status' => $response->status(),
-                'body'   => $response->json(),
-                'raw'    => $response->body(),
+                'body' => $response->json(),
             ]);
+
+            return false;
         }
 
-        return $response->json();
+        $payload = $response->json();
+
+        // Paystack API-level success
+        if (!($payload['status'] ?? false)) {
+            return false;
+        }
+
+        // Transaction-level success
+        if (($payload['data']['status'] ?? '') !== 'success') {
+            return false;
+        }
+
+        return $payload['data']['receipt_number']; // ✅ clean verified data
     }
 
     public function refundPaystackTransaction(string $reference, int $amountKes = null)

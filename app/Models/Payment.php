@@ -13,6 +13,7 @@ class Payment extends Model
         'order_id',
         'amount',
         'reference',
+        'transaction_code',
         'status'
     ];
 

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
             $table->integer('amount');
             $table->string('reference');
+            $table->string('transaction_code')->nullable();
             $table->enum('status', [
                 PaymentStatus::PAID->value,
                 PaymentStatus::NOTPAID->value,
