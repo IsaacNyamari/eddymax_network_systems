@@ -19,7 +19,7 @@
         </div>
 
         <div class="mt-4">
-            <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
+            <label for="image" class="block text-sm font-medium text-gray-700">Main Product Image</label>
             <input type="file" id="image" wire:model="image" accept="image/*"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
             @error('image')
@@ -30,6 +30,47 @@
                 <div class="mt-2">
                     <p class="text-sm text-gray-600">Preview:</p>
                     <img src="{{ $image->temporaryUrl() }}" class="mt-2 w-32 h-32 object-cover rounded-lg">
+                </div>
+            @endif
+        </div>
+
+        <!-- Multiple Images Section -->
+        <div class="mt-4">
+            <label for="images" class="block text-sm font-medium text-gray-700">
+                Additional Images (Max: 5)
+            </label>
+            <input type="file" id="images" wire:model="images" accept="image/*" multiple
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
+
+            @error('images')
+                <span class="text-red-600 text-sm">{{ $message }}</span>
+            @enderror
+            @error('images.*')
+                <span class="text-red-600 text-sm">{{ $message }}</span>
+            @enderror
+
+            @if ($images && count($images) > 0)
+                <div class="mt-3">
+                    <p class="text-sm text-gray-600 mb-2">Preview of additional images:</p>
+                    <div class="flex flex-wrap gap-3">
+                        @foreach ($images as $index => $img)
+                            <div class="relative">
+                                <img src="{{ $img->temporaryUrl() }}"
+                                    class="w-24 h-24 object-cover rounded-lg border border-gray-200">
+                                <button type="button" wire:click="removeImage({{ $index }})"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                                    ×
+                                </button>
+                                <span
+                                    class="absolute bottom-1 right-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded">
+                                    {{ $index + 1 }}
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        {{ count($images) }} image(s) selected
+                    </p>
                 </div>
             @endif
         </div>

@@ -35,4 +35,8 @@ class Product extends Model
             ->withPivot('quantity', 'price', 'product_name')
             ->withTimestamps();
     }
+    public function productImages()
+    {
+        return $this->morphMany(ProductImages::class, 'imageable');
+    }
 }

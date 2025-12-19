@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductImages;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -22,6 +23,8 @@ class CreateProduct extends Component
     #[Validate('nullable|image|max:1024')]
     public $image;
 
+    public $images = [];
+
     #[Validate('nullable|string|max:2000')]
     public $description;
 
@@ -35,16 +38,28 @@ class CreateProduct extends Component
         $this->categories = Category::all();
     }
 
+    // Method to remove a specific image from the array
+    public function removeImage($index)
+    {
+        if (isset($this->images[$index])) {
+            unset($this->images[$index]);
+            // Re-index the array to maintain proper order
+            $this->images = array_values($this->images);
+        }
+    }
+
     public function save()
     {
         $this->validate();
 
+        // Handle main image upload
         $imagePath = null;
         if ($this->image) {
             $imagePath = $this->image->store('products', 'public');
         }
 
-        Product::create([
+        // Create product
+        $product = Product::create([
             'name' => $this->name,
             'price' => $this->price,
             'image' => $imagePath,
@@ -53,9 +68,22 @@ class CreateProduct extends Component
             'slug' => Str::slug($this->name),
         ]);
 
+        // Handle multiple images upload
+        if (!empty($this->images)) {
+            foreach ($this->images as $uploadedImage) {
+                $path = $uploadedImage->store('product-images', 'public');
+                
+                ProductImages::create([
+                    'path' => $path,
+                    'imageable_id' => $product->id,
+                    'imageable_type' => Product::class,
+                ]);
+            }
+        }
+
         // Reset form
         $this->reset();
-        $this->reset('image'); // Reset file upload separately
+        $this->reset('image', 'images'); // Reset file uploads separately
 
         session()->flash('message', 'Product created successfully.');
     }
