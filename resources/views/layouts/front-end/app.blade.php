@@ -28,7 +28,12 @@
             overflow: hidden;
         }
 
-        h1,h2,h3,h4,h5,h6 {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             font-family: 'Algerian', serif !important;
         }
 
@@ -85,10 +90,42 @@
         .text-red-600 {
             color: rgba(128, 0, 0, 0.541) !important;
         }
+
+        .slide-out {
+            animation: slideInUp 0.5s forwards;
+        }
+
+        .slide-in {
+            animation: slideInDown 0.5s forwards;
+        }
+
+        @keyframes slideInDown {
+            0% {
+                transform: translateX(350px)
+            }
+
+            100% {
+                transform: translateX(0)
+            }
+        }
+
+        @keyframes slideInUp {
+            0% {
+                transform: translateX(0)
+            }
+
+            100% {
+                transform: translateX(350px)
+            }
+        }
     </style>
 </head>
 
 <body class="font-sans antialiased">
+    <div id="cartAlert"
+        class="alert bg-red-600 w-80 hidden border-l-4 border-slate-950 text-white-800 px-4 py-2 fixed top-1 right-3 transition z-50">
+
+    </div>
     <div class="min-h-screen bg-gray-100">
         <livewire:navigation />
         <x-main-nav />
@@ -137,7 +174,22 @@
             }
         });
     </script>
+    <script>
+        let cartAlert = document.getElementById('cartAlert')
+        Livewire.on('added-to-cart', (data) => {
+            cartAlert.innerHTML = data[0].message
+            cartAlert.classList.remove('hidden');
+            cartAlert.classList.add('slide-in')
+            setTimeout(() => {
+                cartAlert.classList.remove('slide-in')
+                cartAlert.classList.add('slide-out')
 
+            }, 5000);
+            setTimeout(() => {
+                cartAlert.classList.add('hidden');
+            }, 6000);
+        });
+    </script>
 </body>
 
 </html>

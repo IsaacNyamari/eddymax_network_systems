@@ -5,50 +5,198 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\Product;
 use Livewire\Component;
-
+use Livewire\Attributes\On;
 
 class FilterWidget extends Component
 {
     public $categories;
-    public $selectedCategory = null; // null = All Categories
+    public $selectedCategory = null;
     public $min_price;
     public $max_price;
     public $products;
     public $fixedMaxPrice;
     public $fixedMinPrice;
+    public $is_parent_category;
+
+    // New properties
+    public $priceRange = [0, 0];
+    public $selectedBrands = [];
+    public $selectedRatings = [];
+    public $sortBy = 'default';
+    public $inStockOnly = false;
+    public $onSaleOnly = false;
+    public $showAdvancedFilters = false;
+    public $brands = [];
+    public $searchQuery = '';
+
     public function mount($categories)
     {
-
-        $this->min_price = Product::min('price');
-        $this->max_price = Product::max('price');
         $this->categories = $categories;
-        $this->fixedMaxPrice = Product::max('price');
-        $this->fixedMinPrice = Product::min('price');
+        $this->fixedMinPrice = Product::min('price') ?? 0;
+        $this->fixedMaxPrice = Product::max('price') ?? 10000;
+        $this->min_price = $this->fixedMinPrice;
+        $this->max_price = $this->fixedMaxPrice;
+        $this->priceRange = [$this->fixedMinPrice, $this->fixedMaxPrice];
+
+        // Get unique brands from products
+        $this->brands = Product::select('brand')
+            ->whereNotNull('brand')
+            ->distinct()
+            ->pluck('brand')
+            ->filter()
+            ->values()
+            ->toArray();
     }
+
+    #[On('reset-filters')]
+    public function resetFilters()
+    {
+        $this->selectedCategory = null;
+        $this->min_price = $this->fixedMinPrice;
+        $this->max_price = $this->fixedMaxPrice;
+        $this->priceRange = [$this->fixedMinPrice, $this->fixedMaxPrice];
+        $this->selectedBrands = [];
+        $this->selectedRatings = [];
+        $this->sortBy = 'default';
+        $this->inStockOnly = false;
+        $this->onSaleOnly = false;
+        $this->searchQuery = '';
+
+        $this->search();
+    }
+
+    public function updated()
+    {
+        // Debounced search (auto-search on filter change)
+        $this->dispatch('search-debounced');
+    }
+
     public function search()
     {
-        if (empty($this->selectedCategory)) {
-            // All products
-            $this->products = Product::query()
-                ->when($this->min_price, fn($q) => $q->where('price', '>=', $this->min_price))
-                ->when($this->max_price, fn($q) => $q->where('price', '<=', $this->max_price))
-                ->get();
-        } else {
-            // Products by category
+        // Build query
+        $query = Product::query();
+
+        // Category filter (including children)
+        if (!empty($this->selectedCategory)) {
             $category = Category::where('slug', $this->selectedCategory)->first();
 
-            $this->products = $category
-                ? $category->products()
-                ->when($this->min_price, fn($q) => $q->where('price', '>=', $this->min_price))
-                ->when($this->max_price, fn($q) => $q->where('price', '<=', $this->max_price))
-                ->get()
-                : collect();
+            if ($category) {
+                $categoryIds = $this->getAllCategoryIds($category);
+                $query->whereHas('category', function ($q) use ($categoryIds) {
+                    $q->whereIn('categories.id', $categoryIds);
+                });
+            }
         }
+
+        // Price range
+        $query->whereBetween('price', [$this->min_price, $this->max_price]);
+
+        // Brand filter
+        if (!empty($this->selectedBrands)) {
+            $query->whereIn('brand', $this->selectedBrands);
+        }
+
+        // Rating filter
+        if (!empty($this->selectedRatings)) {
+            $query->where(function ($q) {
+                foreach ($this->selectedRatings as $rating) {
+                    $minRating = $rating - 0.5;
+                    $maxRating = $rating + 0.5;
+                    $q->orWhereBetween('rating', [$minRating, $maxRating]);
+                }
+            });
+        }
+
+        // Stock filter
+        if ($this->inStockOnly) {
+            $query->where('stock_quantity', '>', 0);
+        }
+
+        // Sale filter
+        if ($this->onSaleOnly) {
+            $query->where('discount_percent', '>', 0)
+                ->orWhere('is_on_sale', true);
+        }
+
+        // Search query
+        if (!empty($this->searchQuery)) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->searchQuery . '%')
+                    ->orWhere('description', 'like', '%' . $this->searchQuery . '%');
+            });
+        }
+
+        // Sorting
+        switch ($this->sortBy) {
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'popular':
+                $query->orderBy('views', 'desc');
+                break;
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'rating':
+                $query->orderBy('rating', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+
+        $this->products = $query->get();
 
         $this->dispatch(
             'filter-result',
-            view('partials.filter-results', ['products' => $this->products])->render()
+            view('partials.filter-results', [
+                'products' => $this->products,
+                'resultCount' => $this->products->count()
+            ])->render()
         );
+    }
+
+    public function updatedPriceRange($value)
+    {
+        $this->min_price = $value[0];
+        $this->max_price = $value[1];
+    }
+
+    public function toggleBrand($brand)
+    {
+        if (in_array($brand, $this->selectedBrands)) {
+            $this->selectedBrands = array_diff($this->selectedBrands, [$brand]);
+        } else {
+            $this->selectedBrands[] = $brand;
+        }
+    }
+
+    public function toggleRating($rating)
+    {
+        if (in_array($rating, $this->selectedRatings)) {
+            $this->selectedRatings = array_diff($this->selectedRatings, [$rating]);
+        } else {
+            $this->selectedRatings[] = $rating;
+        }
+    }
+
+    private function getAllCategoryIds($category)
+    {
+        $categoryIds = [$category->id];
+        $this->getChildrenCategoryIds($category, $categoryIds);
+        return $categoryIds;
+    }
+
+    private function getChildrenCategoryIds($category, &$categoryIds)
+    {
+        if ($category->children && $category->children->isNotEmpty()) {
+            foreach ($category->children as $child) {
+                $categoryIds[] = $child->id;
+                $this->getChildrenCategoryIds($child, $categoryIds);
+            }
+        }
     }
 
     public function render()

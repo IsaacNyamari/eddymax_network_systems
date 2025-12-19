@@ -22,11 +22,11 @@ class AddToCartButton extends Component
 
         session()->put('cart', $cart);
         $this->dispatch('added-to-cart', [
-        'productName' => $this->product['name'],
-        'message' => "{$this->product['name']} added to cart!",
-    ]);
-    
-    $this->dispatch('cart-updated');
+            'productName' => $this->product['name'],
+            'message' => "{$this->product['name']} added to cart!",
+        ]);
+
+        $this->dispatch('cart-updated');
     }
     public function render()
     {

@@ -16,8 +16,12 @@ class FrontStoreController extends Controller
     {
         $categories = Category::withCount('products')->get();
         $products = Product::all();
-        $parent_categories = Category::whereNull('parent_id')->with(['children'])->get();
-        return view('layouts.front-end.shop', compact('categories','products', 'parent_categories'));
+        $parent_categories = Category::whereNull('parent_id')
+            ->with(['children'])
+            ->whereNotIn('name', ['Accessories', 'Electronics', 'Telephones'])
+            ->take(10)
+            ->get();
+        return view('layouts.front-end.shop', compact('categories', 'products', 'parent_categories'));
     }
 
     /**
@@ -47,8 +51,8 @@ class FrontStoreController extends Controller
     public function shop()
     {
         $categories = Category::all();
-
-        return view('layouts.front-end.products.index', compact('categories'));
+        $products = Product::all();
+        return view('layouts.front-end.products.index', compact('categories', 'products'));
     }
     public function cart()
     {

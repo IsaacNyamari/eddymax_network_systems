@@ -21,62 +21,65 @@
         </div>
     @else
         <div class="space-y-4">
-            @foreach ($cart as $item)
-                <div class="flex items-center justify-between border-b pb-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
-
-                            @if (!empty($item['image']))
-                                <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['name'] }}"
-                                    class="w-full h-full object-cover">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center bg-gray-200">
-                                    <span class="text-gray-500 text-sm font-semibold">No Image</span>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div>
-                            <a href="{{ route('products.show', $item['slug']) }}">
-                                <h4 class="font-semibold text-red-600">{{ $item['name'] }}</h4>
-                            </a>
-                            <p class="text-gray-600">Ksh {{ number_format($item['price']) }}</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center space-x-6">
-                        <div class="flex items-center space-x-3">
-                            <button wire:click="decrement({{ $item['id'] }})"
-                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
-                                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M20 12H4" />
-                                </svg>
-                            </button>
-                            <span class="font-semibold">{{ $item['quantity'] }}</span>
-                            <button wire:click="increment({{ $item['id'] }})"
-                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
-                                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="text-right">
-                            <div class="font-bold text-gray-900">
-                                Ksh {{ number_format($item['price'] * $item['quantity']) }}
+            <div class="space-y-4">
+                @foreach ($cart as $productId => $item)
+                    <div  wire:key="cart-item-{{ $productId }}" class="flex items-center justify-between border-b pb-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+                                @if (!empty($item['image']))
+                                    <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['name'] }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                                        <span class="text-gray-500 text-sm font-semibold">No Image</span>
+                                    </div>
+                                @endif
                             </div>
-                            <button wire:click="removeItem({{ $item['id'] }})"
-                                class="text-sm text-red-600 hover:text-red-800 mt-1">
-                                Remove
-                            </button>
+
+                            <div>
+                                <a href="{{ route('products.show', $item['slug']) }}">
+                                    <h4 class="font-semibold text-red-600">{{ $item['name'] }}</h4>
+                                </a>
+                                <p class="text-gray-600">Ksh {{ number_format($item['price']) }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="flex items-center space-x-3">
+                                <button wire:click="decrement({{ $productId }})"
+                                    class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M20 12H4" />
+                                    </svg>
+                                </button>
+                                <span class="font-semibold">{{ $item['quantity'] }}</span>
+                                <button wire:click="increment({{ $productId }})"
+                                    class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="text-right">
+                                <div class="font-bold text-gray-900">
+                                    Ksh {{ number_format($item['price'] * $item['quantity']) }}
+                                </div>
+                                <button wire:click="removeItem({{ $productId }})"
+                                    class="text-sm text-red-600 hover:text-red-800 mt-1">
+                                    Remove
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+
+                <!-- ... rest of your code ... -->
+            </div>
 
             <div class="pt-6 border-t">
                 @php
@@ -110,7 +113,7 @@
                         class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-center font-semibold transition">
                         Continue Shopping
                     </a>
-                    <a href="{{ route('store.checkout') }}"  
+                    <a href="{{ route('store.checkout') }}"
                         class="px-6 py-3 bg-red-600 text-white text-center rounded-lg hover:bg-red-700 font-semibold transition">
                         Proceed to Checkout
                     </a>

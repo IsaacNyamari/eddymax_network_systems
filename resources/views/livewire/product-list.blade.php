@@ -1,13 +1,23 @@
-<div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-4 gap-6">
+
+    <div class="grid grid-cols-1 h-fit sm:grid-cols-2 lg:grid-cols-5 mb-4 gap-6">
         @foreach ($products as $product)
             <div
                 class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                 <div class="relative overflow-hidden">
+
                     <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
-                        class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
+                        class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500"
                         loading="lazy"
-                        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjIyNCIgdmlld0JveD0iMCAwIDMyMCAyMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPnthcHBsaWNhdGlvbiBzZXR0aW5nc31Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                        onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
+
+                    <!-- ADD THIS CART BUTTON OVERLAY -->
+                    <div
+                        class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div class="transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                            <livewire:add-to-cart-button :product="$product" />
+                        </div>
+                    </div>
+
                     @if ($product['badge'])
                         <div
                             class="absolute top-3 left-3 bg-{{ $product['badge'] == 'Sale' ? 'red' : ($product['badge'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
@@ -23,7 +33,7 @@
                     </button>
                 </div>
                 <div class="p-5">
-                    <a href="{{ route('products.show', $product->slug) }}"  >
+                    <a href="{{ route('products.show', $product->slug) }}">
                         <h3 class="font-semibold text-lg text-gray-900 mb-2 group-hover:text-red-600 transition">
                             {{ Str::limit($product['name'], 15, '...') }}
                     </a>
@@ -36,11 +46,9 @@
                                 <span class="text-sm text-gray-500 line-through ml-2">Ksh 15,999</span>
                             @endif
                         </div>
-                        <div class="">
-                            <livewire:add-to-cart-button :product="$product" />
-                        </div>
+                       
                     </div>
-                    <div class="mt-3 flex items-center">
+                    {{-- <div class="mt-3 flex items-center">
                         <div class="flex text-yellow-400">
                             @for ($i = 1; $i <= 5; $i++)
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -50,9 +58,8 @@
                             @endfor
                         </div>
                         <span class="text-sm text-gray-600 ml-2">(24 reviews)</span>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         @endforeach
     </div>
-</div>

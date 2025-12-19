@@ -30,7 +30,7 @@
         <!-- Filter Header -->
         <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold text-gray-900">Filters</h2>
-            <a href="{{ route('store.shop') }}"   wire:lazy class="text-sm text-red-600 hover:underline">
+            <a href="{{ route('store.shop') }}" wire:lazy class="text-sm text-red-600 hover:underline">
                 Clear All
             </a>
         </div>
