@@ -10,9 +10,10 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Recent Orders</h2>
-                    {{-- <a href="{{ route('admin.orders.index') }}" class="text-sm text-red-600 hover:text-red-800 font-medium">
-                        View all →
-                    </a> --}}
+                    <a href="{{ route('customer.orders.returns') }}"
+                        class="text-sm text-red-600 hover:text-red-800 font-medium">
+                        View Returns →
+                    </a>
                 </div>
             </div>
             <div class="overflow-x-auto">
@@ -31,7 +32,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @php
-                        
+
                         @endphp
                         @forelse($recentOrders as $order)
                             <tr class="hover:bg-gray-50">
@@ -42,7 +43,7 @@
                                     </a>
                                     <p class="text-xs text-gray-500 mt-1">{{ $order->created_at->format('M d, Y') }}</p>
                                 </td>
-                                
+
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <p class="text-sm font-medium text-gray-900">KES
                                         {{ number_format($order->total_amount, 2) }}</p>

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderReturns;
 use App\OrderStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -24,6 +26,11 @@ class OrderController extends Controller
     public function create()
     {
         //
+    }
+    public function return()
+    {
+        $orders = OrderReturns::with(['order.user'])->get();
+        return view('dashboard.admin.orders.returns', compact('orders'));
     }
     public function deliverOrder(string $order_number)
     {

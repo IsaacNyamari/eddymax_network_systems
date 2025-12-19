@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/orders', [CustomerOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])->name('orders.show');
         Route::post('/orders/{order}/return', [CustomerOrderController::class, 'cancel'])->name('orders.cancel');
+        Route::get('/orders/returns/page', [CustomerOrderController::class, 'return'])->name('orders.returns');
         Route::post('/orders/{order}/track', [CustomerOrderController::class, 'track'])->name('orders.track');
 
         // filter orders
@@ -78,7 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/orders/{order}/cancel', [AdminOrderController::class, 'cancelOrder'])->name('orders.status.cancel');
         Route::get('/orders/{order}/payment-status', [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.payment-status.update');
         Route::get('/orders/{order}/invoice', [AdminOrderController::class, 'invoice'])->name('orders.invoice');
-        Route::get('/orders/{order}/shipping-label', [AdminOrderController::class, 'shippingLabel'])->name('orders.shipping-label');
+        Route::get('/orders/returns/page', [AdminOrderController::class, 'return'])->name('orders.returns');
 
         // Users Management
         Route::patch('/users/{user}/roles', [AdminUserController::class, 'updateRoles'])->name('users.roles.update');

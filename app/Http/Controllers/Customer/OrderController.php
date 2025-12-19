@@ -26,9 +26,14 @@ class OrderController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function return()
     {
-        //
+        $orders = OrderReturns::with('order')
+            ->whereHas('order', function ($query) {
+                $query->where('user_id', Auth::id());
+            })
+            ->get();
+        return view('dashboard.customer.orders.returns', compact('orders'));
     }
     public function cancel(Request $request, Order $order)
     {
