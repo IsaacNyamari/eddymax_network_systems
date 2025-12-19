@@ -14,7 +14,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->hasRole('admin')) {
             return $this->adminDashboard();
@@ -24,7 +24,7 @@ class DashboardController extends Controller
             return $this->customerDashboard();
         }
 
-        return view('dashboard.index', ['user' => $user]);
+        // return view('dashboard.index', ['user' => $user]);
     }
 
     public function admin()

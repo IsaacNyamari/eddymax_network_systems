@@ -10,8 +10,8 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900"> Orders</h2>
-                    <a href="{{ route('admin.orders.index') }}" class="text-sm text-red-600 hover:text-red-800 font-medium">
-                        View all →
+                    <a href="{{ route('admin.orders.returns') }}" class="text-sm text-red-600 hover:text-red-800 font-medium">
+                        View Returns →
                     </a>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('admin.orders.show', $order->order_number) }}"  
+                                    <a href="{{ route('admin.orders.show', $order->order_number) }}"
                                         class="text-red-600 hover:text-red-900 mr-3">View</a>
 
                                     @php
@@ -101,8 +101,7 @@
 
                                     @foreach ($nextActions as $actionRoute => $actionLabel)
                                         <a href="{{ route('admin.orders.status.' . $actionRoute, $order->order_number) }}"
-                                              class="text-green-600 px-4 py-2 hover:text-green-900"
-                                            {{-- Optional: remove   if dynamically rendered to avoid JS errors --}}>
+                                            class="text-green-600 px-4 py-2 hover:text-green-900" {{-- Optional: remove   if dynamically rendered to avoid JS errors --}}>
                                             {{ $actionLabel }}
                                         </a>
                                     @endforeach
@@ -116,8 +115,8 @@
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 5H7a2 2 0 00-2 2v12a2 2
-                                                                                    0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
-                                                                                            5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                                                                            0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
+                                                                                                    5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
                                     <p class="mt-2">No orders yet</p>
                                 </td>
