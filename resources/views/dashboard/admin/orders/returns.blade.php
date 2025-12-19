@@ -55,9 +55,7 @@
                         </p>
                     </div>
                     <div class="float-right">
-                        @if ($return->status == 'pending')
-                            <livewire:return-actions :return="$return" />
-                        @endif
+                        <livewire:return-actions :return="$return" />
                     </div>
                 </div>
 
@@ -69,4 +67,12 @@
         @endforelse
 
     </div>
+
 @endsection
+<script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('return-updated', (event) => {
+            console.log(event[0]);
+        })
+    })
+</script>

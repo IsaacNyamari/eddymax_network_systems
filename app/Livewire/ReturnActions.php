@@ -8,14 +8,22 @@ use Livewire\Component;
 class ReturnActions extends Component
 {
     public $return;
-    public $return_status;
-    public function updateRequestStatus(array $return, string $action)
+    public $return_status = 'pending';
+    public function updateRequestStatus(int $returnId, string $action)
     {
-        $return['status'] = $action;
-        $returnUpdate = OrderReturns::where('id', $return['id']);
-        $returnUpdate->update([
-            'status' => $return['status']
-        ]);
+        $returnUpdate = OrderReturns::find($returnId);
+
+        if ($returnUpdate) {
+            $returnUpdate->update([
+                'status' => $action
+            ]);
+
+            // Update the local return property
+            $this->return->status = $action;
+            $this->dispatch('return-updated', $action);
+            // Optional: Show success message
+            session()->flash('message', "Return {$action} successfully!");
+        }
     }
 
     public function render()
