@@ -44,7 +44,6 @@
         </div> --}}
         <!-- Featured Products -->
         @foreach ($parent_categories as $index => $category)
-        {{ $category->products }}
             <div class="mb-16">
                 @if ($index == 0)
                     <!-- Category Banner -->

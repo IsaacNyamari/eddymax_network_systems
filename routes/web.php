@@ -3,6 +3,7 @@
 use App\Http\Controllers\CheckPayment;
 use App\Http\Controllers\FrontStoreController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::name('store.')->group(function () {
     Route::get('/', [FrontStoreController::class, 'index'])->name('home');
     Route::get('/shop', [FrontStoreController::class, 'shop'])->name('shop');
+    Route::get('/search/quick', [SearchController::class, 'quickSearch'])->name('search.index');
     Route::get('/shop/category/{category}', [FrontStoreController::class, 'filterCategory'])->name('filter.category');
     Route::get('/cart', [FrontStoreController::class, 'cart'])->name('cart');
     Route::get('/checkout', [FrontStoreController::class, 'checkout'])->name('checkout');
