@@ -18,32 +18,63 @@
         <!-- Product Details Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-            <!-- Product Images -->
+            <!-- Product Images with Gallery -->
             <div class="space-y-4">
-                <div class="rounded-xl overflow-hidden shadow-lg">
+                <!-- Main Image with Zoom -->
+                <div class="rounded-xl overflow-hidden shadow-lg relative group cursor-zoom-in" id="zoom-container">
                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                        class="w-full h-96 object-cover" loading="lazy"
+                        class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy" id="main-product-image"
                         onerror="this.src='https://via.placeholder.com/600x400?text=Product+Image'">
                 </div>
-                {{-- <div class="grid grid-cols-3 gap-4">
-                    @for ($i = 1; $i <= 3; $i++)
-                        <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition">
-                            <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                                alt="Thumbnail {{ $i }}" class="w-full h-24 object-cover" loading="lazy"
-                                onerror="this.src='https://via.placeholder.com/150?text=Thumbnail'">
-                        </div>
-                    @endfor
-                </div> --}}
+
+                <!-- Gallery Thumbnails -->
+                <div class="grid grid-cols-4 gap-3">
+                    <!-- Main Image Thumbnail -->
+                    <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition border-2 border-red-500"
+                        onclick="changeMainImage('{{ asset('storage/' . $product->image) }}', this)">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }} Thumbnail"
+                            class="w-full h-24 object-cover" loading="lazy"
+                            onerror="this.src='https://via.placeholder.com/150?text=Thumbnail'">
+                    </div>
+                    @php
+                        dd($product-> );
+                    @endphp
+                    <!-- Additional Images Gallery -->
+                    @if ($product->productImages && $product->productImages->count() > 0)
+                        {{ $product->productImages->path }}
+                        @foreach ($product->productImages as $image)
+                            <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition border-2 border-gray-200 hover:border-red-500"
+                                onclick="changeMainImage('{{ asset('storage/' . $image->path) }}', this)">
+                                <img src="{{ asset('storage/' . $image->path) }}"
+                                    alt="Product Image {{ $loop->iteration + 1 }}" class="w-full h-24 object-cover"
+                                    loading="lazy"
+                                    onerror="this.src='https://via.placeholder.com/150?text=Image+{{ $loop->iteration + 1 }}'">
+                            </div>
+                        @endforeach
+                    @endif
+
+                    <!-- If no additional images, show placeholders -->
+                    @if (!$product->productImages || $product->productImages->count() == 0)
+                        @for ($i = 1; $i <= 3; $i++)
+                            <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition opacity-50">
+                                <img src="https://via.placeholder.com/150?text=Image+{{ $i }}"
+                                    alt="Thumbnail {{ $i }}" class="w-full h-24 object-cover grayscale"
+                                    loading="lazy">
+                            </div>
+                        @endfor
+                    @endif
+                </div>
             </div>
 
             <!-- Product Info -->
             <div class="space-y-6">
-
                 <!-- Price & Badges -->
                 <div class="flex items-center space-x-4">
                     <span class="text-3xl font-bold text-red-600">Ksh {{ number_format($product->price, 2) }}</span>
-                    <span
-                        class="px-3 py-1 rounded-full bg-green-600 text-white font-semibold text-sm">{{ $product->category->name }}</span>
+                    <span class="px-3 py-1 rounded-full bg-green-600 text-white font-semibold text-sm">
+                        {{ $product->category->name }}
+                    </span>
                 </div>
 
                 <!-- Short Description -->
@@ -53,12 +84,6 @@
 
                 <!-- Product Options -->
                 <div class="space-y-4">
-                    {{-- <div class="mb-2">
-                        <label for="quantity" class="font-semibold text-gray-900">Quantity</label>
-                        <input type="number" id="quantity" name="quantity" value="1" min="1"
-                            class="w-24 border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
-                    </div> --}}
-
                     <div class="flex items-center space-x-4">
                         <livewire:add-to-cart-button :product="$product" />
                         <button
@@ -90,6 +115,32 @@
 
             </div>
         </div>
+
+        <!-- Add some CSS for the zoom effect -->
+        <style>
+            #zoom-container {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .zoomable-image {
+                transition: transform 0.3s ease;
+                cursor: zoom-in;
+            }
+
+            .zoomable-image:hover {
+                transform: scale(1.5);
+                cursor: zoom-out;
+            }
+
+            .thumbnail-active {
+                border-color: #dc2626 !important;
+                /* red-600 */
+                box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3);
+            }
+        </style>
+
+
 
         <!-- Product Description / Details -->
         <div class="bg-gray-50 p-8 rounded-xl shadow-lg">
@@ -134,4 +185,42 @@
         </div>
 
     </div>
+    <!-- JavaScript for image switching -->
+    <script>
+        function changeMainImage(imageUrl, clickedElement) {
+            // Update main image
+            const mainImage = document.getElementById('main-product-image');
+            mainImage.src = imageUrl;
+
+            // Remove active class from all thumbnails
+            const thumbnails = document.querySelectorAll('.grid-cols-4 > div');
+            thumbnails.forEach(thumb => {
+                thumb.classList.remove('thumbnail-active');
+                thumb.classList.remove('border-red-500');
+                thumb.classList.add('border-gray-200');
+            });
+
+            // Add active class to clicked thumbnail
+            clickedElement.classList.remove('border-gray-200');
+            clickedElement.classList.add('border-red-500', 'thumbnail-active');
+        }
+
+        // Add click-to-zoom functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const zoomContainer = document.getElementById('zoom-container');
+            const mainImage = document.getElementById('main-product-image');
+
+            zoomContainer.addEventListener('click', function() {
+                if (mainImage.classList.contains('zoomable-image')) {
+                    mainImage.classList.remove('zoomable-image');
+                    zoomContainer.classList.remove('cursor-zoom-out');
+                    zoomContainer.classList.add('cursor-zoom-in');
+                } else {
+                    mainImage.classList.add('zoomable-image');
+                    zoomContainer.classList.remove('cursor-zoom-in');
+                    zoomContainer.classList.add('cursor-zoom-out');
+                }
+            });
+        });
+    </script>
 @endsection
