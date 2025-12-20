@@ -17,14 +17,50 @@
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
         </div>
-
         <div class="mt-4">
-            <label for="image" class="block text-sm font-medium text-gray-700">Main Product Image</label>
-            <input type="file" id="image" wire:model="image" accept="image/*"
+            <label for="categoryId" class="block text-sm font-medium text-gray-700">Category</label>
+            <select id="categoryId" wire:model.live="category_id"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
-            @error('image')
+                <option value="">Select Category</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+            @error('category_id')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
+        </div>
+        <div class="mt-4">
+            <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
+            <input type="text" id="brand"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500"
+                wire:model.live='brand'>
+            @error('brand')
+                <span class="text-red-600 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="mt-4">
+            <label for="model" class="block text-sm font-medium text-gray-700 capitalize">model</label>
+            <input type="text" id="model"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500"
+                wire:model.live='model'>
+            @error('model')
+                <span class="text-red-600 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="mt-4">
+            <label for="fileName" class="block text-sm font-medium text-gray-700">Main Product Image</label>
+            <div class="drop-zone" id="dropZone">
+                <i class="fa fa-upload" aria-hidden="true"></i>
+                <p class="mt-3 fw-bold">Drop file here</p>
+                <p class="text-muted small">or click to browse</p>
+                <input type="file" id="fileInput" class="hidden" wire:model="image" accept="image/*"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
+                @error('image')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+
 
             @if ($image)
                 <div class="mt-2">
@@ -76,29 +112,25 @@
         </div>
 
         <div class="mt-4">
-            <label for="editor" class="block text-sm font-medium text-gray-700">Description</label>
-            <livewire:editor-toolbar />
-            <textarea id="editor" wire:model.live="description"
+            <label for="editor" class="block text-sm font-medium text-gray-700">Short Description</label>
+            <textarea id="editor" wire:model.live="short_description"
                 class="mt-0 block w-full border border-gray-300 rounded-bl-lg  rounded-br-lg shadow-sm p-2 focus:ring-red-500"
                 rows="5"></textarea>
+            @error('short_description')
+                <span class="text-red-600 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="mt-4">
+            <label for="editor" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea id="editor" wire:model.live="description"
+                class="mt-0 block w-full border border-gray-300 rounded-bl-lg  rounded-br-lg shadow-sm p-2 focus:ring-red-500"
+                rows="15"></textarea>
             @error('description')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
         </div>
 
-        <div class="mt-4">
-            <label for="categoryId" class="block text-sm font-medium text-gray-700">Category</label>
-            <select id="categoryId" wire:model.live="category_id"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
-                <option value="">Select Category</option>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-            @error('category_id')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
-            @enderror
-        </div>
+
 
         <div class="mt-6">
             <button type="submit"

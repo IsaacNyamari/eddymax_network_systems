@@ -37,12 +37,9 @@
                             class="w-full h-24 object-cover" loading="lazy"
                             onerror="this.src='https://via.placeholder.com/150?text=Thumbnail'">
                     </div>
-                    @php
-                        dd($product-> );
-                    @endphp
+
                     <!-- Additional Images Gallery -->
                     @if ($product->productImages && $product->productImages->count() > 0)
-                        {{ $product->productImages->path }}
                         @foreach ($product->productImages as $image)
                             <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition border-2 border-gray-200 hover:border-red-500"
                                 onclick="changeMainImage('{{ asset('storage/' . $image->path) }}', this)">

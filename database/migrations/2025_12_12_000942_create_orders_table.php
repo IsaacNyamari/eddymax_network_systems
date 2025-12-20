@@ -20,9 +20,7 @@ return new class extends Migration
             $table->enum('status', [
                 OrderStatus::PENDING->value,
                 OrderStatus::SHIPPED->value,
-                OrderStatus::SHIPPING->value,
                 OrderStatus::CANCELLED->value,
-                OrderStatus::CLOSED->value,
                 OrderStatus::DELIVERED->value
             ])->default(OrderStatus::PENDING->value);
             $table->decimal('total_amount', 10, 2);

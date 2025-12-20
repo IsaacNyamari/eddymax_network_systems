@@ -15,6 +15,7 @@ class Product extends Model
         'name',
         'price',
         'image',
+        'short_description',
         'description',
         'model',
         'brand',
@@ -40,5 +41,9 @@ class Product extends Model
     public function productImages()
     {
         return $this->morphMany(ProductImages::class, 'imageable');
+    }
+    public function brand()
+    {
+        $this->belongsTo(Brands::class);
     }
 }

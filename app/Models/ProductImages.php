@@ -19,7 +19,7 @@ class ProductImages extends Model
     // Polymorphic relationship
     public function imageable()
     {
-        return $this->morphTo();
+        return $this->morphTo('imageable');
     }
 
     // If you want a direct relationship to Product

@@ -25,8 +25,10 @@ class CreateProduct extends Component
 
     public $images = [];
 
-    #[Validate('nullable|string|max:2000')]
+    #[Validate('nullable|string|max:10000|min:10')]
     public $description;
+    #[Validate('nullable|string|max:2000|min:10')]
+    public $short_description;
 
     #[Validate('required|exists:categories,id')]
     public $category_id;
@@ -72,7 +74,7 @@ class CreateProduct extends Component
         if (!empty($this->images)) {
             foreach ($this->images as $uploadedImage) {
                 $path = $uploadedImage->store('product-images', 'public');
-                
+
                 ProductImages::create([
                     'path' => $path,
                     'imageable_id' => $product->id,

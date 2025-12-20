@@ -291,15 +291,17 @@ class CheckoutPage extends Component
         } while (Order::where('order_number', $orderNumber)->exists());
 
         // Save order to database
-        $order = Order::create([
-            'user_id' => Auth::user()->id, // logged in user or null for guest
-            'order_number' => $orderNumber,
-            'products' => json_encode($this->cart),
-            'total_amount' => $this->total,
-            'shipping_address' => $this->address,
-            'status' => 'pending',
-        ]);
-
+        $products_in_cart = $this->cart;
+        foreach ($products_in_cart as $product) {
+            $order = Order::create([
+                'user_id' => Auth::user()->id, // logged in user or null for guest
+                'order_number' => $orderNumber,
+                'products' => json_encode($product),
+                'total_amount' => $this->total,
+                'shipping_address' => $this->address,
+                'status' => 'pending',
+            ]);
+        }
 
 
         // Clear cart
