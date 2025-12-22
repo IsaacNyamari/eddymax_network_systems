@@ -42,6 +42,8 @@
 
             <livewire:category-carousel />
         </div> --}}
+
+
         <!-- Featured Products -->
         @foreach ($parent_categories as $index => $category)
             <div class="mb-16">
@@ -87,20 +89,77 @@
                     </a>
                 </div>
                 <!-- Products Grid -->
-                @livewire('product-list')
+                <div class="grid grid-cols-1 h-fit sm:grid-cols-2 lg:grid-cols-5 mb-4 gap-6">
 
-                <!-- View All Bottom CTA -->
-                <div class="text-center mt-12 pt-8 border-t border-gray-200">
-                    <a href="{{ route('store.filter.category', $category->slug) }}"
-                        class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-full hover:shadow-xl hover:shadow-red-200 transform hover:-translate-y-1 transition-all duration-300 group/cta">
-                        <span class="mr-3">View All {{ $category->name }}</span>
-                        <svg class="w-5 h-5 transform group-hover/cta:translate-x-2 transition-transform" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                    </a>
+
+                    @foreach ($category->getAllProducts() as $product)
+                        <!-- Changed from $category->products -->
+
+
+                        <div
+                            class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="relative overflow-hidden">
+
+                                <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
+                                    class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500"
+                                    loading="lazy" onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
+
+                                <!-- ADD THIS CART BUTTON OVERLAY -->
+                                <div
+                                    class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <div class="transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                                        <livewire:add-to-cart-button :product="$product" />
+                                    </div>
+                                </div>
+
+                                @if ($product['badge'])
+                                    <div
+                                        class="absolute top-3 left-3 bg-{{ $product['badge'] == 'Sale' ? 'red' : ($product['badge'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                                        {{ $product['badge'] }}
+                                    </div>
+                                @endif
+                                <button
+                                    class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition opacity-0 group-hover:opacity-100">
+                                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="p-5">
+                                <a href="{{ route('products.show', $product->slug) }}">
+                                    <h3
+                                        class="font-semibold text-lg text-gray-900 mb-2 group-hover:text-red-600 transition">
+                                        {{ Str::limit($product['name'], 15, '...') }}
+                                </a>
+                                </h3>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-lg font-bold text-red-600 block">Ksh
+                                            {{ number_format($product['price'], 2) }}</span>
+                                        @if ($product['badge'] == 'Sale')
+                                            <span class="text-sm text-gray-500 line-through ml-2">Ksh 15,999</span>
+                                        @endif
+                                    </div>
+
+                                </div>
+                                {{-- <div class="mt-3 flex items-center">
+                        <div class="flex text-yellow-400">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                            @endfor
+                        </div>
+                        <span class="text-sm text-gray-600 ml-2">(24 reviews)</span>
+                    </div> --}}
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
+
             </div>
         @endforeach
         <!-- Why Choose Us -->

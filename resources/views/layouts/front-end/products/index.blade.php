@@ -27,7 +27,7 @@
                     
                     @if (!isset($productsSorted))
                         <!-- Grid Container -->
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                             @foreach ($products as $product)
                                 <div class="group bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                                     
@@ -120,13 +120,13 @@
                     @endif
 
                 </div>
-
+{{-- 
                 <!-- Pagination (if applicable) -->
                 @if(method_exists($products, 'links') && !isset($productsSorted))
                     <div class="mt-6">
                         {{ $products->links() }}
                     </div>
-                @endif
+                @endif --}}
                 
             </main>
 

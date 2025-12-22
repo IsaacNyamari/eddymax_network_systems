@@ -15,6 +15,10 @@ class CreateProduct extends Component
     use WithFileUploads;
 
     #[Validate('required|string|max:255|min:3')]
+    public $brand;
+    #[Validate('required|string|max:255|min:3')]
+    public $model;
+    #[Validate('required|string|max:255|min:3')]
     public $name;
 
     #[Validate('required|numeric|min:0')]
@@ -65,6 +69,7 @@ class CreateProduct extends Component
             'name' => $this->name,
             'price' => $this->price,
             'image' => $imagePath,
+            'short_description' => $this->short_description,
             'description' => $this->description,
             'category_id' => $this->category_id,
             'slug' => Str::slug($this->name),

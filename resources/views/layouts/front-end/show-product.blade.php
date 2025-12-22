@@ -21,7 +21,7 @@
             <!-- Product Images with Gallery -->
             <div class="space-y-4">
                 <!-- Main Image with Zoom -->
-                <div class="rounded-xl overflow-hidden shadow-lg relative group cursor-zoom-in" id="zoom-container">
+                <div class="rounded-xl bg-blue-800 hover:bg-blue-800 overflow-hidden shadow-lg relative group cursor-zoom-in" id="zoom-container">
                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                         class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy" id="main-product-image"
@@ -31,7 +31,7 @@
                 <!-- Gallery Thumbnails -->
                 <div class="grid grid-cols-4 gap-3">
                     <!-- Main Image Thumbnail -->
-                    <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition border-2 border-red-500"
+                    <div class="rounded-lg overflow-hidden shadow cursor-pointer hover:shadow-lg transition border-2 border-red-500"
                         onclick="changeMainImage('{{ asset('storage/' . $product->image) }}', this)">
                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }} Thumbnail"
                             class="w-full h-24 object-cover" loading="lazy"
@@ -41,7 +41,7 @@
                     <!-- Additional Images Gallery -->
                     @if ($product->productImages && $product->productImages->count() > 0)
                         @foreach ($product->productImages as $image)
-                            <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition border-2 border-gray-200 hover:border-red-500"
+                            <div class="rounded-lg overflow-hidden cursor-pointer shadow hover:shadow-lg transition border-2 border-gray-200 hover:border-red-500"
                                 onclick="changeMainImage('{{ asset('storage/' . $image->path) }}', this)">
                                 <img src="{{ asset('storage/' . $image->path) }}"
                                     alt="Product Image {{ $loop->iteration + 1 }}" class="w-full h-24 object-cover"
@@ -76,7 +76,7 @@
 
                 <!-- Short Description -->
                 <p class="text-gray-700 text-lg">
-                    {{ Str::limit($product->description, 75, '...') }}
+                    {{ Str::limit($product->short_description, 75, '...') }}
                 </p>
 
                 <!-- Product Options -->

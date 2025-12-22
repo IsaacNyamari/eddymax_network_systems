@@ -105,7 +105,7 @@
 
         <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="border-b border-gray-200">
-                <div class="flex h-16 items-center">
+                <div class="flex h-16 items-center ">
 
                     <!-- Mobile menu button -->
                     <button type="button" command="show-modal" commandfor="mobile-menu"
@@ -136,7 +136,6 @@
                                 class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">Checkout</a>
                         </div>
                     </el-popover-group>
-
                     <!-- RIGHT SIDE AUTH LINKS -->
                     <div class="ml-auto flex items-center">
                         <div class="hidden lg:flex lg:space-x-6">

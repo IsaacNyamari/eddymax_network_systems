@@ -39,15 +39,21 @@ class ProductController extends Controller
      */
     public function show(string $slug)
     {
+        // First try exact slug match (most specific)
         $product = Product::where('slug', trim($slug))->first();
+
+        // If no exact slug match, show 404
+        if (!$product) {
+            abort(404);
+        }
+
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->take(4)
             ->get();
-        
+
         return view('layouts.front-end.show-product', compact('product', 'relatedProducts'));
     }
-
     /**
      * Show the form for editing the specified resource.
      */

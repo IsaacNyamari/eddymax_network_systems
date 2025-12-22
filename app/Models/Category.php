@@ -8,8 +8,8 @@ use Laravel\Scout\Searchable;
 
 class Category extends Model
 {
-    /** @use HasFactory<\Database\Factories\CategoryFactory> */
-    use HasFactory,Searchable;
+    use HasFactory, Searchable;
+    
     protected $fillable = [
         'parent_id',
         'name',
@@ -21,6 +21,7 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+    
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
@@ -29,5 +30,53 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
+    }
+    
+    /**
+     * Get all products including child category products
+     */
+    public function getAllProducts($perPage = 20)
+    {
+        $categoryIds = $this->getAllDescendantIds();
+        $categoryIds[] = $this->id;
+        
+        return Product::whereIn('category_id', $categoryIds)
+            ->with('category') // Optional: eager load category
+            ->paginate($perPage);
+    }
+    
+    /**
+     * Get all descendant category IDs recursively
+     */
+    public function getAllDescendantIds()
+    {
+        $ids = [];
+        
+        // Load children if not already loaded
+        if (!$this->relationLoaded('children')) {
+            $this->load('children');
+        }
+        
+        foreach ($this->children as $child) {
+            $ids[] = $child->id;
+            
+            // Recursively get children's descendants
+            if ($child->children->isNotEmpty()) {
+                $ids = array_merge($ids, $child->getAllDescendantIds());
+            }
+        }
+        
+        return $ids;
+    }
+    
+    /**
+     * Check if category has any products (including child categories)
+     */
+    public function hasAnyProducts()
+    {
+        $categoryIds = $this->getAllDescendantIds();
+        $categoryIds[] = $this->id;
+        
+        return Product::whereIn('category_id', $categoryIds)->exists();
     }
 }

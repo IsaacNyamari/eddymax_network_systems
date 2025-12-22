@@ -1,523 +1,68 @@
-@php
-    $parents = App\Models\Category::with(['children.children'])
-        ->whereNull('parent_id')
-        ->orderBy('name')
-        ->limit(10)
-        ->get();
-@endphp
-
-<div class="bg-red-900">
-    <nav class="bg-gradient-to-r from-maroon-50 to-rose-50 border-b border-maroon-100 shadow-sm" x-data="{
-        mobileMenuOpen: false,
-        searchOpen: false,
-        searchSuggestionsOpen: false,
-        searchQuery: '',
-        searchLoading: false,
-        searchResults: [],
-        mobileSearchOpen: false,
-    
-        // ADD THIS FUNCTION:
-        performSearch(query) {
-            if (query.length < 2) {
-                this.searchResults = [];
-                return;
-            }
-    
-            this.searchLoading = true;
-    
-            fetch(`/search/quick?q=${encodeURIComponent(query)}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    this.searchResults = data;
-                })
-                .catch(error => {
-                    console.error('Search error:', error);
-                    this.searchResults = [];
-                })
-                .finally(() => {
-                    this.searchLoading = false;
-                });
-        }
-    }">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                {{-- Mobile Top Bar --}}
-                <div class="flex justify-between items-center py-3 lg:hidden">
-                    <button @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="p-2 rounded-lg text-slate-700 hover:text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16">
-                            </path>
-                        </svg>
-                    </button>
-
-                    {{-- Mobile Search Button --}}
-                    <button @click="mobileSearchOpen = !mobileSearchOpen"
-                        class="p-2 rounded-lg text-slate-700 hover:text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
-                            </path>
-                        </svg>
-                    </button>
-                </div>
-
-                {{-- Mobile Search Panel --}}
-                <div x-show="mobileSearchOpen" x-cloak x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0 translate-y-1"
-                    x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition ease-in duration-150"
-                    x-transition:leave-start="opacity-100 translate-y-0"
-                    x-transition:leave-end="opacity-0 translate-y-1"
-                    class="lg:hidden bg-white border-t border-b border-gray-200 py-4 px-4">
-                    <form action="{{ route('store.search.index') }}" method="GET" class="relative">
-                        <div class="relative">
-                            <input type="text" name="q" x-model="searchQuery"
-                                @input.debounce.300ms="performSearch($event.target.value, true)"
-                                class="w-full px-4 py-3 pl-10 pr-12 rounded-lg border border-gray-300 focus:border-red-600 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 focus:outline-none transition duration-200"
-                                placeholder="Search routers, CCTV, laptops, software..." value="{{ request('q') }}"
-                                autocomplete="off">
-
-                            {{-- Search Icon --}}
-                            <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
-                                    </path>
-                                </svg>
-                            </div>
-
-                            {{-- Close Button --}}
-                            <button @click="mobileSearchOpen = false" type="button"
-                                class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
-                                <svg class="w-5 h-5 text-gray-400 hover:text-gray-600 transition" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
-
-                        {{-- Mobile Search Suggestions --}}
-                        <div x-show="searchQuery.length >= 2" x-cloak
-                            class="mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-                            <div class="py-2">
-                                <div x-show="searchLoading" class="px-4 py-3">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-red-600"></div>
-                                        <span class="text-gray-600">Searching...</span>
-                                    </div>
-                                </div>
-
-                                <div x-show="!searchLoading">
-                                    <template x-if="searchResults.length === 0">
-                                        <div class="px-4 py-3 text-gray-500 text-center">
-                                            <p>No products found for "<span x-text="searchQuery"></span>"</p>
-                                        </div>
-                                    </template>
-
-                                    <template x-if="searchResults.length > 0">
-                                        <div class="max-h-64 overflow-y-auto">
-                                            <template x-for="product in searchResults" :key="product.id">
-                                                <a :href="product.url" @click="mobileSearchOpen = false"
-                                                    class="block px-4 py-3 hover:bg-gray-50 border-b border-gray-100">
-                                                    <div class="flex items-center space-x-3">
-                                                        <img :src="product.image" :alt="product.name"
-                                                            class="w-10 h-10 rounded object-cover flex-shrink-0">
-                                                        <div class="flex-1 min-w-0">
-                                                            <h4 class="text-sm font-medium text-gray-900 truncate"
-                                                                x-text="product.name"></h4>
-                                                            <p class="text-xs text-gray-500 truncate"
-                                                                x-text="product.category"></p>
-                                                        </div>
-                                                        <div class="text-red-600 font-semibold text-sm">
-                                                            KES <span x-text="product.price"></span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                {{-- Desktop & Mobile Menu --}}
-                <div :class="{ 'block': mobileMenuOpen, 'hidden': !mobileMenuOpen }" class="hidden lg:block flex-1">
-                    <ul
-                        class="flex flex-col lg:flex-row lg:flex-wrap lg:justify-center lg:items-center lg:space-x-1 space-y-2 lg:space-y-0 py-2 lg:py-0">
-                        @foreach ($parents as $parent)
-                            <li class="relative group" x-data="{ open: false }"
-                                @mouseenter="if(window.innerWidth >= 1024) open = true"
-                                @mouseleave="if(window.innerWidth >= 1024) open = false">
-
-                                {{-- Parent link --}}
-                                <button type="button"
-                                    @click="if(window.innerWidth < 1024) { 
-                                        open = !open; 
-                                        $event.stopPropagation(); 
-                                    }"
-                                    class="flex items-center text-white justify-between w-full lg:w-auto px-4 lg:px-5 py-3 rounded-lg transition-all duration-300
-                                           hover:text-white
-                                           group-hover:shadow-sm group-hover:-translate-y-0.5
-                                           font-medium text-left">
-                                    <span class="flex items-center">
-                                        {{ $parent->name }}
-                                        @if ($parent->children->count())
-                                            <svg class="w-3 h-3 ml-1.5 transition-transform duration-300"
-                                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        @endif
-                                    </span>
-                                </button>
-
-                                {{-- Dropdown - CENTERED IN PAGE --}}
-                                @if ($parent->children->count())
-                                    <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
-                                        x-transition:enter-start="opacity-0 translate-y-2"
-                                        x-transition:enter-end="opacity-100 translate-y-0"
-                                        x-transition:leave="transition ease-in duration-150"
-                                        x-transition:leave-start="opacity-100 translate-y-0"
-                                        x-transition:leave-end="opacity-0 translate-y-2"
-                                        class="
-                                            fixed
-                                            top-20
-                                            left-1/2 -translate-x-1/2
-
-                                            w-[95%] sm:w-[90%] lg:w-[800px] lg:max-w-[90vw]
-
-                                            bg-white
-                                            rounded-lg lg:rounded-xl
-                                            shadow-2xl
-                                            border border-maroon-100
-                                            p-4 lg:p-6
-                                            z-50
-                                            overflow-hidden
-                                        ">
-
-                                        {{-- Gradient top border --}}
-                                        <div
-                                            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-maroon-500 to-rose-500">
-                                        </div>
-
-                                        {{-- Close button for mobile --}}
-                                        <button @click="open = false"
-                                            class="absolute top-4 right-4 lg:hidden p-1 rounded-full bg-white-100 text-white-800 hover:text-white hover:bg-maroon-600">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
-
-                                        {{-- Dropdown header --}}
-                                        <h3
-                                            class="text-lg font-bold text-slate-800 mb-4 lg:mb-6 px-2 flex items-center gap-2">
-                                            {{ $parent->name }}
-                                        </h3>
-
-                                        {{-- Content grid --}}
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                                            @foreach ($parent->children as $child)
-                                                <div class="space-y-2 lg:space-y-3">
-                                                    {{-- Child header --}}
-                                                    <div class="flex items-center gap-2 mb-1 lg:mb-2">
-                                                        <div class="w-1.5 h-1.5 bg-maroon-400 rounded-full"></div>
-                                                        <h4 class="font-semibold text-slate-800 text-sm">
-                                                            {{ $child->name }}
-                                                        </h4>
-                                                    </div>
-
-                                                    {{-- Grandchildren list --}}
-                                                    @if ($child->children->count())
-                                                        <ul class="space-y-1 lg:space-y-1.5">
-                                                            @foreach ($child->children as $grandchild)
-                                                                <li>
-                                                                    <a href="{{ route('store.filter.category', $grandchild->slug) }}"
-                                                                        class="block px-3 py-1.5 rounded-md text-sm text-slate-600 
-                                                                               hover:text-black hover:bg-maroon-600
-                                                                               transition-colors duration-150
-                                                                               border-l-2 border-transparent hover:border-maroon-400
-                                                                               flex items-center gap-2">
-                                                                        <svg class="w-2 h-2 text-maroon-400 group-hover:text-black"
-                                                                            fill="currentColor" viewBox="0 0 8 8">
-                                                                            <circle cx="4" cy="4"
-                                                                                r="3" />
-                                                                        </svg>
-                                                                        {{ $grandchild->name }}
-                                                                    </a>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @else
-                                                        {{-- Direct child link if no grandchildren --}}
-                                                        <a href="{{ route('store.filter.category', $child->slug) }}"
-                                                            class="block px-3 py-1.5 rounded-md text-sm text-slate-600 
-                                                                   hover:text-black hover:bg-maroon-600
-                                                                   transition-colors duration-150
-                                                                   border-l-2 border-transparent hover:border-maroon-400
-                                                                   flex items-center gap-2">
-                                                            <svg class="w-2 h-2 text-maroon-400 group-hover:text-black"
-                                                                fill="currentColor" viewBox="0 0 8 8">
-                                                                <circle cx="4" cy="4" r="3" />
-                                                            </svg>
-                                                            {{ $child->name }}
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                {{-- Desktop Cart/Actions Area --}}
-                <div class="hidden lg:flex items-center space-x-4 ml-4">
-                    <a href="{{ route('store.cart') }}" class="relative p-2 text-white hover:text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                            </path>
-                        </svg>
-                        <span
-                            class="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                            <livewire:cart-count />
-                        </span>
-                    </a>
-                </div>
+<div class="w-full max-w-sm min-w-[200px]">
+    <div class="relative mt-2">
+        <div class="absolute top-1 left-1 flex items-center">
+            <button id="dropdownButton"
+                class="rounded border border-transparent py-1 px-1.5 text-center flex items-center text-sm transition-all text-slate-600">
+                <span id="dropdownSpan" class="text-ellipsis overflow-hidden">Europe</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="h-4 w-4 ml-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+            </button>
+            <div class="h-6 border-l border-slate-200 ml-1"></div>
+            <div id="dropdownMenu"
+                class="min-w-[150px] overflow-hidden absolute left-0 w-full mt-10 hidden w-full bg-white border border-slate-200 rounded-md shadow-lg z-10">
+                <ul id="dropdownOptions">
+                    <li class="px-4 py-2 text-slate-600 hover:bg-slate-50 text-sm cursor-pointer" data-value="Europe">
+                        Europe</li>
+                    <li class="px-4 py-2 text-slate-600 hover:bg-slate-50 text-sm cursor-pointer"
+                        data-value="Australia">Australia</li>
+                    <li class="px-4 py-2 text-slate-600 hover:bg-slate-5- text-sm cursor-pointer" data-value="Africa">
+                        Africa</li>
+                </ul>
             </div>
         </div>
-    </nav>
+        <input type="text"
+            class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pr-12 pl-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+            placeholder="Search for any product..." />
 
-    {{-- Desktop Search Bar (BELOW the navigation) --}}
-    <div class="hidden lg:block bg-white border-b border-gray-200 py-4">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto" x-data>
-                <form action="{{ route('store.search.index') }}" method="GET" class="relative" id="navbar-search-form">
-                    <div class="relative">
-                        <input type="text" name="q" id="navbar-search-input" x-model="searchQuery"
-                            @input.debounce.300ms="performSearch($event.target.value)" @focus="searchSuggestionsOpen = true"
-                            @blur="setTimeout(() => searchSuggestionsOpen = false, 200)"
-                            class="w-full px-5 py-3 pl-12 pr-12 rounded-full border border-gray-300 focus:border-red-600 focus:ring-4 focus:ring-red-500 focus:ring-opacity-20 focus:outline-none transition duration-200 shadow-md"
-                            placeholder="Search routers, CCTV, laptops, software, accessories..." value="{{ request('q') }}"
-                            autocomplete="off">
-
-                        {{-- Search Icon --}}
-                        <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
-                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
-                                </path>
-                            </svg>
-                        </div>
-
-                        {{-- Search Button --}}
-                        <button type="submit" 
-                            class="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 bg-red-600 hover:bg-red-700 rounded-full transition duration-200">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
-                                </path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    {{-- Search Suggestions Dropdown --}}
-                    <div x-show="searchSuggestionsOpen && searchQuery.length >= 2" x-cloak
-                        x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
-                        x-transition:leave="transition ease-in duration-150"
-                        x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
-                        class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-50"
-                        @click.away="searchSuggestionsOpen = false">
-                        <div class="py-2">
-                            {{-- Loading State --}}
-                            <div x-show="searchLoading" class="px-4 py-3">
-                                <div class="flex items-center space-x-3">
-                                    <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-red-600"></div>
-                                    <span class="text-gray-600">Searching...</span>
-                                </div>
-                            </div>
-
-                            {{-- Results Container --}}
-                            <div x-show="!searchLoading">
-                                <template x-if="searchResults.length === 0 && searchQuery.length >= 2">
-                                    <div class="px-4 py-6 text-gray-500 text-center">
-                                        <div class="flex flex-col items-center">
-                                            <svg class="w-10 h-10 text-gray-400 mb-3" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                                </path>
-                                            </svg>
-                                            <p class="text-gray-700 font-medium">No products found for "<span x-text="searchQuery" class="font-semibold"></span>"</p>
-                                            <p class="text-sm text-gray-500 mt-1">Try different keywords or browse categories</p>
-                                        </div>
-                                    </div>
-                                </template>
-
-                                <template x-if="searchResults.length > 0">
-                                    <div>
-                                        <div class="max-h-96 overflow-y-auto">
-                                            <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                                                <p class="text-sm font-semibold text-gray-700">
-                                                    <span x-text="searchResults.length"></span> results found
-                                                </p>
-                                            </div>
-                                            <template x-for="product in searchResults" :key="product.id">
-                                                <a :href="product.url"
-                                                    class="block px-4 py-4 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition duration-150">
-                                                    <div class="flex items-center space-x-4">
-                                                        <div class="flex-shrink-0">
-                                                            <img :src="product.image" :alt="product.name"
-                                                                class="w-12 h-12 rounded-lg object-cover border border-gray-200">
-                                                        </div>
-                                                        <div class="flex-1 min-w-0">
-                                                            <h4 class="text-sm font-semibold text-gray-900 truncate"
-                                                                x-text="product.name"></h4>
-                                                            <p class="text-xs text-gray-500 truncate mt-1"
-                                                                x-text="product.category"></p>
-                                                        </div>
-                                                        <div class="text-red-600 font-bold text-sm whitespace-nowrap">
-                                                            KES <span x-text="product.price"></span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </template>
-                                        </div>
-
-                                        {{-- View All Results Link --}}
-                                        <a :href="'/search?q=' + encodeURIComponent(searchQuery)"
-                                            class="block px-4 py-3 bg-red-50 hover:bg-red-100 text-center text-red-700 font-semibold border-t border-red-100 transition duration-150">
-                                            View all <span x-text="searchResults.length" class="font-bold"></span> results
-                                            <svg class="w-4 h-4 inline ml-2" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 5l7 7-7 7"></path>
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <button
+            class="absolute right-1 top-1 rounded bg-slate-800 p-1.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                <path fill-rule="evenodd"
+                    d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                    clip-rule="evenodd"></path>
+            </svg>
+        </button>
     </div>
 </div>
 
-@push('scripts')
-    <script>
-        // Initialize Alpine store and functions
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('searchComponent', () => ({
-                searchQuery: '',
-                searchSuggestionsOpen: false,
-                searchLoading: false,
-                searchResults: [],
-                mobileSearchOpen: false,
-
-                async performSearch(query, isMobile = false) {
-                    if (query.length < 2) {
-                        this.searchResults = [];
-                        return;
-                    }
-
-                    this.searchLoading = true;
-
-                    try {
-                        const response = await fetch(
-                            `/search/quick?q=${encodeURIComponent(query)}`, {
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'Accept': 'application/json'
-                                }
-                            });
-
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-
-                        const data = await response.json();
-                        this.searchResults = data;
-                    } catch (error) {
-                        console.error('Search error:', error);
-                        this.searchResults = [];
-                    } finally {
-                        this.searchLoading = false;
-                    }
-                },
-
-                clearSearch() {
-                    this.searchQuery = '';
-                    this.searchResults = [];
-                    this.searchSuggestionsOpen = false;
-                }
-            }));
-        });
-    </script>
-
-    <style>
-        /* Custom scrollbar for search results */
-        .max-h-96::-webkit-scrollbar,
-        .max-h-64::-webkit-scrollbar {
-            width: 6px;
+<script>
+    document.getElementById('dropdownButton').addEventListener('click', function() {
+        var dropdownMenu = document.getElementById('dropdownMenu');
+        if (dropdownMenu.classList.contains('hidden')) {
+            dropdownMenu.classList.remove('hidden');
+        } else {
+            dropdownMenu.classList.add('hidden');
         }
+    });
 
-        .max-h-96::-webkit-scrollbar-track,
-        .max-h-64::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
+    document.getElementById('dropdownOptions').addEventListener('click', function(event) {
+        if (event.target.tagName === 'LI') {
+            const dataValue = event.target.getAttribute('data-value');
+            document.getElementById('dropdownSpan').textContent = dataValue;
+            document.getElementById('dropdownMenu').classList.add('hidden');
         }
+    });
 
-        .max-h-96::-webkit-scrollbar-thumb,
-        .max-h-64::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
+    document.addEventListener('click', function(event) {
+        var isClickInside = document.getElementById('dropdownButton').contains(event.target) || document
+            .getElementById('dropdownMenu').contains(event.target);
+        var dropdownMenu = document.getElementById('dropdownMenu');
 
-        .max-h-96::-webkit-scrollbar-thumb:hover,
-        .max-h-64::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
+        if (!isClickInside) {
+            dropdownMenu.classList.add('hidden');
         }
-
-        /* Ensure dropdown appears above other elements */
-        [x-cloak] {
-            display: none !important;
-        }
-
-        /* Search input focus styles */
-        #navbar-search-input:focus,
-        input[name="q"]:focus {
-            box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.15);
-        }
-
-        /* Animation for search results */
-        .search-result-enter {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        .search-result-enter-active {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 200ms, transform 200ms;
-        }
-    </style>
-@endpush
+    });
+</script>

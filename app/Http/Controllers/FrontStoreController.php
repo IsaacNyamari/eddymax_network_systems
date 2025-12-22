@@ -80,8 +80,11 @@ class FrontStoreController extends Controller
      */
     public function filterCategory(string $filter)
     {
-        $isparent_category = Category::whereNull('parent_id')->where('slug',$filter)->with(['products'])->get();
-        return $isparent_category;
+        $parent_categories = Category::whereNull('parent_id')->where('slug', $filter)->with('products')
+            ->with(['children.children'])
+            ->take(10)
+            ->get();
+        return ($parent_categories);
         // Get categories with product counts (optional)
         $categories = Category::withCount('products')->get();
         // Get products for the given category slug

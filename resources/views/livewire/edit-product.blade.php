@@ -46,8 +46,7 @@
               {{-- DESCRIPTION --}}
               <div>
                   <x-input-label for="description">Description</x-input-label>
-                  <x-editor-toolbar />
-                  <textarea wire:model="description" id="editor" rows="3"
+                  <textarea wire:model="description"rows="3"
                       class="w-full rounded-lg border-gray-300 h-72 focus:border-indigo-500 focus:ring-indigo-500"></textarea>
                   @error('description')
                       <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
