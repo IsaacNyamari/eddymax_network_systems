@@ -39,9 +39,23 @@ class CreateProduct extends Component
 
     public $categories = [];
 
+    // In your Livewire component
+    // In your Livewire component
     public function mount()
     {
-        $this->categories = Category::all();
+        $this->categories = $this->getNestedCategories();
+    }
+
+    private function getNestedCategories()
+    {
+        return Category::whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->with(['children' => function ($query) {
+                    $query->with(['children']);
+                }]);
+            }])
+            ->orderBy('name')
+            ->get();
     }
 
     // Method to remove a specific image from the array
@@ -71,6 +85,8 @@ class CreateProduct extends Component
             'image' => $imagePath,
             'short_description' => $this->short_description,
             'description' => $this->description,
+            'model' => $this->model,
+            'brand' => $this->brand,
             'category_id' => $this->category_id,
             'slug' => Str::slug($this->name),
         ]);

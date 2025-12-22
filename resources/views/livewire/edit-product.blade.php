@@ -1,4 +1,9 @@
   <div class="grid grid-row-1 lg:grid-row-2 gap-6">
+
+      <div id="editAlert"
+          class="fixed top-5 right-5 rounded-r-lg text-white font-semibold hidden border-l-8 border-l-red-500 z-50 p-4 bg-green-500 justify-center ml-auto">
+          Product updated
+          successfully!</div>
       <!-- Recent Orders -->
       <div class="bg-white rounded-xl shadow-sm border border-gray-200">
 
@@ -54,17 +59,138 @@
               </div>
 
               {{-- CATEGORY --}}
-              <div>
-                  <x-input-label for="category_id">Category</x-input-label>
-                  <select wire:model.live="category_id"
-                      class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
-                      <option value="">Select category</option>
-                      @foreach ($categories as $cat)
-                          <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+              <div class="mt-4">
+                  <label class="block text-sm font-medium text-gray-700 mb-3">Select Category</label>
+
+                  <div class="border border-gray-300 rounded-lg p-4 max-h-96 overflow-y-auto bg-gray-50">
+                      @foreach ($categories as $parentCategory)
+                          @if ($parentCategory->parent_id === null)
+                              <div class="mb-3">
+                                  <!-- Parent Category - Check if it's a leaf node -->
+                                  @if ($parentCategory->children->isEmpty())
+                                      <!-- This parent category has no children, so it's selectable -->
+                                      <label
+                                          class="flex items-center space-x-3 p-2 bg-white rounded shadow-sm mb-2 hover:bg-gray-50 cursor-pointer">
+                                          <input type="radio" name="category_id" wire:model.live="category_id"
+                                              value="{{ $parentCategory->id }}" class="text-red-600 focus:ring-red-500">
+                                          <span class="font-semibold text-gray-800">{{ $parentCategory->name }}</span>
+                                          <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">Parent
+                                              Category</span>
+                                      </label>
+                                  @else
+                                      <!-- Parent category has children, show as header only -->
+                                      <div class="font-semibold text-gray-800 p-2 bg-white rounded shadow-sm mb-2">
+                                          {{ $parentCategory->name }}
+                                          <span
+                                              class="text-xs text-gray-500 ml-2">{{ $parentCategory->children->count() }}
+                                              subcategories</span>
+                                      </div>
+                                  @endif
+
+                                  @foreach ($parentCategory->children as $childCategory)
+                                      <div class="ml-4 mb-2">
+                                          <!-- Child Category - Check if it's a leaf node -->
+                                          @if ($childCategory->children->isEmpty())
+                                              <!-- This child category has no children, so it's selectable -->
+                                              <label
+                                                  class="flex items-center space-x-3 p-2 bg-white rounded shadow-sm mb-1 hover:bg-gray-50 cursor-pointer">
+                                                  <input type="radio" name="category_id" wire:model.live="category_id"
+                                                      value="{{ $childCategory->id }}"
+                                                      class="text-red-600 focus:ring-red-500">
+                                                  <span
+                                                      class="text-gray-700 font-medium">{{ $childCategory->name }}</span>
+                                                  <span
+                                                      class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">Category</span>
+                                              </label>
+                                          @else
+                                              <!-- Child category has grandchildren, show as sub-header -->
+                                              <div
+                                                  class="text-gray-700 font-medium p-2 bg-white rounded shadow-sm mb-1">
+                                                  {{ $childCategory->name }}
+                                                  <span
+                                                      class="text-xs text-gray-500 ml-2">{{ $childCategory->children->count() }}
+                                                      subcategories</span>
+                                              </div>
+                                          @endif
+
+                                          <!-- Grandchildren (Level 3) - Always selectable -->
+                                          @foreach ($childCategory->children as $grandchildCategory)
+                                              <label
+                                                  class="flex items-center space-x-3 ml-8 p-2 hover:bg-gray-100 rounded cursor-pointer">
+                                                  <input type="radio" name="category_id" wire:model.live="category_id"
+                                                      value="{{ $grandchildCategory->id }}"
+                                                      class="text-red-600 focus:ring-red-500">
+                                                  <span class="text-gray-600">
+                                                      {{ $grandchildCategory->name }}
+                                                      @if ($grandchildCategory->children->isNotEmpty())
+                                                          <span class="text-xs text-red-500 ml-2">Has
+                                                              {{ $grandchildCategory->children->count() }} more
+                                                              levels</span>
+                                                      @endif
+                                                  </span>
+                                              </label>
+
+                                              <!-- Great Grandchildren (Level 4+) - Also selectable -->
+                                              @foreach ($grandchildCategory->children as $greatGrandchild)
+                                                  <label
+                                                      class="flex items-center space-x-3 ml-12 p-2 hover:bg-gray-100 rounded cursor-pointer">
+                                                      <input type="radio" name="category_id"
+                                                          wire:model.live="category_id"
+                                                          value="{{ $greatGrandchild->id }}"
+                                                          class="text-red-600 focus:ring-red-500">
+                                                      <span
+                                                          class="text-sm text-gray-500">{{ $greatGrandchild->name }}</span>
+                                                  </label>
+
+                                                  <!-- Level 5 - Also selectable -->
+                                                  @foreach ($greatGrandchild->children as $level5Category)
+                                                      <label
+                                                          class="flex items-center space-x-3 ml-16 p-2 hover:bg-gray-100 rounded cursor-pointer">
+                                                          <input type="radio" name="category_id"
+                                                              wire:model.live="category_id"
+                                                              value="{{ $level5Category->id }}"
+                                                              class="text-red-600 focus:ring-red-500">
+                                                          <span
+                                                              class="text-xs text-gray-500">{{ $level5Category->name }}</span>
+                                                      </label>
+                                                  @endforeach
+                                              @endforeach
+                                          @endforeach
+                                      </div>
+                                  @endforeach
+                              </div>
+                          @endif
                       @endforeach
-                  </select>
+
+                      {{-- <!-- If no categories found -->
+                      @if ($categories-->isEmpty())
+                          <div class="text-center py-8 text-gray-500">
+                              <svg class="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor"
+                                  viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                  </path>
+                              </svg>
+                              <p>No categories available</p>
+                          </div>
+                      @endif --}}
+                  </div>
+
+                  @if ($category_id)
+                      <div class="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                          <p class="text-sm text-green-700">Selected:
+                              <span class="font-semibold">
+                                  @php
+                                      $selectedCategory = \App\Models\Category::find($category_id);
+                                  @endphp
+                                  {{ $selectedCategory ? $selectedCategory->fullPath() : 'Unknown Category' }}
+                              </span>
+                          </p>
+                      </div>
+                  @endif
+
                   @error('category_id')
-                      <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                      <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span>
                   @enderror
               </div>
 
@@ -74,3 +200,18 @@
 
       </div>
   </div>
+  @script
+      <script>
+          let editAlert = document.getElementById('editAlert')
+          $wire.on('product-edit', (event) => {
+              let message = event[0].message
+              editAlert.innerHTML = message
+              editAlert.classList.remove('hidden');
+              editAlert.classList.add('animate-slide-in');
+
+              setTimeout(() => {
+                  editAlert.classList.add('hidden')
+              }, 3000);
+          })
+      </script>
+  @endscript

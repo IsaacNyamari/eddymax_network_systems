@@ -22,7 +22,7 @@ class EditProduct extends Component
     public $price;
 
     public $existingImage;
-    
+
     #[Validate('nullable|image|max:4096')]
     public $image;
 
@@ -50,14 +50,14 @@ class EditProduct extends Component
         $this->validate();
 
         $imagePath = $this->existingImage;
-        
+
         // If new image is uploaded, replace the old one
         if ($this->image) {
             // Delete old image if exists
             if ($this->existingImage && file_exists(storage_path('app/public/' . $this->existingImage))) {
                 unlink(storage_path('app/public/' . $this->existingImage));
             }
-            
+
             $imagePath = $this->image->store('products', 'public');
         }
 
@@ -77,6 +77,9 @@ class EditProduct extends Component
         }
 
         session()->flash('message', 'Product updated successfully.');
+        $this->dispatch('product-edit', [
+            "message" => "Product updated successfully!"
+        ]);
     }
 
     public function deleteImage()
@@ -84,10 +87,10 @@ class EditProduct extends Component
         if ($this->existingImage && file_exists(storage_path('app/public/' . $this->existingImage))) {
             unlink(storage_path('app/public/' . $this->existingImage));
         }
-        
+
         $this->product->update(['image' => null]);
         $this->existingImage = null;
-        
+
         session()->flash('message', 'Product image removed.');
     }
 

@@ -7,6 +7,18 @@
 @tailwind utilities;
 @custom-variant dark (&:where(.dark, .light *));
 
+@keyframes slide-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
 @keyframes slide-in {
     from {
         transform: translateX(100%);
@@ -23,6 +35,10 @@
     animation: slide-in 0.3s ease-out;
 }
 
+.animate-slide-out {
+    animation: slide-out 0.3s ease-out;
+}
+
 /* Optional: Different colors for different actions */
 .toast-added {
     border-left-color: #10b981;
@@ -34,4 +50,29 @@
 
 .toast-updated {
     border-left-color: #f59e0b;
+}
+
+/* Input focus effects */
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Button animations */
+.btn-animate {
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-animate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+/* Gradient border for selected items */
+.selected-gradient {
+    background: linear-gradient(white, white) padding-box,
+        linear-gradient(to right, #dc2626, #ef4444) border-box;
+    border: 2px solid transparent;
 }

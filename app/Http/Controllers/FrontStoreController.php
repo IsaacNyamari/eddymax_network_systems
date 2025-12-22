@@ -81,16 +81,16 @@ class FrontStoreController extends Controller
     public function filterCategory(string $filter)
     {
         $parent_categories = Category::whereNull('parent_id')->where('slug', $filter)->with('products')
-            ->with(['children.children'])
+            ->with(['children'])
             ->take(10)
             ->get();
-        return ($parent_categories);
-        // Get categories with product counts (optional)
-        $categories = Category::withCount('products')->get();
-        // Get products for the given category slug
-        $productsSorted = Product::whereHas('category', function ($query) use ($filter) {
-            $query->where('slug', $filter);
-        })->get();
-        return view('layouts.front-end.products.index', compact('productsSorted', 'categories'));
+        // return $allProductsForCategory;
+        // // Get categories with product counts (optional)
+        // $categories = Category::withCount('products')->get();
+        // // Get products for the given category slug
+        // $productsSorted = Product::whereHas('category', function ($query) use ($filter) {
+        //     $query->where('slug', $filter);
+        // })->get();
+        return view('layouts.front-end.products.show', compact('parent_categories'));
     }
 }
