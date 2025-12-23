@@ -11,19 +11,11 @@
                         <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-10"></div>
                         <img src="{{ asset('storage/' . $category['image']) }}"
                             class="w-full h-[400px] object-cover transform group-hover:scale-105 transition-transform duration-700"
-                            alt="{{ $category->name }}" loading="lazy"
-                            onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'">
+                            alt="{{ $category->name }}" loading="lazy">
                         <div class="absolute bottom-8 left-8 z-20 text-white max-w-lg">
                             <h3 class="text-3xl font-bold mb-3">Shop {{ $category->name }}</h3>
                             <p class="text-lg opacity-90 mb-4">Premium quality products curated for you</p>
-                            <a href="{{ route('store.filter.category', $category->slug) }}"
-                                class="inline-flex items-center bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300">
-                                Shop Now
-                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
-                            </a>
+
                         </div>
                     </div>
                 @endif
@@ -55,10 +47,10 @@
                                     </div>
                                 </div>
 
-                                @if ($product['badge'])
+                                @if ($product['stock_status'])
                                     <div
-                                        class="absolute top-3 left-3 bg-{{ $product['badge'] == 'Sale' ? 'red' : ($product['badge'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                                        {{ $product['badge'] }}
+                                        class="absolute top-3 left-3 bg-{{ $product['stock_status'] == 'Sale' ? 'red' : ($product['stock_status'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                                        {{ Str::replace('_', ' ', $product['stock_status']) }}
                                     </div>
                                 @endif
                                 <button

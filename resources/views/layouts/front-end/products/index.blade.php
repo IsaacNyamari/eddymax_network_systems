@@ -1,13 +1,48 @@
 @extends('layouts.front-end.app')
 
 @section('content')
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Add this section to your shop page -->
+    <section class="relative py-16 px-4 sm:px-6 lg:px-8">
+        <!-- Background Image with Clean Overlay -->
+        <div class="absolute inset-0 z-0">
+            <!-- Semi-transparent overlay -->
+            <div class="absolute inset-0 bg-black/50"></div>
 
-        <!-- Page Header -->
-        <div class="mb-6">
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Shop</h1>
-            <p class="text-gray-600 mt-2">Browse our collection of products</p>
+            <!-- Subtle gradient -->
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-red-900/20 mix-blend-screen"></div>
+
+            <!-- Background Image -->
+            <img src="{{ asset('images/Omada-SDN-Banner_High-Resolution.jpg') }}"
+                alt="{{ config('app.name') }} - Technology Solutions" class="w-full h-full object-cover object-center"
+                loading="lazy" onerror="this.style.display='none'">
         </div>
+
+        <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
+            <!-- SEO Optimized Description -->
+            {{-- <div class="prose prose-lg max-w-fit text-gray-100 mb-10 bg-black/40 p-8 rounded-xl backdrop-blur-sm"> --}}
+                {{-- <h2 class="text-white text-5xl">SHOP</h2> --}}
+            {{-- </div> --}}
+        </div>
+    </section>
+
+    <!-- Additional SEO Content (Hidden from users, visible to search engines) -->
+    <div class="hidden" aria-hidden="true">
+        <h2>Shop {{ config('app.name') }} - Best Technology Store</h2>
+        <p>
+            {{ config('app.name') }} offers wide range of networking products including routers, switches, cables, and
+            wireless
+            solutions. Our computing section features computers, laptops, printers, and accessories from top brands.
+            We provide comprehensive security systems for home and business protection. Our electronics department
+            includes the latest gadgets and devices. As a leading solar energy systems provider, we offer complete
+            solar power solutions for residential and commercial needs.
+        </p>
+        <p>
+            Buy networking equipment, computing devices, security cameras, electronic gadgets, and solar panels
+            at best prices in Kenya. {{ config('app.name') }} is your trusted partner for technology solutions
+            and renewable energy systems.
+        </p>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <!-- Main Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">

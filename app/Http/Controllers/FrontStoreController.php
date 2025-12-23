@@ -84,13 +84,6 @@ class FrontStoreController extends Controller
             ->with(['children'])
             ->take(10)
             ->get();
-        // return $allProductsForCategory;
-        // // Get categories with product counts (optional)
-        // $categories = Category::withCount('products')->get();
-        // // Get products for the given category slug
-        // $productsSorted = Product::whereHas('category', function ($query) use ($filter) {
-        //     $query->where('slug', $filter);
-        // })->get();
         return view('layouts.front-end.products.show', compact('parent_categories'));
     }
 }

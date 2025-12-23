@@ -65,7 +65,7 @@ class FilterWidget extends Component
         $this->onSaleOnly = false;
         $this->searchQuery = '';
 
-        // $this->search();
+        $this->search();
     }
 
     public function updated()
@@ -75,100 +75,100 @@ class FilterWidget extends Component
     }
 
     #[On('search-debounced')]
-   public function search()
-{
-    $this->loading = true;
-    
-    // Build query
-    $query = Product::query();
+    public function search()
+    {
+        $this->loading = true;
 
-    // Category filter (including children)
-    if (!empty($this->selectedCategory)) {
-        $category = Category::where('slug', $this->selectedCategory)->first();
+        // Build query
+        $query = Product::query();
 
-        if ($category) {
-            $categoryIds = $this->getAllCategoryIds($category);
-            $query->whereHas('category', function ($q) use ($categoryIds) {
-                $q->whereIn('categories.id', $categoryIds);
+        // Category filter (including children)
+        if (!empty($this->selectedCategory)) {
+            $category = Category::where('slug', $this->selectedCategory)->first();
+
+            if ($category) {
+                $categoryIds = $this->getAllCategoryIds($category);
+                $query->whereHas('category', function ($q) use ($categoryIds) {
+                    $q->whereIn('categories.id', $categoryIds);
+                });
+            }
+        }
+
+        // Price range
+        $query->whereBetween('price', [$this->min_price, $this->max_price]);
+
+        // Brand filter
+        if (!empty($this->selectedBrands)) {
+            $query->whereIn('brand', $this->selectedBrands);
+        }
+
+        // Rating filter
+        if (!empty($this->selectedRatings)) {
+            $query->where(function ($q) {
+                foreach ($this->selectedRatings as $rating) {
+                    $minRating = $rating - 0.5;
+                    $maxRating = $rating + 0.5;
+                    $q->orWhereBetween('rating', [$minRating, $maxRating]);
+                }
             });
         }
+
+        // Stock filter
+        if ($this->inStockOnly) {
+            $query->where('stock_quantity', '>', 0);
+        }
+
+        // Sale filter
+        if ($this->onSaleOnly) {
+            $query->where('discount_percent', '>', 0)
+                ->orWhere('is_on_sale', true);
+        }
+
+        // Search query
+        if (!empty($this->searchQuery)) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->searchQuery . '%')
+                    ->orWhere('description', 'like', '%' . $this->searchQuery . '%')
+                    ->orWhere('brand', 'like', '%' . $this->searchQuery . '%');
+            });
+        }
+
+        // Sorting
+        switch ($this->sortBy) {
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'popular':
+                $query->orderBy('views', 'desc');
+                break;
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'rating':
+                $query->orderBy('rating', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+
+        $this->products = $query->get();
+        $this->resultCount = $this->products->count();
+
+        $this->loading = false;
+
+        // Dispatch with both HTML and data separately
+        $this->dispatch(
+            'filter-result',
+            html: view('partials.filter-results', [
+                'products' => $this->products,
+                'resultCount' => $this->resultCount
+            ])->render(),
+            resultCount: $this->resultCount // Send resultCount as separate parameter
+        );
     }
-
-    // Price range
-    $query->whereBetween('price', [$this->min_price, $this->max_price]);
-
-    // Brand filter
-    if (!empty($this->selectedBrands)) {
-        $query->whereIn('brand', $this->selectedBrands);
-    }
-
-    // Rating filter
-    if (!empty($this->selectedRatings)) {
-        $query->where(function ($q) {
-            foreach ($this->selectedRatings as $rating) {
-                $minRating = $rating - 0.5;
-                $maxRating = $rating + 0.5;
-                $q->orWhereBetween('rating', [$minRating, $maxRating]);
-            }
-        });
-    }
-
-    // Stock filter
-    if ($this->inStockOnly) {
-        $query->where('stock_quantity', '>', 0);
-    }
-
-    // Sale filter
-    if ($this->onSaleOnly) {
-        $query->where('discount_percent', '>', 0)
-            ->orWhere('is_on_sale', true);
-    }
-
-    // Search query
-    if (!empty($this->searchQuery)) {
-        $query->where(function ($q) {
-            $q->where('name', 'like', '%' . $this->searchQuery . '%')
-                ->orWhere('description', 'like', '%' . $this->searchQuery . '%')
-                ->orWhere('brand', 'like', '%' . $this->searchQuery . '%');
-        });
-    }
-
-    // Sorting
-    switch ($this->sortBy) {
-        case 'price_low':
-            $query->orderBy('price', 'asc');
-            break;
-        case 'price_high':
-            $query->orderBy('price', 'desc');
-            break;
-        case 'popular':
-            $query->orderBy('views', 'desc');
-            break;
-        case 'newest':
-            $query->orderBy('created_at', 'desc');
-            break;
-        case 'rating':
-            $query->orderBy('rating', 'desc');
-            break;
-        default:
-            $query->orderBy('created_at', 'desc');
-    }
-
-    $this->products = $query->get();
-    $this->resultCount = $this->products->count();
-    
-    $this->loading = false;
-
-    // Dispatch with both HTML and data separately
-    $this->dispatch(
-        'filter-result',
-        html: view('partials.filter-results', [
-            'products' => $this->products,
-            'resultCount' => $this->resultCount
-        ])->render(),
-        resultCount: $this->resultCount // Send resultCount as separate parameter
-    );
-}
 
     public function updatedPriceRange($value)
     {

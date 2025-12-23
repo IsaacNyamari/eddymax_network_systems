@@ -1,54 +1,52 @@
+<div class="grid grid-cols-1 h-fit sm:grid-cols-2 lg:grid-cols-5 mb-4 gap-6">
+    @foreach ($products as $product)
+        <div
+            class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="relative overflow-hidden">
 
-    <div class="grid grid-cols-1 h-fit sm:grid-cols-2 lg:grid-cols-5 mb-4 gap-6">
-        @foreach ($products as $product)
-            <div
-                class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="relative overflow-hidden">
+                <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
+                    class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy" onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
 
-                    <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
-                        class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500"
-                        loading="lazy"
-                        onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
-
-                    <!-- ADD THIS CART BUTTON OVERLAY -->
-                    <div
-                        class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="transform scale-90 group-hover:scale-100 transition-transform duration-300">
-                            <livewire:add-to-cart-button :product="$product" />
-                        </div>
+                <!-- ADD THIS CART BUTTON OVERLAY -->
+                <div
+                    class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div class="transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                        <livewire:add-to-cart-button :product="$product" />
                     </div>
-
-                    @if ($product['badge'])
-                        <div
-                            class="absolute top-3 left-3 bg-{{ $product['badge'] == 'Sale' ? 'red' : ($product['badge'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                            {{ $product['badge'] }}
-                        </div>
-                    @endif
-                    <button
-                        class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition opacity-0 group-hover:opacity-100">
-                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
                 </div>
-                <div class="p-5">
-                    <a href="{{ route('products.show', $product->slug) }}">
-                        <h3 class="font-semibold text-lg text-gray-900 mb-2 group-hover:text-red-600 transition">
-                            {{ Str::limit($product['name'], 15, '...') }}
-                    </a>
-                    </h3>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-lg font-bold text-red-600 block">Ksh
-                                {{ number_format($product['price'], 2) }}</span>
-                            @if ($product['badge'] == 'Sale')
-                                <span class="text-sm text-gray-500 line-through ml-2">Ksh 15,999</span>
-                            @endif
-                        </div>
-                       
+
+                @if ($product['stock_status'])
+                    <div
+                        class="absolute top-3 left-3 bg-{{ $product['stock_status'] == 'Sale' ? 'red' : ($product['stock_status'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        {{ Str::replace('_', ' ', $product['stock_status']) }}
                     </div>
-                    {{-- <div class="mt-3 flex items-center">
+                @endif
+                <button
+                    class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition opacity-0 group-hover:opacity-100">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="p-5">
+                <a href="{{ route('products.show', $product->slug) }}">
+                    <h3 class="font-semibold text-lg text-gray-900 mb-2 group-hover:text-red-600 transition">
+                        {{ Str::limit($product['name'], 15, '...') }}
+                </a>
+                </h3>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-lg font-bold text-red-600 block">Ksh
+                            {{ number_format($product['price'], 2) }}</span>
+                        @if ($product['badge'] == 'Sale')
+                            <span class="text-sm text-gray-500 line-through ml-2">Ksh 15,999</span>
+                        @endif
+                    </div>
+
+                </div>
+                {{-- <div class="mt-3 flex items-center">
                         <div class="flex text-yellow-400">
                             @for ($i = 1; $i <= 5; $i++)
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -59,7 +57,7 @@
                         </div>
                         <span class="text-sm text-gray-600 ml-2">(24 reviews)</span>
                     </div> --}}
-                </div>
             </div>
-        @endforeach
-    </div>
+        </div>
+    @endforeach
+</div>

@@ -1,53 +1,37 @@
 @extends('layouts.front-end.app')
 
 @section('content')
+    <section class="relative py-16 px-4 sm:px-6 lg:px-8">
+        <!-- Background Image with Clean Overlay -->
+        <div class="absolute inset-0 z-0">
+            <!-- Semi-transparent overlay -->
+            <div class="absolute inset-0 bg-black/50"></div>
+
+            <!-- Subtle gradient -->
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-red-900/20 mix-blend-screen"></div>
+
+            <!-- Background Image -->
+            <img src="{{ asset('images/Omada-SDN-Banner_High-Resolution.jpg') }}"
+                alt="{{ config('app.name') }} - Technology Solutions" class="w-full h-full object-cover object-center"
+                loading="lazy" onerror="this.style.display='none'">
+        </div>
+
+        <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
+            <!-- SEO Optimized Description -->
+            {{-- <div class="prose prose-lg max-w-fit text-gray-100 mb-10 bg-black/40 p-8 rounded-xl backdrop-blur-sm"> --}}
+            {{-- <h2 class="text-white text-5xl">SHOP</h2> --}}
+            {{-- </div> --}}
+        </div>
+    </section>
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
-        <!-- Hero Section -->
-        {{-- <div class="relative bg-gradient-to-r from-blue-900 to-blue-800 rounded-xl overflow-hidden shadow-2xl">
-            <div class="absolute inset-0">
-                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80"
-                    alt="Networking Equipment" class="w-full h-full object-cover opacity-40" loading="lazy"
-                    onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIzMDAiIHZpZXdCb3g9IjAgMCAxMjAwIDQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWYyYTM1Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5FVFdPUktJTkcgRVFVSVBJTUVOVDwvdGV4dD48L3N2Zz4='">
-            </div>
-            <div class="relative px-8 py-16 md:py-24 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
-                    Professional Networking Solutions
-                </h1>
-                <p class="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-                    High-quality routers, switches, access points, and cables with warranty and expert support
-                </p>
-                <a href="{{ route('store.shop') }}"
-                    class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold rounded-lg hover:from-red-700 hover:to-red-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    Shop Now
-                </a>
-            </div>
-        </div> --}}
+        <!-- Add this section to your shop page -->
 
-        {{-- <!-- Featured Categories -->
-        <div id="shop">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-900">Shop by Category</h2>
-                <a href="{{ route('store.shop') }}"  
-                    class="text-red-600 hover:text-red-500 font-semibold flex items-center">
-                    View All
-                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
-
-            <livewire:category-carousel />
-        </div> --}}
 
 
         <!-- Featured Products -->
         @foreach ($parent_categories as $index => $category)
             <div class="mb-16">
-                @if ($index == 0)
+                {{-- @if ($index == 0)
                     <!-- Category Banner -->
                     <div class="relative overflow-hidden rounded-2xl mb-10 group cursor-pointer">
                         <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-10"></div>
@@ -68,7 +52,7 @@
                             </a>
                         </div>
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Category Header -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
@@ -108,10 +92,10 @@
                                     </div>
                                 </div>
 
-                                @if ($product['badge'])
+                                @if ($product['stock_status'])
                                     <div
-                                        class="absolute top-3 left-3 bg-{{ $product['badge'] == 'Sale' ? 'red' : ($product['badge'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                                        {{ $product['badge'] }}
+                                        class="absolute top-3 left-3 bg-{{ $product['stock_status'] == 'Sale' ? 'red' : ($product['stock_status'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                                        {{ Str::replace('_', ' ', $product['stock_status']) }}
                                     </div>
                                 @endif
                                 <button
