@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderStatusUpdated;
 use App\Models\Order;
 use App\Models\OrderReturns;
 use App\OrderStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -32,34 +34,182 @@ class OrderController extends Controller
         $orders = OrderReturns::with(['order.user'])->get();
         return view('dashboard.admin.orders.returns', compact('orders'));
     }
+
+    /**
+     * Deliver an order
+     */
     public function deliverOrder(string $order_number)
     {
-        $order = Order::where('order_number', $order_number)->first();
+        $order = Order::where('order_number', $order_number)->firstOrFail();
+
         $order->status = OrderStatus::DELIVERED->value;
-        $order->update();
-        return back()->with('status', "Order '$order_number' updated successfully!");
+        $order->save();
+
+        Mail::to($order->user->email)
+            ->send(new OrderStatusUpdated($order, 'DELIVERED', 'Order Delivered'));
+
+        return back()->with('success', "Order #{$order_number} marked as delivered! Email sent to customer.");
     }
-    public function cancelOrder(string $order_number)
-    {
-        $order = Order::where('order_number', $order_number)->first();
-        $order->status = OrderStatus::CANCELLED->value;
-        $order->update();
-        return back()->with('status', "Order '$order_number' updated successfully!");
-    }
+
+    /**
+     * Ship an order
+     */
     public function shipOrder(string $order_number)
     {
-        $order = Order::where('order_number', $order_number)->first();
+        $order = Order::where('order_number', $order_number)->firstOrFail();
+
         $order->status = OrderStatus::SHIPPED->value;
-        $order->update();
-        return back()->with('status', "Order '$order_number' updated successfully!");
+        $order->save();
+
+        Mail::to($order->user->email)
+            ->send(new OrderStatusUpdated($order, 'SHIPPED', 'Order Shipped'));
+
+        return back()->with('success', "Order #{$order_number} marked as shipped! Email sent to customer.");
     }
+
+    /**
+     * Cancel an order
+     */
+    public function cancelOrder(string $order_number)
+    {
+        $order = Order::where('order_number', $order_number)->firstOrFail();
+
+        $order->status = OrderStatus::CANCELLED->value;
+        $order->save();
+
+        Mail::to($order->user->email)
+            ->send(new OrderStatusUpdated($order, 'CANCELLED', 'Order Cancelled'));
+
+        return back()->with('success', "Order #{$order_number} cancelled! Email sent to customer.");
+    }
+
+    /**
+     * Start processing an order
+     */
     public function processOrder(string $order_number)
     {
-        $order = Order::where('order_number', $order_number)->first();
+        $order = Order::where('order_number', $order_number)->firstOrFail();
+
         $order->status = OrderStatus::PROCESSING->value;
-        $order->update();
-        return back()->with('status', "Order '$order_number' updated successfully!");
+        $order->save();
+
+        Mail::to($order->user->email)
+            ->send(new OrderStatusUpdated($order, 'PROCESSING', 'Order Processing Started'));
+
+        return back()->with('success', "Order #{$order_number} is now processing! Email sent to customer.");
     }
+
+    /**
+     * Mark order as pending
+     */
+    public function pendingOrder(string $order_number)
+    {
+        $order = Order::where('order_number', $order_number)->firstOrFail();
+
+        $order->status = OrderStatus::PENDING->value;
+        $order->save();
+
+        Mail::to($order->user->email)
+            ->send(new OrderStatusUpdated($order, 'PENDING', 'Order Marked as Pending'));
+
+        return back()->with('success', "Order #{$order_number} marked as pending! Email sent to customer.");
+    }
+
+    /**
+     * Mark order as confirmed
+     */
+    // public function confirmOrder(string $order_number)
+    // {
+    //     $order = Order::where('order_number', $order_number)->firstOrFail();
+
+    //     $order->status = OrderStatus::CONFIRMED->value;
+    //     $order->save();
+
+    //     Mail::to($order->user->email)
+    //         ->send(new OrderStatusUpdated($order, 'CONFIRMED', 'Order Confirmed'));
+
+    //     return back()->with('success', "Order #{$order_number} confirmed! Email sent to customer.");
+    // }
+
+    // /**
+    //  * Mark order as ready for pickup
+    //  */
+    // public function readyForPickupOrder(string $order_number)
+    // {
+    //     $order = Order::where('order_number', $order_number)->firstOrFail();
+
+    //     $order->status = OrderStatus::READY_FOR_PICKUP->value;
+    //     $order->save();
+
+    //     Mail::to($order->user->email)
+    //         ->send(new OrderStatusUpdated($order, 'READY FOR PICKUP', 'Order Ready for Pickup'));
+
+    //     return back()->with('success', "Order #{$order_number} ready for pickup! Email sent to customer.");
+    // }
+
+    /**
+     * Mark order as returned
+     */
+    public function returnOrder(string $order_number)
+    {
+        $order = Order::where('order_number', $order_number)->firstOrFail();
+
+        $order->status = OrderStatus::RETURNED->value;
+        $order->save();
+
+        Mail::to($order->user->email)
+            ->send(new OrderStatusUpdated($order, 'RETURNED', 'Order Returned'));
+
+        return back()->with('success', "Order #{$order_number} marked as returned! Email sent to customer.");
+    }
+
+    /**
+     * Mark order as refunded
+     */
+    // public function refundOrder(string $order_number)
+    // {
+    //     $order = Order::where('order_number', $order_number)->firstOrFail();
+
+    //     $order->status = OrderStatus::REFUNDED->value;
+    //     $order->save();
+
+    //     Mail::to($order->user->email)
+    //         ->send(new OrderStatusUpdated($order, 'REFUNDED', 'Order Refunded'));
+
+    //     return back()->with('success', "Order #{$order_number} refunded! Email sent to customer.");
+    // }
+
+    // /**
+    //  * Mark order as on hold
+    //  */
+    // public function holdOrder(string $order_number)
+    // {
+    //     $order = Order::where('order_number', $order_number)->firstOrFail();
+
+    //     $order->status = OrderStatus::ON_HOLD->value;
+    //     $order->save();
+
+    //     Mail::to($order->user->email)
+    //         ->send(new OrderStatusUpdated($order, 'ON HOLD', 'Order Placed on Hold'));
+
+    //     return back()->with('success', "Order #{$order_number} placed on hold! Email sent to customer.");
+    // }
+
+    // /**
+    //  * Mark order as failed
+    //  */
+    // public function failOrder(string $order_number)
+    // {
+    //     $order = Order::where('order_number', $order_number)->firstOrFail();
+
+    //     $order->status = OrderStatus::FAILED->value;
+    //     $order->save();
+
+    //     Mail::to($order->user->email)
+    //         ->send(new OrderStatusUpdated($order, 'FAILED', 'Order Failed'));
+
+    //     return back()->with('success', "Order #{$order_number} marked as failed! Email sent to customer.");
+    // }
     /**
      * Store a newly created resource in storage.
      */

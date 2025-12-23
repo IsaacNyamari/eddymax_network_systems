@@ -1,16 +1,13 @@
 @extends('dashboard.layouts.dashboard')
 
-@section('title', 'Users')
+@section('title', 'Customers')
 @section('content')
 
     <!-- Recent Users -->
     <div class="grid grid-row-1 lg:grid-row-2 gap-6">
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-                <h2 class="text-lg font-semibold text-gray-900">Users</h2>
-                <a href="{{ route('admin.users.index') }}" class="text-sm text-red-600 hover:text-red-800 font-medium">
-                    View all →
-                </a>
+                <h2 class="text-lg font-semibold text-gray-900">All Customers</h2>
             </div>
 
             <div class="overflow-x-auto">

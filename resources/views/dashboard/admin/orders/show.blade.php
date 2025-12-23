@@ -235,7 +235,7 @@
                         </svg>
                         <span class="text-xs font-medium text-gray-700">Send Email</span>
                     </a>
-                    <a href="tel:{{ $order->user->phone }}"
+                    <a href="tel:{{ $order->user->addresses->first()->phone }}"
                         class="bg-white border border-gray-300 rounded-lg p-3 text-center hover:bg-gray-50 transition">
                         <svg class="w-5 h-5 mx-auto text-gray-600 mb-1" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">

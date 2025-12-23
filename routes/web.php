@@ -5,6 +5,7 @@ use App\Http\Controllers\FrontStoreController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -72,7 +73,14 @@ Route::post('/logout', function () {
 Route::get('/check/transaction/{ref}', [CheckPayment::class, 'verifyPaystackTransaction'])->name('check.transaction');
 Route::get('/refund/transaction/{ref}', [CheckPayment::class, 'refundPaystackTransaction'])->name('refund.transaction');
 Route::get('/check/balance/', [CheckPayment::class, 'checkMyBalance'])->name('check.balance');
-
+Route::get('/navigation', function () {
+    return view('livewire.welcome.navigation');
+});
+// routes/web.php
+Route::get('/order-items', function () {
+    $order_items = OrderItem::with('order.user')->get();
+    return $order_items;
+});
 // Dashboard 
 require __DIR__ . '/dashboard.php';
 // Authentication Routes (Laravel Breeze/Jetstream)

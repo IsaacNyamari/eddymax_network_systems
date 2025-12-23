@@ -1,364 +1,321 @@
-@php
-    $parents = App\Models\Category::with(['children.children'])
-        ->whereNull('parent_id')
-        ->orderBy('name')
-        ->limit(10)
-        ->get();
-@endphp
+ @php
+     header('Content-Type: Application/json');
+     $parents = App\Models\Category::with(['children'])
+         ->whereNull('parent_id')
+         ->orderBy('name')
+         ->limit(10)
+         ->get();
 
-<div class="bg-red-900" x-data="navSearch()">
-    <nav class="bg-gradient-to-r from-maroon-50 to-rose-50 border-b border-maroon-100 shadow-sm">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                {{-- Mobile Top Bar --}}
-                <div class="flex justify-between items-center py-3 lg:hidden">
-                    <button @click="navMobileMenuOpen = !navMobileMenuOpen"
-                        class="p-2 rounded-lg text-slate-700 hover:text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16">
-                            </path>
-                        </svg>
-                    </button>
+ @endphp
+ @extends('layouts.front-end.app')
+ @section('content')
+     <nav class="bg-white border-default">
+         <div class="max-w-screen-xl flex flex-wrap items-center gap-1 justify-between mx-auto px-4 py-2.5">
+             <!-- Mobile menu button (hidden on desktop) -->
+             <button data-collapse-toggle="navbar-dropdown" type="button"
+                 class="inline-flex items-center p-2 w-10 h-10 justify-center text-heading bg-white box-border border border-white hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-base focus:outline-none md:hidden"
+                 aria-controls="navbar-dropdown" aria-expanded="false">
+                 <span class="sr-only">Open main menu</span>
+                 <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     fill="none" viewBox="0 0 24 24">
+                     <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14" />
+                 </svg>
+             </button>
 
-                    {{-- Mobile Search Button --}}
-                    <button @click="navMobileSearchOpen = !navMobileSearchOpen"
-                        class="p-2 rounded-lg text-slate-700 hover:text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
-                            </path>
-                        </svg>
-                    </button>
-                </div>
+             <!-- Navigation menu (visible on all devices) -->
+             <div class="w-full md:w-auto hidden md:block" id="navbar-dropdown">
+                 <ul
+                     class="flex flex-col font-medium p-4 mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:mt-0 md:text-sm md:border-0 md:bg-white md:space-x-8 md:rtl:space-x-reverse md:space-y-0 md:p-0 space-y-0">
+                     @foreach ($parents as $category)
+                         <li class="relative group">
+                             @if (isset($category->children) && $category->children->count() > 0)
+                                 <!-- Parent category with dropdown -->
+                                 <button id="dropdownNavbarLink-{{ $category->slug }}"
+                                     class="flex items-center justify-between w-full py-3 px-4 text-body rounded hover:bg-white md:hover:bg-white md:border-0 md:hover:text-fg-brand md:p-0 md:w-auto md:group-hover:text-fg-brand transition-colors duration-200">
+                                     <span
+                                         class="text-lg md:text-base font-semibold md:font-normal">{{ $category->name }}</span>
+                                     <svg class="w-5 h-5 ms-2 md:w-4 md:h-4 md:ms-1.5 transform group-hover:rotate-180 transition-transform duration-200"
+                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                         fill="none" viewBox="0 0 24 24">
+                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                             stroke-width="2" d="m19 9-7 7-7-7" />
+                                     </svg>
+                                 </button>
+                                 <!-- Dropdown menu for children - MOBILE (Full width) -->
+                                 <div id="dropdownNavbar-mobile-{{ $category->slug }}"
+                                     class="md:hidden bg-white border-t border-b border-default-medium shadow-lg w-full left-0 px-4 py-3">
+                                     <div class="flex items-center justify-between mb-3 pb-2 border-b border-default-soft">
+                                         <button onclick="goBackToParent('{{ $category->slug }}')"
+                                             class="flex items-center text-fg-brand hover:text-fg-brand-dark">
+                                             <svg class="w-5 h-5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                 width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                     stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4" />
+                                             </svg>
+                                             <span class="font-semibold">Back</span>
+                                         </button>
+                                         <h3 class="text-lg font-bold text-heading">{{ $category->name }}</h3>
+                                         <div class="w-12"></div> <!-- Spacer for centering -->
+                                     </div>
 
-                {{-- Mobile Search Panel --}}
-                <div x-show="navMobileSearchOpen" x-cloak x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0 translate-y-1"
-                    x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition ease-in duration-150"
-                    x-transition:leave-start="opacity-100 translate-y-0"
-                    x-transition:leave-end="opacity-0 translate-y-1"
-                    class="lg:hidden bg-white border-t border-b border-gray-200 py-4 px-4">
-                    <form action="{{ route('store.search.index') }}" method="GET" class="relative">
-                        <div class="relative">
-                            <input type="text" name="q" x-model="navSearchQuery"
-                                @input.debounce.300ms="navPerformSearch($event.target.value)"
-                                class="w-full px-4 py-3 pl-10 pr-12 rounded-lg border border-gray-300 focus:border-red-600 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 focus:outline-none transition duration-200"
-                                placeholder="Search routers, CCTV, laptops, software..." value="{{ request('q') }}"
-                                autocomplete="off">
+                                     <ul class="space-y-1">
+                                         @foreach ($category->children as $child)
+                                             <li class="border-b border-default-soft last:border-b-0">
+                                                 @if (isset($child->children) && $child->children->count() > 0)
+                                                     <!-- Child category with grandchildren dropdown - MOBILE -->
+                                                     <button
+                                                         onclick="showGrandchildren('{{ $child->slug }}', '{{ $child->name }}')"
+                                                         class="flex items-center justify-between w-full py-3 px-2 text-body hover:bg-neutral-secondary-soft rounded-lg transition-colors duration-150">
+                                                         <span class="text-base font-medium">{{ $child->name }}</span>
+                                                         <svg class="w-5 h-5 text-neutral-tertiary" aria-hidden="true"
+                                                             xmlns="http://www.w3.org/2000/svg" width="24"
+                                                             height="24" fill="none" viewBox="0 0 24 24">
+                                                             <path stroke="currentColor" stroke-linecap="round"
+                                                                 stroke-linejoin="round" stroke-width="2"
+                                                                 d="m9 5 7 7-7 7" />
+                                                         </svg>
+                                                     </button>
+                                                     <!-- Grandchildren dropdown - MOBILE -->
+                                                     <div id="grandchildren-{{ $child->slug }}"
+                                                         class="hidden bg-white border-l-4 border-fg-brand pl-4 ml-2 mt-1 mb-2">
+                                                         <ul class="space-y-1">
+                                                             @foreach ($child->children as $grandchild)
+                                                                 <li>
+                                                                     <a href="{{ route('store.filter.category', $grandchild->slug) }}"
+                                                                         class="flex items-center w-full py-2 px-3 text-sm text-body hover:bg-neutral-secondary-soft hover:text-heading rounded-lg transition-colors duration-150">
+                                                                         <span
+                                                                             class="w-2 h-2 bg-neutral-tertiary rounded-full mr-3"></span>
+                                                                         {{ $grandchild->name }}
+                                                                     </a>
+                                                                 </li>
+                                                             @endforeach
+                                                         </ul>
+                                                     </div>
+                                                 @else
+                                                     <!-- Child category without grandchildren (direct link) - MOBILE -->
+                                                     <a href="{{ route('store.filter.category', $child->slug) }}"
+                                                         class="flex items-center w-full py-3 px-2 text-body hover:bg-neutral-secondary-soft hover:text-heading rounded-lg transition-colors duration-150">
+                                                         <span class="text-base font-medium">{{ $child->name }}</span>
+                                                     </a>
+                                                 @endif
+                                             </li>
+                                         @endforeach
+                                     </ul>
+                                 </div>
 
-                            {{-- Search Icon --}}
-                            <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
-                                    </path>
-                                </svg>
-                            </div>
+                                 <!-- Dropdown menu for children - DESKTOP (Centered) -->
+                                 <div id="dropdownNavbar-{{ $category->slug }}"
+                                     class="hidden md:group-hover:block absolute z-50 top-full left-1/2 transform -translate-x-1/2 mt-1 w-64 bg-white border border-default-medium rounded-lg shadow-xl">
+                                     <div class="relative">
+                                         <!-- Arrow pointing up -->
+                                         <div class="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                                             <div
+                                                 class="w-4 h-4 bg-white border-t border-l border-default-medium rotate-45">
+                                             </div>
+                                         </div>
 
-                            {{-- Close Button --}}
-                            <button @click="navMobileSearchOpen = false" type="button"
-                                class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
-                                <svg class="w-5 h-5 text-gray-400 hover:text-gray-600 transition" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
+                                         <ul class="p-3 space-y-1">
+                                             @foreach ($category->children as $child)
+                                                 <li class="group/child relative">
+                                                     @if (isset($child->children) && $child->children->count() > 0)
+                                                         <!-- Child category with grandchildren - DESKTOP -->
+                                                         <div
+                                                             class="flex items-center justify-between p-2 hover:bg-neutral-secondary-soft rounded-lg transition-colors duration-150 cursor-pointer">
+                                                             <span
+                                                                 class="text-sm font-medium text-body group-hover/child:text-heading">{{ $child->name }}</span>
+                                                             <svg class="w-3 h-3 text-neutral-tertiary" aria-hidden="true"
+                                                                 xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                 height="24" fill="none" viewBox="0 0 24 24">
+                                                                 <path stroke="currentColor" stroke-linecap="round"
+                                                                     stroke-linejoin="round" stroke-width="2"
+                                                                     d="m9 5 7 7-7 7" />
+                                                             </svg>
+                                                         </div>
+                                                         <!-- Grandchildren dropdown - DESKTOP -->
+                                                         <div
+                                                             class="hidden group-hover/child:block absolute left-full top-0 ml-1 w-56 bg-white border border-default-medium rounded-lg shadow-xl z-50">
+                                                             <div class="p-3">
+                                                                 <h4
+                                                                     class="text-xs font-semibold text-neutral-tertiary uppercase tracking-wider mb-2 px-2">
+                                                                     {{ $child->name }}
+                                                                 </h4>
+                                                                 <ul class="space-y-1">
+                                                                     @foreach ($child->children as $grandchild)
+                                                                         <li>
+                                                                             <a href="{{ route('store.filter.category', $grandchild->slug) }}"
+                                                                                 class="flex items-center p-2 text-sm text-body hover:bg-neutral-secondary-soft hover:text-heading rounded-lg transition-colors duration-150">
+                                                                                 <span
+                                                                                     class="w-1.5 h-1.5 bg-neutral-tertiary rounded-full mr-3"></span>
+                                                                                 {{ $grandchild->name }}
+                                                                             </a>
+                                                                         </li>
+                                                                     @endforeach
+                                                                 </ul>
+                                                             </div>
+                                                         </div>
+                                                     @else
+                                                         <!-- Child category without grandchildren - DESKTOP -->
+                                                         <a href="{{ route('store.filter.category', $child->slug) }}"
+                                                             class="flex items-center p-2 text-sm text-body hover:bg-neutral-secondary-soft hover:text-heading rounded-lg transition-colors duration-150">
+                                                             <span class="font-medium">{{ $child->name }}</span>
+                                                         </a>
+                                                     @endif
+                                                 </li>
+                                             @endforeach
+                                         </ul>
+                                     </div>
+                                 </div>
+                             @else
+                                 <!-- Parent category without children (direct link) -->
+                                 <a href="{{ route('store.filter.category', $category->slug) }}"
+                                     class="flex items-center justify-between w-full py-3 px-4 text-body rounded hover:bg-white md:hover:bg-white md:border-0 md:hover:text-fg-brand md:p-0 md:w-auto transition-colors duration-200">
+                                     <span
+                                         class="text-lg md:text-base font-semibold md:font-normal">{{ $category->name }}</span>
+                                 </a>
+                             @endif
+                         </li>
+                     @endforeach
+                 </ul>
+             </div>
+         </div>
+     </nav>
 
-                        {{-- Mobile Search Suggestions --}}
-                        <div x-show="navSearchQuery.length >= 2" x-cloak
-                            class="mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-                            <div class="py-2">
-                                <div x-show="navSearchLoading" class="px-4 py-3">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-red-600"></div>
-                                        <span class="text-gray-600">Searching...</span>
-                                    </div>
-                                </div>
+     <!-- Mobile navigation overlay -->
+     <div id="mobile-nav-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
 
-                                <div x-show="!navSearchLoading">
-                                    <template x-if="navSearchResults.length === 0">
-                                        <div class="px-4 py-3 text-gray-500 text-center">
-                                            <p>No products found for "<span x-text="navSearchQuery"></span>"</p>
-                                        </div>
-                                    </template>
+     <script>
+         // Mobile navigation functionality
+         document.addEventListener('DOMContentLoaded', function() {
+             const mobileMenuButton = document.querySelector('[data-collapse-toggle="navbar-dropdown"]');
+             const mobileNav = document.getElementById('navbar-dropdown');
+             const mobileOverlay = document.getElementById('mobile-nav-overlay');
 
-                                    <template x-if="navSearchResults.length > 0">
-                                        <div class="max-h-64 overflow-y-auto">
-                                            <template x-for="product in navSearchResults" :key="product.id">
-                                                <a :href="product.url" @click="navMobileSearchOpen = false"
-                                                    class="block px-4 py-3 hover:bg-gray-50 border-b border-gray-100">
-                                                    <div class="flex items-center space-x-3">
-                                                        <img :src="product.image" :alt="product.name"
-                                                            class="w-10 h-10 rounded object-cover flex-shrink-0">
-                                                        <div class="flex-1 min-w-0">
-                                                            <h4 class="text-sm font-medium text-gray-900 truncate"
-                                                                x-text="product.name"></h4>
-                                                            <p class="text-xs text-gray-500 truncate"
-                                                                x-text="product.category"></p>
-                                                        </div>
-                                                        <div class="text-red-600 font-semibold text-sm">
-                                                            KES <span x-text="product.price"></span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+             // Toggle mobile menu
+             mobileMenuButton.addEventListener('click', function() {
+                 const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+                 mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                 mobileNav.classList.toggle('hidden');
+                 mobileNav.classList.toggle('block');
+                 mobileNav.classList.toggle('fixed');
+                 mobileNav.classList.toggle('absolute');
+                 mobileNav.classList.toggle('top-16');
+                 mobileNav.classList.toggle('left-0');
+                 mobileNav.classList.toggle('right-0');
+                 mobileNav.classList.toggle('bg-white');
+                 mobileNav.classList.toggle('z-50');
+                 mobileNav.classList.toggle('max-h-[calc(100vh-4rem)]');
+                 mobileNav.classList.toggle('overflow-y-auto');
+                 mobileOverlay.classList.toggle('hidden');
 
-                {{-- Desktop & Mobile Menu --}}
-                <div :class="{ 'block': navMobileMenuOpen, 'hidden': !navMobileMenuOpen }"
-                    class="hidden lg:block flex-1">
-                    <ul
-                        class="flex flex-col lg:flex-row lg:flex-wrap lg:justify-center lg:items-center lg:space-x-1 space-y-2 lg:space-y-0 py-2 lg:py-0">
-                        @foreach ($parents as $parent)
-                            <li class="relative group" x-data="{ open: false }"
-                                @mouseenter="if(window.innerWidth >= 1024) open = true"
-                                @mouseleave="if(window.innerWidth >= 1024) open = false">
+                 // Add/remove body scroll lock
+                 document.body.style.overflow = !isExpanded ? 'hidden' : '';
+             });
 
-                                {{-- Parent link --}}
-                                <button type="button"
-                                    @click="if(window.innerWidth < 1024) { 
-                                        open = !open; 
-                                        $event.stopPropagation(); 
-                                    }"
-                                    class="flex items-center text-white justify-between w-full lg:w-auto px-4 lg:px-5 py-3 rounded-lg transition-all duration-300
-                                           hover:text-white
-                                           group-hover:shadow-sm group-hover:-translate-y-0.5
-                                           font-medium text-left">
-                                    <span class="flex items-center">
-                                        {{ $parent->name }}
-                                        @if ($parent->children->count())
-                                            <svg class="w-3 h-3 ml-1.5 transition-transform duration-300"
-                                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        @endif
-                                    </span>
-                                </button>
+             // Close mobile menu when clicking overlay
+             mobileOverlay.addEventListener('click', function() {
+                 mobileMenuButton.setAttribute('aria-expanded', 'false');
+                 mobileNav.classList.add('hidden');
+                 mobileNav.classList.remove('block', 'fixed', 'absolute', 'top-16', 'left-0', 'right-0',
+                     'bg-white', 'z-50', 'max-h-[calc(100vh-4rem)]', 'overflow-y-auto');
+                 mobileOverlay.classList.add('hidden');
+                 document.body.style.overflow = '';
+             });
 
-                                {{-- Dropdown - CENTERED IN PAGE --}}
-                                @if ($parent->children->count())
-                                    <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
-                                        x-transition:enter-start="opacity-0 translate-y-2"
-                                        x-transition:enter-end="opacity-100 translate-y-0"
-                                        x-transition:leave="transition ease-in duration-150"
-                                        x-transition:leave-start="opacity-100 translate-y-0"
-                                        x-transition:leave-end="opacity-0 translate-y-2"
-                                        class="
-                                            fixed
-                                            top-20
-                                            left-1/2 -translate-x-1/2
+             // Close dropdowns when clicking outside on desktop
+             document.addEventListener('click', function(event) {
+                 if (window.innerWidth >= 768) {
+                     const dropdowns = document.querySelectorAll('[id^="dropdownNavbar-"]');
+                     dropdowns.forEach(dropdown => {
+                         if (!dropdown.contains(event.target) && !event.target.closest(
+                                 '[data-dropdown-toggle]')) {
+                             dropdown.classList.remove('block');
+                         }
+                     });
+                 }
+             });
+         });
 
-                                            w-[95%] sm:w-[90%] lg:w-[800px] lg:max-w-[90vw]
+         // Mobile-specific functions
+         function showGrandchildren(childSlug, childName) {
+             const grandchildrenMenu = document.getElementById(`grandchildren-${childSlug}`);
+             grandchildrenMenu.classList.toggle('hidden');
 
-                                            bg-white
-                                            rounded-lg lg:rounded-xl
-                                            shadow-2xl
-                                            border border-maroon-100
-                                            p-4 lg:p-6
-                                            z-50
-                                            overflow-hidden
-                                        ">
+             // Add animation
+             if (!grandchildrenMenu.classList.contains('hidden')) {
+                 grandchildrenMenu.style.maxHeight = '0';
+                 grandchildrenMenu.style.overflow = 'hidden';
+                 const scrollHeight = grandchildrenMenu.scrollHeight;
+                 grandchildrenMenu.style.maxHeight = scrollHeight + 'px';
+                 setTimeout(() => {
+                     grandchildrenMenu.style.maxHeight = 'none';
+                 }, 300);
+             }
+         }
 
-                                        {{-- Gradient top border --}}
-                                        <div
-                                            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-maroon-500 to-rose-500">
-                                        </div>
+         function goBackToParent(categorySlug) {
+             const mobileDropdown = document.getElementById(`dropdownNavbar-mobile-${categorySlug}`);
+             if (mobileDropdown) {
+                 // Close all grandchildren menus
+                 const grandchildrenMenus = mobileDropdown.querySelectorAll('[id^="grandchildren-"]');
+                 grandchildrenMenus.forEach(menu => {
+                     menu.classList.add('hidden');
+                     menu.style.maxHeight = '';
+                 });
+             }
+         }
 
-                                        {{-- Close button for mobile --}}
-                                        <button @click="open = false"
-                                            class="absolute top-4 right-4 lg:hidden p-1 rounded-full bg-white-100 text-white-800 hover:text-white hover:bg-maroon-600">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
+         // Initialize mobile dropdowns
+         document.addEventListener('DOMContentLoaded', function() {
+             // Add smooth transition to grandchildren menus
+             const grandchildrenMenus = document.querySelectorAll('[id^="grandchildren-"]');
+             grandchildrenMenus.forEach(menu => {
+                 menu.style.transition = 'max-height 0.3s ease-out';
+             });
+         });
+     </script>
 
-                                        {{-- Dropdown header --}}
-                                        <h3
-                                            class="text-lg font-bold text-slate-800 mb-4 lg:mb-6 px-2 flex items-center gap-2">
-                                            {{ $parent->name }}
-                                        </h3>
+     <style>
+         /* Custom scrollbar for mobile menu */
+         #navbar-dropdown::-webkit-scrollbar {
+             width: 4px;
+         }
 
-                                        {{-- Content grid --}}
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                                            @foreach ($parent->children as $child)
-                                                <div class="space-y-2 lg:space-y-3">
-                                                    {{-- Child header --}}
-                                                    <div class="flex items-center gap-2 mb-1 lg:mb-2">
-                                                        <div class="w-1.5 h-1.5 bg-maroon-400 rounded-full"></div>
-                                                        <h4 class="font-semibold text-slate-800 text-sm">
-                                                            {{ $child->name }}
-                                                        </h4>
-                                                    </div>
+         #navbar-dropdown::-webkit-scrollbar-track {
+             background: #f1f1f1;
+             border-radius: 2px;
+         }
 
-                                                    {{-- Grandchildren list --}}
-                                                    @if ($child->children->count())
-                                                        <ul class="space-y-1 lg:space-y-1.5">
-                                                            @foreach ($child->children as $grandchild)
-                                                                <li>
-                                                                    <a href="{{ route('store.filter.category', $grandchild->slug) }}"
-                                                                        class="block px-3 py-1.5 rounded-md text-sm text-slate-600 
-                                                                               hover:text-black hover:bg-maroon-600
-                                                                               transition-colors duration-150
-                                                                               border-l-2 border-transparent hover:border-maroon-400
-                                                                               flex items-center gap-2">
-                                                                        <svg class="w-2 h-2 text-maroon-400 group-hover:text-black"
-                                                                            fill="currentColor" viewBox="0 0 8 8">
-                                                                            <circle cx="4" cy="4"
-                                                                                r="3" />
-                                                                        </svg>
-                                                                        {{ $grandchild->name }}
-                                                                    </a>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @else
-                                                        {{-- Direct child link if no grandchildren --}}
-                                                        <a href="{{ route('store.filter.category', $child->slug) }}"
-                                                            class="block px-3 py-1.5 rounded-md text-sm text-slate-600 
-                                                                   hover:text-black hover:bg-maroon-600
-                                                                   transition-colors duration-150
-                                                                   border-l-2 border-transparent hover:border-maroon-400
-                                                                   flex items-center gap-2">
-                                                            <svg class="w-2 h-2 text-maroon-400 group-hover:text-black"
-                                                                fill="currentColor" viewBox="0 0 8 8">
-                                                                <circle cx="4" cy="4" r="3" />
-                                                            </svg>
-                                                            {{ $child->name }}
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+         #navbar-dropdown::-webkit-scrollbar-thumb {
+             background: #c1c1c1;
+             border-radius: 2px;
+         }
 
-                {{-- Desktop Cart/Actions Area --}}
-                <div class="hidden lg:flex items-center space-x-4 ml-4">
-                    <a href="{{ route('store.cart') }}" class="relative p-2 text-white hover:text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                            </path>
-                        </svg>
-                        <span
-                            class="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                            <livewire:cart-count />
-                        </span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+         #navbar-dropdown::-webkit-scrollbar-thumb:hover {
+             background: #a8a8a8;
+         }
 
-    {{-- Desktop Search Bar (BELOW the navigation but INSIDE the same Alpine component) --}}
+         /* Smooth transitions */
+         #navbar-dropdown,
+         [id^="dropdownNavbar-"],
+         [id^="grandchildren-"] {
+             transition: all 0.3s ease;
+         }
 
-</div>
+         /* Mobile menu animations */
+         @keyframes slideIn {
+             from {
+                 opacity: 0;
+                 transform: translateY(-10px);
+             }
 
-@push('scripts')
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('navSearch', () => ({
-                navMobileMenuOpen: false,
-                navMobileSearchOpen: false,
-                navSearchQuery: '',
-                navSearchSuggestionsOpen: false,
-                navSearchLoading: false,
-                navSearchResults: [],
+             to {
+                 opacity: 1;
+                 transform: translateY(0);
+             }
+         }
 
-                navPerformSearch(query) {
-                    if (query.length < 2) {
-                        this.navSearchResults = [];
-                        return;
-                    }
-
-                    this.navSearchLoading = true;
-
-                    fetch(`/search/quick?q=${encodeURIComponent(query)}`, {
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'Accept': 'application/json'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            this.navSearchResults = data;
-                        })
-                        .catch(error => {
-                            console.error('Search error:', error);
-                            this.navSearchResults = [];
-                        })
-                        .finally(() => {
-                            this.navSearchLoading = false;
-                        });
-                }
-            }));
-        });
-    </script>
-
-    <style>
-        /* Custom scrollbar for search results */
-        .max-h-96::-webkit-scrollbar,
-        .max-h-64::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .max-h-96::-webkit-scrollbar-track,
-        .max-h-64::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-
-        .max-h-96::-webkit-scrollbar-thumb,
-        .max-h-64::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-
-        .max-h-96::-webkit-scrollbar-thumb:hover,
-        .max-h-64::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
-        }
-
-        /* Ensure dropdown appears above other elements */
-        [x-cloak] {
-            display: none !important;
-        }
-
-        /* Search input focus styles */
-        #navbar-search-input:focus,
-        input[name="q"]:focus {
-            box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.15);
-        }
-
-        /* Animation for search results */
-        .search-result-enter {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        .search-result-enter-active {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 200ms, transform 200ms;
-        }
-    </style>
-@endpush
+         #navbar-dropdown.block {
+             animation: slideIn 0.3s ease forwards;
+         }
+     </style>
+ @endsection

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Address;
 use App\Models\Adresses;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Payment;
 use App\PaymentStatus;
 use Illuminate\Support\Facades\Auth;
@@ -226,9 +227,10 @@ class CheckoutPage extends Component
             $this->saveUserAddress($user->id);
         }
 
-        // ✅ Create order now
+        // ✅ Create order now (only once)
         $order = $this->createOrder($reference);
 
+        // Create payment record
         Payment::create([
             'order_id' => $order->id,
             'amount' => $this->total,
@@ -237,7 +239,7 @@ class CheckoutPage extends Component
             'status' => PaymentStatus::PAID->value
         ]);
 
-        // ✅ NOW clear cart
+        // ✅ Clear cart after order is created
         session()->forget('cart');
         $this->dispatch('cart-updated');
 
@@ -287,27 +289,34 @@ class CheckoutPage extends Component
     {
         // Generate unique order number
         do {
-            $orderNumber = strtoupper(Str::random(9)); // 9 random uppercase letters
+            $orderNumber = strtoupper(Str::random(9));
         } while (Order::where('order_number', $orderNumber)->exists());
 
-        // Save order to database
+        // Get products from cart
         $products_in_cart = $this->cart;
+
+        // Create ONE order with all products
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'order_number' => $orderNumber,
+            'products' => json_encode($products_in_cart), // Encode all products at once
+            'total_amount' => $this->total,
+            'shipping_address' => $this->address,
+            'status' => 'pending',
+        ]);
+
+        // Optional: You might want to create order items separately if you need more structure
         foreach ($products_in_cart as $product) {
-            $order = Order::create([
-                'user_id' => Auth::user()->id, // logged in user or null for guest
-                'order_number' => $orderNumber,
-                'products' => json_encode($product),
-                'total_amount' => $this->total,
-                'shipping_address' => $this->address,
-                'status' => 'pending',
+            $order =  OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $product['id'],
+                'quantity' => $product['quantity'],
+                'price' => $product['price'],
             ]);
         }
 
-
-        // Clear cart
         return $order;
     }
-
 
     public function getIsLoggedInProperty()
     {
