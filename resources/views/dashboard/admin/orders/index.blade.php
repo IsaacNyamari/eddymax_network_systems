@@ -6,6 +6,11 @@
     <!-- Recent Orders & Top Products -->
     <div class="grid grid-row-1 lg:grid-row-2 gap-6">
         <!-- Recent Orders -->
+        @if (session('success'))
+            <div class="bg-green-500 text-white px-4 py-2 w-full">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
@@ -115,8 +120,8 @@
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 5H7a2 2 0 00-2 2v12a2 2
-                                                                                            0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
-                                                                                                    5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                                                                                        0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
+                                                                                                                5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
                                     <p class="mt-2">No orders yet</p>
                                 </td>

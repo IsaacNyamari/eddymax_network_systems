@@ -307,11 +307,12 @@ class CheckoutPage extends Component
 
         // Optional: You might want to create order items separately if you need more structure
         foreach ($products_in_cart as $product) {
-            $order =  OrderItem::create([
+             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $product['id'],
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
+                'subtotal' => $product['price'] * $product['quantity'],
             ]);
         }
 

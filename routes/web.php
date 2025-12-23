@@ -78,7 +78,7 @@ Route::get('/navigation', function () {
 });
 // routes/web.php
 Route::get('/order-items', function () {
-    $order_items = OrderItem::with('order.user')->get();
+    $order_items = OrderItem::with('order')->get();
     return $order_items;
 });
 // Dashboard 
