@@ -18,7 +18,7 @@ class FrontStoreController extends Controller
         $products = Product::all();
         $parent_categories = Category::whereNull('parent_id')->with('products')
             ->with(['children'])
-            ->take(10)
+            ->take(10)->orderBy('name', 'asc')
             ->get();
         return view('layouts.front-end.shop', compact('categories', 'products', 'parent_categories'));
     }

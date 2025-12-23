@@ -4,6 +4,7 @@ use App\Http\Controllers\CheckPayment;
 use App\Http\Controllers\FrontStoreController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,11 @@ Route::name('store.')->group(function () {
 Route::prefix('products')->name('products.')->group(function () {
     Route::get('/{product}', [ProductController::class, 'show'])->name('show');
 });
+// Sitemap Routes - Add these at the beginning
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
+Route::get('/sitemap-static.xml', [SitemapController::class, 'staticPages']);
+Route::get('/sitemap-products-{page}.xml', [SitemapController::class, 'products'])
+    ->where('page', '[0-9]+');
 
 // Informational Pages
 Route::prefix('pages')->name('pages.')->group(function () {

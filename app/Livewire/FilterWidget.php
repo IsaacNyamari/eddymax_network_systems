@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Computed;
 
 class FilterWidget extends Component
 {
@@ -28,6 +29,8 @@ class FilterWidget extends Component
     public $showAdvancedFilters = false;
     public $brands = [];
     public $searchQuery = '';
+    public $loading = false;
+    public $resultCount = 0;
 
     public function mount($categories)
     {
@@ -62,7 +65,7 @@ class FilterWidget extends Component
         $this->onSaleOnly = false;
         $this->searchQuery = '';
 
-        $this->search();
+        // $this->search();
     }
 
     public function updated()
@@ -71,92 +74,101 @@ class FilterWidget extends Component
         $this->dispatch('search-debounced');
     }
 
-    public function search()
-    {
-        // Build query
-        $query = Product::query();
+    #[On('search-debounced')]
+   public function search()
+{
+    $this->loading = true;
+    
+    // Build query
+    $query = Product::query();
 
-        // Category filter (including children)
-        if (!empty($this->selectedCategory)) {
-            $category = Category::where('slug', $this->selectedCategory)->first();
+    // Category filter (including children)
+    if (!empty($this->selectedCategory)) {
+        $category = Category::where('slug', $this->selectedCategory)->first();
 
-            if ($category) {
-                $categoryIds = $this->getAllCategoryIds($category);
-                $query->whereHas('category', function ($q) use ($categoryIds) {
-                    $q->whereIn('categories.id', $categoryIds);
-                });
-            }
-        }
-
-        // Price range
-        $query->whereBetween('price', [$this->min_price, $this->max_price]);
-
-        // Brand filter
-        if (!empty($this->selectedBrands)) {
-            $query->whereIn('brand', $this->selectedBrands);
-        }
-
-        // Rating filter
-        if (!empty($this->selectedRatings)) {
-            $query->where(function ($q) {
-                foreach ($this->selectedRatings as $rating) {
-                    $minRating = $rating - 0.5;
-                    $maxRating = $rating + 0.5;
-                    $q->orWhereBetween('rating', [$minRating, $maxRating]);
-                }
+        if ($category) {
+            $categoryIds = $this->getAllCategoryIds($category);
+            $query->whereHas('category', function ($q) use ($categoryIds) {
+                $q->whereIn('categories.id', $categoryIds);
             });
         }
-
-        // Stock filter
-        if ($this->inStockOnly) {
-            $query->where('stock_quantity', '>', 0);
-        }
-
-        // Sale filter
-        if ($this->onSaleOnly) {
-            $query->where('discount_percent', '>', 0)
-                ->orWhere('is_on_sale', true);
-        }
-
-        // Search query
-        if (!empty($this->searchQuery)) {
-            $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->searchQuery . '%')
-                    ->orWhere('description', 'like', '%' . $this->searchQuery . '%');
-            });
-        }
-
-        // Sorting
-        switch ($this->sortBy) {
-            case 'price_low':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'price_high':
-                $query->orderBy('price', 'desc');
-                break;
-            case 'popular':
-                $query->orderBy('views', 'desc');
-                break;
-            case 'newest':
-                $query->orderBy('created_at', 'desc');
-                break;
-            case 'rating':
-                $query->orderBy('rating', 'desc');
-                break;
-            default:
-                $query->orderBy('created_at', 'desc');
-        }
-
-        $this->products = $query->get();
-
-        $this->dispatch(
-            'filter-result',
-            view('partials.filter-results', [
-                'products' => $this->products,
-                'resultCount' => $this->products->count()
-            ])->render()
-        );
     }
+
+    // Price range
+    $query->whereBetween('price', [$this->min_price, $this->max_price]);
+
+    // Brand filter
+    if (!empty($this->selectedBrands)) {
+        $query->whereIn('brand', $this->selectedBrands);
+    }
+
+    // Rating filter
+    if (!empty($this->selectedRatings)) {
+        $query->where(function ($q) {
+            foreach ($this->selectedRatings as $rating) {
+                $minRating = $rating - 0.5;
+                $maxRating = $rating + 0.5;
+                $q->orWhereBetween('rating', [$minRating, $maxRating]);
+            }
+        });
+    }
+
+    // Stock filter
+    if ($this->inStockOnly) {
+        $query->where('stock_quantity', '>', 0);
+    }
+
+    // Sale filter
+    if ($this->onSaleOnly) {
+        $query->where('discount_percent', '>', 0)
+            ->orWhere('is_on_sale', true);
+    }
+
+    // Search query
+    if (!empty($this->searchQuery)) {
+        $query->where(function ($q) {
+            $q->where('name', 'like', '%' . $this->searchQuery . '%')
+                ->orWhere('description', 'like', '%' . $this->searchQuery . '%')
+                ->orWhere('brand', 'like', '%' . $this->searchQuery . '%');
+        });
+    }
+
+    // Sorting
+    switch ($this->sortBy) {
+        case 'price_low':
+            $query->orderBy('price', 'asc');
+            break;
+        case 'price_high':
+            $query->orderBy('price', 'desc');
+            break;
+        case 'popular':
+            $query->orderBy('views', 'desc');
+            break;
+        case 'newest':
+            $query->orderBy('created_at', 'desc');
+            break;
+        case 'rating':
+            $query->orderBy('rating', 'desc');
+            break;
+        default:
+            $query->orderBy('created_at', 'desc');
+    }
+
+    $this->products = $query->get();
+    $this->resultCount = $this->products->count();
+    
+    $this->loading = false;
+
+    // Dispatch with both HTML and data separately
+    $this->dispatch(
+        'filter-result',
+        html: view('partials.filter-results', [
+            'products' => $this->products,
+            'resultCount' => $this->resultCount
+        ])->render(),
+        resultCount: $this->resultCount // Send resultCount as separate parameter
+    );
+}
 
     public function updatedPriceRange($value)
     {
@@ -180,6 +192,20 @@ class FilterWidget extends Component
         } else {
             $this->selectedRatings[] = $rating;
         }
+    }
+
+    #[Computed]
+    public function activeFilterCount()
+    {
+        $count = 0;
+        if ($this->selectedCategory) $count++;
+        if ($this->min_price != $this->fixedMinPrice || $this->max_price != $this->fixedMaxPrice) $count++;
+        if (!empty($this->selectedBrands)) $count += count($this->selectedBrands);
+        if (!empty($this->selectedRatings)) $count += count($this->selectedRatings);
+        if ($this->inStockOnly) $count++;
+        if ($this->onSaleOnly) $count++;
+        if ($this->sortBy !== 'default') $count++;
+        return $count;
     }
 
     private function getAllCategoryIds($category)

@@ -21,7 +21,8 @@
             <!-- Product Images with Gallery -->
             <div class="space-y-4">
                 <!-- Main Image with Zoom -->
-                <div class="rounded-xl bg-blue-800 hover:bg-blue-800 overflow-hidden shadow-lg relative group cursor-zoom-in" id="zoom-container">
+                <div class="rounded-xl bg-blue-800 hover:bg-blue-800 overflow-hidden shadow-lg relative group cursor-zoom-in"
+                    id="zoom-container">
                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                         class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy" id="main-product-image"
@@ -66,23 +67,80 @@
 
             <!-- Product Info -->
             <div class="space-y-6">
-                <!-- Price & Badges -->
-                <div class="flex items-center space-x-4">
-                    <span class="text-3xl font-bold text-red-600">Ksh {{ number_format($product->price, 2) }}</span>
-                    <span class="px-3 py-1 rounded-full bg-green-600 text-white font-semibold text-sm">
-                        {{ $product->category->name }}
-                    </span>
+                <!-- Price & Stock Status -->
+                <div class="space-y-3">
+                    <!-- Price -->
+                    <div class="flex items-center">
+                        <span class="text-3xl font-bold text-red-600">Ksh {{ number_format($product->price, 2) }}</span>
+                    </div>
+
+                    <!-- Stock Status & Category -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <!-- Stock Badge -->
+                        @if ($product->stock_status == 'in_stock')
+                            <div
+                                class="inline-flex items-center px-3 py-1.5 rounded-full bg-green-100 text-green-800 font-semibold text-sm">
+                                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                In Stock
+                                @if ($product->stock_quantity > 0 && $product->stock_quantity < 10)
+                                    <span class="ml-1">(Only {{ $product->stock_quantity }} left)</span>
+                                @endif
+                            </div>
+                        @elseif($product->stock_status == 'out_of_stock')
+                            <div
+                                class="inline-flex items-center px-3 py-1.5 rounded-full bg-red-100 text-red-800 font-semibold text-sm">
+                                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Out of Stock
+                            </div>
+                        @elseif($product->stock_status == 'backorder')
+                            <div
+                                class="inline-flex items-center px-3 py-1.5 rounded-full bg-yellow-100 text-yellow-800 font-semibold text-sm">
+                                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Available on Backorder
+                            </div>
+                        @endif
+
+                        <!-- Category Badge -->
+                        <span class="px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 font-semibold text-sm">
+                            {{ $product->category->name }}
+                        </span>
+                    </div>
                 </div>
 
                 <!-- Short Description -->
-                <p class="text-gray-700 text-lg">
-                    {{ Str::limit($product->short_description, 75, '...') }}
-                </p>
+                <!-- Short Description -->
+                @if ($product->short_description)
+                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                        <h3 class="font-bold text-lg text-gray-800 mb-2">Product Overview</h3>
+                        <p class="text-gray-700">
+                            {{ Str::limit(strip_tags($product->short_description), 75, '...') }}
+                        </p>
+                    </div>
+                @endif
 
                 <!-- Product Options -->
                 <div class="space-y-4">
                     <div class="flex items-center space-x-4">
-                        <livewire:add-to-cart-button :product="$product" />
+                        @if ($product->stock_status == 'in_stock' || $product->stock_status == 'backorder')
+                            <livewire:add-to-cart-button :product="$product" />
+                        @else
+                            <button disabled
+                                class="px-6 py-3 bg-gray-300 text-gray-500 rounded-lg font-semibold cursor-not-allowed">
+                                Out of Stock
+                            </button>
+                        @endif
                         <button
                             class="border-2 border-gray-300 hover:border-red-500 px-4 py-3 rounded-lg transition transform hover:-translate-y-1 flex items-center">
                             <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,8 +195,6 @@
             }
         </style>
 
-
-
         <!-- Product Description / Details -->
         <div class="bg-gray-50 p-8 rounded-xl shadow-lg">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Product Details</h2>
@@ -169,11 +225,40 @@
                         <div class="p-4">
                             <a href="{{ route('products.show', $product->slug) }}">
                                 <h3 class="font-semibold text-lg text-gray-900 mb-2">{{ $product->name }}</h3>
-
                             </a>
+
+                            <!-- Stock badge in related products -->
+                            @if ($product->stock_status == 'in_stock')
+                                <div class="mb-2">
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        In Stock
+                                    </span>
+                                </div>
+                            @elseif($product->stock_status == 'out_of_stock')
+                                <div class="mb-2">
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                        Out of Stock
+                                    </span>
+                                </div>
+                            @endif
+
                             <div class="flex items-center justify-between">
-                                <span class="text-red-600 font-bold">Ksh 12,499</span>
-                                <livewire:add-to-cart-button :product="$product" />
+                                <span class="text-red-600 font-bold">Ksh {{ number_format($product->price, 2) }}</span>
+                                @if ($product->stock_status == 'in_stock' || $product->stock_status == 'backorder')
+                                    <livewire:add-to-cart-button :product="$product" />
+                                @else
+                                    <button disabled
+                                        class="px-3 py-1.5 bg-gray-200 text-gray-500 text-sm rounded cursor-not-allowed">
+                                        Out of Stock
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -219,5 +304,57 @@
                 }
             });
         });
+    </script>
+@endsection
+
+@section('structured-data')
+    @php
+        // Prepare images array
+        $images = [asset('storage/' . $product->image)];
+        if ($product->productImages && $product->productImages->count() > 0) {
+            foreach ($product->productImages as $image) {
+                $images[] = asset('storage/' . $image->path);
+            }
+        }
+
+        // Determine availability
+        if ($product->stock_status == 'in_stock') {
+            $availability = 'https://schema.org/InStock';
+        } elseif ($product->stock_status == 'backorder') {
+            $availability = 'https://schema.org/BackOrder';
+        } else {
+            $availability = 'https://schema.org/OutOfStock';
+        }
+    @endphp
+
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'Product',
+        'name' => $product->name,
+        'image' => $images,
+        'description' => Str::limit(strip_tags($product->description), 150),
+        'sku' => $product->id,
+        'offers' => [
+            '@type' => 'Offer',
+            'availability' => $availability,
+            'price' => $product->price,
+            'priceCurrency' => 'KES',
+            'priceValidUntil' => \Carbon\Carbon::now()->addYear()->format('Y-m-d'),
+            'shippingDetails' => [
+                '@type' => 'OfferShippingDetails',
+                'shippingRate' => [
+                    '@type' => 'MonetaryAmount',
+                    'value' => '0',
+                    'currency' => 'KES',
+                ],
+            ],
+        ],
+        'brand' => [
+            '@type' => 'Brand',
+            'name' => 'Cameras Africa',
+        ],
+        'category' => $product->category->name,
+    ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
     </script>
 @endsection

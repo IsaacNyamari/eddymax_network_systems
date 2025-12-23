@@ -133,3 +133,70 @@
         </div>
     </div>
 @endsection
+@section('overlay')
+    <!-- FILTER RESULT OVERLAY -->
+    <!-- FILTER RESULT OVERLAY -->
+    <div id="filter-overlay" class="fixed inset-0 z-[9999] hidden bg-black/70 backdrop-blur-sm">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <!-- Remove max-w-6xl to allow full width, use w-full instead -->
+            <div
+                class="bg-white w-full max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 mx-4">
+                <!-- Header -->
+                <div class="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-gray-50 to-white">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-red-100 rounded-lg">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">Filter Results</h3>
+                            <p class="text-sm text-gray-500" id="result-count">0 products found</p>
+                        </div>
+                    </div>
+                    <button id="close-overlay" type="button"
+                        class="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-2 hover:bg-gray-100 rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Body - Make it take full width -->
+                <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    <!-- Remove grid-cols-1, use container and proper grid -->
+                    <div id="filter-results-container" class="container mx-auto">
+                        <!-- Empty state -->
+                        <div id="empty-state" class="col-span-full text-center py-12">
+                            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p class="text-gray-500">Apply filters to see results</p>
+                        </div>
+
+                        <!-- Results will be loaded here -->
+                        <div id="results-grid"
+                            class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="px-6 py-4 border-t bg-gray-50">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">
+                            Showing <span class="font-semibold" id="current-count">0</span> products
+                        </span>
+                        <button type="button" onclick="window.location.href='{{ route('store.shop') }}'"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                            View All Products
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

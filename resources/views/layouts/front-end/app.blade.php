@@ -134,6 +134,7 @@
             @yield('content')
         </main>
         @include('layouts.front-end.footer')
+        @yield('overlay')
     </div>
     @livewireScripts
     <script>
