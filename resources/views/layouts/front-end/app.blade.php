@@ -119,7 +119,7 @@
     </div>
     <div class="min-h-screen bg-gray-100">
         <x-main-nav />
-
+        <livewire:welcome.navigation />
         <!-- Page Heading -->
         @if (isset($header))
             <header class="bg-white shadow">
