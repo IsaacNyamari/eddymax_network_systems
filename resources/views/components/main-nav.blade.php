@@ -1,6 +1,3 @@
-<!-- Include this script tag or install `@tailwindplus/elements` via npm: -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script> -->
-
 <div class="bg-white">
     <!-- Mobile menu -->
     <el-dialog>
@@ -120,8 +117,7 @@
                     <!-- Logo -->
                     <div class="ml-4 flex lg:ml-0">
                         <a href="/">
-                            <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                                class="h-8 w-auto" />
+                            <img src="{{ asset('images/edymax-logo.png') }}" class="h-16 w-auto" />
                         </a>
                     </div>
 

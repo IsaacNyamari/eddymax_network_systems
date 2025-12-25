@@ -9,7 +9,7 @@
 
     @endphp
     <nav class="bg-white border-default">
-        <div class="max-w-screen-xl flex flex-wrap items-center md:ml-20 justify-between mx-auto px-4 py-2.5">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4 py-2.5">
             <!-- Mobile menu button (hidden on desktop) -->
             <button data-collapse-toggle="navbar-dropdown" type="button"
                 class="inline-flex items-center p-2 w-10 h-10 justify-center text-heading bg-white box-border border border-white hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-base focus:outline-none md:hidden"
