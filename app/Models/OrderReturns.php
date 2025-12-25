@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class OrderReturns extends Model
 {
@@ -33,5 +34,9 @@ class OrderReturns extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id');
+    }
+    public function images(): MorphMany
+    {
+        return $this->morphMany(ReturnImages::class, 'imageable');
     }
 }

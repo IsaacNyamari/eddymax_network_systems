@@ -26,9 +26,10 @@
                             Requested {{ $return->created_at->diffForHumans() }}
                         </p>
                     </div>
-
-                    <!-- Return Status -->
-
+                    <div>
+                        <a class="text-white px-4 bg-blue-800 py-2 rounded-xl"
+                            href="{{ route('admin.orders.returns.show', $return) }}">View Return Details</a>
+                    </div>
                 </div>
 
                 <!-- Body -->
@@ -49,9 +50,9 @@
                             {{ $return->order->created_at->format('M d, Y') }}
                         </p>
                     </div>
-                    <div class="float-right">
+                    {{-- <div class="float-right">
                         <livewire:return-actions :return="$return" />
-                    </div>
+                    </div> --}}
                 </div>
 
             </div>

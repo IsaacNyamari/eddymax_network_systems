@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderReturns;
+use App\Models\ReturnImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +18,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $recentOrders = $user->orders()
-            ->with(['items', 'payments','orderReturns']) // eager load relationships
+            ->with(['items', 'payments', 'orderReturns']) // eager load relationships
             ->orderBy('created_at', 'desc') // show newest first
             ->paginate(5);
         return view('dashboard.customer.orders.index', compact('recentOrders'));
@@ -39,15 +40,23 @@ class OrderController extends Controller
     {
         $data = $request->validate([
             'reason' => 'required|min:20',
+            'proof_image' => 'required',
         ]);
         $data['order_id'] = $order->id;
 
         $request_exists = OrderReturns::where('order_id', $data['order_id'])->get()->count();
         if ($request_exists > 0) {
-
             return back()->with('error', 'Your ' . $request['type'] . ' request exists for this order.');
         }
-        OrderReturns::create($data);
+        // ReturnImages::create();
+        $order_return = OrderReturns::create($data);
+
+        foreach ($data['proof_image'] as $image) {
+            $image_path = $image->store('proofs', 'public');
+            $order_return->images()->create([
+                'path' => $image_path
+            ]);
+        }
         return back()->with('success', 'Your order ' . $request['type'] . ' request has been made successfully! Awaits confirmation.');
     }
     /**
