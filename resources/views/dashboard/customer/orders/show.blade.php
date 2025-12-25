@@ -110,7 +110,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6 w-full">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Products in this order.<br> Return status:
             @php
-                $orderStatus = $order->orderReturns->status;
+                $orderStatus = $order->orderReturns ? $order->orderReturns->status : 'no return';
             @endphp
             <span
                 class="px-2 py-2 rounded-lg text-white
@@ -150,7 +150,8 @@
                             <div class="flex-1 min-w-0">
                                 <h4 class="font-semibold text-gray-800 truncate">{{ $product['name'] }}</h4>
                                 <p class="text-gray-500 text-sm">Quantity: {{ $product['quantity'] }}</p>
-                                <p class="text-gray-700 font-medium mt-1">Kshs. {{ number_format($product['price'], 2) }}
+                                <p class="text-gray-700 font-medium mt-1">Kshs.
+                                    {{ number_format($product['price'], 2) }}
                                 </p>
                                 <p class="text-gray-500 text-sm">Total Amount: Kshs.
                                     {{ number_format($product['quantity'] * $product['price'], 2) }}</p>
@@ -227,5 +228,4 @@
             </div>
         @endif
     </div>
-
 @endsection

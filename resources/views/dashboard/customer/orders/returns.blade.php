@@ -27,14 +27,18 @@
                     </div>
 
                     <!-- Return Status -->
-                    <span
-                        class="px-3 py-1 rounded-full text-sm font-medium
+                    <div>
+                        <a href="{{ route('customer.orders.returns.show', $return) }}"
+                            class="px-4 py-2 bg-blue-700 rounded text-white">Return Details</a>
+                        <span
+                            class="px-3 py-1 rounded-full text-sm font-medium
                     @if ($return->status === 'pending') bg-yellow-100 text-yellow-700
                     @elseif($return->status === 'approved') bg-green-100 text-green-700
                     @elseif($return->status === 'rejected') bg-red-100 text-red-700 @endif
                 ">
-                        {{ ucfirst($return->status) }}
-                    </span>
+                            {{ ucfirst($return->status) }}
+                        </span>
+                    </div>
                 </div>
 
                 <!-- Body -->

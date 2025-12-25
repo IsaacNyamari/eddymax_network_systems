@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderReturns;
 use App\Models\ReturnImages;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -66,7 +67,26 @@ class OrderController extends Controller
     {
         //
     }
+    public function showReturn(string $order)
+    {
+        $return = OrderReturns::with(['images', 'order' => function ($query) {
+            // Only load necessary order data
+            $query->select('id', 'order_number', 'user_id', 'status', 'total_amount', 'shipping_address', 'products', 'created_at');
+        }])
+            ->findOrFail($order);
 
+        // Check if the return belongs to the authenticated user
+        if ($return->order->user_id != Auth::id()) {
+            abort(403, 'Unauthorized access to this return.');
+        }
+
+        // If products is a JSON string, decode it for easier access
+        if (isset($return->order->products) && is_string($return->order->products)) {
+            $return->order->products = json_decode($return->order->products, true);
+        }
+
+        return view('dashboard.customer.returns.show', compact('return'));
+    }
     /**
      * Display the specified resource.
      */

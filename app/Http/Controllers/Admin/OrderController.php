@@ -207,17 +207,9 @@ class OrderController extends Controller
     // /**
     //  * Mark order as failed
     //  */
-    // public function failOrder(string $order_number)
+    // public function deleteReturnOrder(OrderReturns $order)
     // {
-    //     $order = Order::where('order_number', $order_number)->firstOrFail();
-
-    //     $order->status = OrderStatus::FAILED->value;
-    //     $order->save();
-
-    //     Mail::to($order->user->email)
-    //         ->send(new OrderStatusUpdated($order, 'FAILED', 'Order Failed'));
-
-    //     return back()->with('success', "Order #{$order_number} marked as failed! Email sent to customer.");
+    //     return $order;
     // }
     /**
      * Store a newly created resource in storage.

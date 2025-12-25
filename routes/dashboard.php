@@ -39,6 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])->name('orders.show');
         Route::post('/orders/{order}/return', [CustomerOrderController::class, 'cancel'])->name('orders.cancel');
         Route::get('/orders/returns/page', [CustomerOrderController::class, 'return'])->name('orders.returns');
+        Route::get('/orders/returns/page/order/{order}', [CustomerOrderController::class, 'showReturn'])->name('orders.returns.show');
         Route::post('/orders/{order}/track', [CustomerOrderController::class, 'track'])->name('orders.track');
 
         // filter orders
