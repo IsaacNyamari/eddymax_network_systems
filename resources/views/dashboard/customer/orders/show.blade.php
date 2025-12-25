@@ -144,61 +144,71 @@
                                     {{ number_format($product['quantity'] * $product['price'], 2) }}</p>
                             </div>
                         </div>
+                        @php
+                            $order_status = $order->status;
+                        @endphp
+                        @if ($order->orderReturns->status != 'rejected')
+                            {{-- Cancel button --}}
+                            <div class="mt-4 sm:mt-0 sm:ml-4">
 
-                        {{-- Cancel button --}}
-                        <div class="mt-4 sm:mt-0 sm:ml-4">
-                            @php
-                                $order_status = $order->status;
-                            @endphp
 
-                            <div x-data="{
-                                showForm: false,
-                                actionType: null
-                            }" class="space-y-3">
+                                <div x-data="{
+                                    showForm: false,
+                                    actionType: null
+                                }" class="space-y-3">
 
-                                {{-- Buttons --}}
-                                @if ($order_status === 'pending' || $order_status === 'processing')
-                                    <button type="button" @click="showForm = true; actionType = 'cancel'"
-                                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
-                                        Cancel
-                                    </button>
-                                @endif
-
-                                @if ($order_status === 'shipped' || $order_status === 'delivered')
-                                    <button type="button" @click="showForm = true; actionType = 'return'"
-                                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
-                                        Return & Refund
-                                    </button>
-                                @endif
-
-                                {{-- Shared Form (ONE URL) --}}
-                                <form x-show="showForm" x-transition action="{{ route('customer.orders.cancel', $order) }}"
-                                    method="POST" class="space-y-2">
-                                    @csrf
-
-                                    <x-text-input name="reason" :placeholder="''"
-                                        x-bind:placeholder="actionType === 'cancel'
-                                            ?
-                                            'Reason for cancellation' :
-                                            'Reason for return & refund'"
-                                        class="w-full" required />
-
-                                    <input type="hidden" name="type" :value="actionType">
-
-                                    <div class="flex gap-2">
-                                        <button type="submit"
-                                            class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">
-                                            Submit
+                                    {{-- Buttons --}}
+                                    @if ($order_status === 'pending' || $order_status === 'processing')
+                                        <button type="button" @click="showForm = true; actionType = 'cancel'"
+                                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
+                                            Cancel
                                         </button>
+                                    @endif
 
-                                        <button type="button" @click="showForm = false"
-                                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
-                                            Close
+                                    @if ($order_status === 'shipped' || $order_status === 'delivered')
+                                        <button type="button" @click="showForm = true; actionType = 'return'"
+                                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
+                                            Return & Refund
                                         </button>
-                                    </div>
-                                </form>
+                                    @endif
+
+                                    {{-- Shared Form (ONE URL) --}}
+                                    <form x-show="showForm" x-transition
+                                        action="{{ route('customer.orders.cancel', $order) }}" method="POST"
+                                        class="space-y-2">
+                                        @csrf
+
+                                        <x-text-input name="reason" :placeholder="''"
+                                            x-bind:placeholder="actionType === 'cancel'
+                                                ?
+                                                'Reason for cancellation' :
+                                                'Reason for return & refund'"
+                                            class="w-full" required />
+
+                                        <input type="hidden" name="type" :value="actionType">
+
+                                        <div class="flex gap-2">
+                                            <button type="submit"
+                                                class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">
+                                                Submit
+                                            </button>
+
+                                            <button type="button" @click="showForm = false"
+                                                class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                                                Close
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="mt-4 sm:mt-0 sm:ml-4">
+                                <p class="bg-red-600 text-white capitalize px-4 py-2 rounded cursor-not-allowed">
+                                    {{ $order->orderReturns->status }}
+                                </p>
+                            </div>
+                        @endif
+
                     </div>
                 @endforeach
             </div>

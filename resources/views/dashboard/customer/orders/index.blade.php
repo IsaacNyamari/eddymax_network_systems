@@ -66,9 +66,6 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="{{ route('customer.orders.show', $order->order_number) }}"
                                         class="text-red-600 hover:text-red-900 mr-3">View</a>
-                                    @if ($order->status === 'pending')
-                                        <a href="#" class="text-green-600 hover:text-green-900">Process</a>
-                                    @endif
                                 </td>
                             </tr>
                         @empty

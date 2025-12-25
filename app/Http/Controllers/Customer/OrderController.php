@@ -17,7 +17,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $recentOrders = $user->orders()
-            ->with(['items', 'payments']) // eager load relationships
+            ->with(['items', 'payments','orderReturns']) // eager load relationships
             ->orderBy('created_at', 'desc') // show newest first
             ->paginate(5);
         return view('dashboard.customer.orders.index', compact('recentOrders'));

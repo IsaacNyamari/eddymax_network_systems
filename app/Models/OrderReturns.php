@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderReturns extends Model
 {
@@ -29,8 +30,8 @@ class OrderReturns extends Model
     /**
      * Relationship to the Order model
      */
-    public function order()
+    public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'order_id');
     }
 }

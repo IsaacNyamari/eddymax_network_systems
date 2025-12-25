@@ -193,14 +193,14 @@
                     // Example: Calculate or retrieve refund amount if needed
                     // $refundAmount = $order->refund_amount ?? $order->calculateRefund();
                 @endphp
-                {{-- Uncomment if you have refund amount data
-                @if (isset($refundAmount) && $refundAmount > 0)
+                {{-- Uncomment if you have refund amount data --}}
+                {{-- @if (isset($order->order->order) && $refundAmount > 0)
                 <div class="detail-row">
                     <span class="label">Refund Amount:</span>
-                    <span class="value" style="color: #10b981;">{{ config('app.currency', '$') }}{{ number_format($refundAmount, 2) }}</span>
+                    <span class="value" style="color: #10b981;">Kshs {{ number_format($refundAmount, 2) }}</span>
                 </div>
-                @endif
-                --}}
+                @endif --}}
+               
             </div>
 
             @if (strtolower($status) == 'approved')

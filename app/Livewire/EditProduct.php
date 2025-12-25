@@ -24,8 +24,8 @@ class EditProduct extends Component
     #[Validate('required|string|min:0')]
     public $model;
 
-    #[Validate('required|string|min:0')]
-    public $brand;
+    // #[Validate('required|string|min:0')]
+    // public $brand;
 
     #[Validate('required|numeric|min:0')]
     public $stock;
@@ -48,14 +48,13 @@ class EditProduct extends Component
 
     public function mount(Product $product)
     {
-        dd($product->brand);
         $this->product = $product;
         $this->name = $product->name;
         $this->price = $product->price;
         $this->existingImage = $product->image;
         $this->description = $product->description;
         $this->category_id = $product->category_id;
-        $this->brand = $product->brand;
+        // $this->brand = $product->brand;
         $this->model = $product->model;
         $this->stock = $product->stock_quantity;
         $this->stock_status = $product->stock_status ?? 'in_stock'; // Fallback to default
@@ -85,7 +84,7 @@ class EditProduct extends Component
             'description' => $this->description,
             'category_id' => $this->category_id,
             'model' => $this->model,
-            'brand' => $this->brand,
+            // 'brand' => $this->brand,
             'stock_quantity' => $this->stock,
             'stock_status' => $this->stock_status,
             'slug' => Str::slug($this->name),

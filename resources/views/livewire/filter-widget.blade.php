@@ -73,7 +73,7 @@
                     <label
                         class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-150 {{ $selectedCategory == $category->slug ? 'bg-red-50 border border-red-100' : '' }}">
                         <div class="relative flex items-center">
-                            <input type="radio" wire:model.live="selectedCategory" value="{{ $category->slug }}"
+                            <input type="radio" wire:model.live="selectedCategory" name="selectedCategory" value="{{ $category->slug }}"
                                 class="sr-only peer">
                             <div
                                 class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-red-600 peer-checked:bg-red-600 flex items-center justify-center transition-all duration-200">

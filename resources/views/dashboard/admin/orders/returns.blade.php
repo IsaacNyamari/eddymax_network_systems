@@ -80,6 +80,20 @@
                     toast.remove()
                 }, 3000);
             })
+            Livewire.on('refund-made', (event) => {
+                let message = event[0].message;
+                let toast = document.createElement("div");
+                toast.classList.add('slide-in')
+                toast.classList.add('bg-green-500', 'text-white', 'p-3', 'border-l-black', 'border-l-4',
+                    'mb-2');
+                toast.innerHTML = message
+                returnStatus.appendChild(toast)
+                returnStatus.classList.remove('hidden');
+
+                setTimeout(() => {
+                    toast.remove()
+                }, 3000);
+            })
         })
     </script>
 @endsection

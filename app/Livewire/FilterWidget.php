@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Brands;
 use App\Models\Category;
 use App\Models\Product;
 use Livewire\Component;
@@ -42,10 +43,10 @@ class FilterWidget extends Component
         $this->priceRange = [$this->fixedMinPrice, $this->fixedMaxPrice];
 
         // Get unique brands from products
-        $this->brands = Product::select('brand')
-            ->whereNotNull('brand')
+        $this->brands = Brands::with('products')
+            ->whereNotNull('name')
             ->distinct()
-            ->pluck('brand')
+            ->pluck('brands.name')
             ->filter()
             ->values()
             ->toArray();
@@ -127,9 +128,7 @@ class FilterWidget extends Component
         // Search query
         if (!empty($this->searchQuery)) {
             $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->searchQuery . '%')
-                    ->orWhere('description', 'like', '%' . $this->searchQuery . '%')
-                    ->orWhere('brand', 'like', '%' . $this->searchQuery . '%');
+                $q->where('name', 'like', '%' . $this->searchQuery . '%');
             });
         }
 
