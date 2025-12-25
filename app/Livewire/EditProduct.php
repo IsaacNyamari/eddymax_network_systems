@@ -21,6 +21,18 @@ class EditProduct extends Component
     #[Validate('required|numeric|min:0')]
     public $price;
 
+    #[Validate('required|string|min:0')]
+    public $model;
+
+    #[Validate('required|string|min:0')]
+    public $brand;
+
+    #[Validate('required|numeric|min:0')]
+    public $stock;
+
+    #[Validate('required|string|in:in_stock,out_of_stock,backorder')]
+    public $stock_status = 'in_stock'; // Default value already set
+
     public $existingImage;
 
     #[Validate('nullable|image|max:4096')]
@@ -36,12 +48,17 @@ class EditProduct extends Component
 
     public function mount(Product $product)
     {
+        dd($product->brand);
         $this->product = $product;
         $this->name = $product->name;
         $this->price = $product->price;
         $this->existingImage = $product->image;
         $this->description = $product->description;
         $this->category_id = $product->category_id;
+        $this->brand = $product->brand;
+        $this->model = $product->model;
+        $this->stock = $product->stock_quantity;
+        $this->stock_status = $product->stock_status ?? 'in_stock'; // Fallback to default
         $this->categories = Category::all();
     }
 
@@ -67,6 +84,10 @@ class EditProduct extends Component
             'image' => $imagePath,
             'description' => $this->description,
             'category_id' => $this->category_id,
+            'model' => $this->model,
+            'brand' => $this->brand,
+            'stock_quantity' => $this->stock,
+            'stock_status' => $this->stock_status,
             'slug' => Str::slug($this->name),
         ]);
 

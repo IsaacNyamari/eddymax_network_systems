@@ -47,6 +47,59 @@
                       <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                   @enderror
               </div>
+              {{-- Stock Status --}}
+              <div>
+                  <x-input-label for="stock_status">Stock Status</x-input-label>
+
+                  <div class="mt-2 flex items-center gap-4">
+                      <div class="inline-flex items-center">
+                          <input type="radio" wire:model.live="stock_status" name="stock_status"
+                              id="stock_status_in_stock" value="in_stock"
+                              class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500" />
+                          <label for="stock_status_in_stock" class="ml-2 text-sm text-gray-700">
+                              In Stock
+                          </label>
+                      </div>
+
+                      <div class="inline-flex items-center">
+                          <input type="radio" wire:model.live="stock_status" name="stock_status"
+                              id="stock_status_out_of_stock" value="out_of_stock"
+                              class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500" />
+                          <label for="stock_status_out_of_stock" class="ml-2 text-sm text-gray-700">
+                              Out of Stock
+                          </label>
+                      </div>
+
+                      <div class="inline-flex items-center">
+                          <input type="radio" wire:model.live="stock_status" name="stock_status"
+                              id="stock_status_backorder" value="backorder"
+                              class="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500" />
+                          <label for="stock_status_backorder" class="ml-2 text-sm text-gray-700">
+                              Backorder
+                          </label>
+                      </div>
+                  </div>
+
+                  @error('stock_status')
+                      <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                  @enderror
+              </div>
+              {{-- MODEL --}}
+              <div>
+                  <x-input-label for="model">Model</x-input-label>
+                  <x-text-input type="text" wire:model.live="model" id="model" class="w-full" />
+                  @error('model')
+                      <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                  @enderror
+              </div>
+              {{-- MODEL --}}
+              <div>
+                  <x-input-label for="brand">Brand</x-input-label>
+                  <x-text-input type="text" wire:brand.live="brand" id="brand" class="w-full" />
+                  @error('brand')
+                      <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                  @enderror
+              </div>
 
               {{-- DESCRIPTION --}}
               <div>
@@ -117,7 +170,8 @@
                                           @foreach ($childCategory->children as $grandchildCategory)
                                               <label
                                                   class="flex items-center space-x-3 ml-8 p-2 hover:bg-gray-100 rounded cursor-pointer">
-                                                  <input type="radio" name="category_id" wire:model.live="category_id"
+                                                  <input type="radio" name="category_id"
+                                                      wire:model.live="category_id"
                                                       value="{{ $grandchildCategory->id }}"
                                                       class="text-red-600 focus:ring-red-500">
                                                   <span class="text-gray-600">

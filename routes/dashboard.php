@@ -80,6 +80,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/orders/{order}/payment-status', [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.payment-status.update');
         Route::get('/orders/{order}/invoice', [AdminOrderController::class, 'invoice'])->name('orders.invoice');
         Route::get('/orders/returns/page', [AdminOrderController::class, 'return'])->name('orders.returns');
+        Route::post('/orders/returns/cancelled/{order}', [AdminOrderController::class, 'markOrderReturnCancelled'])->name('orders.returns.cancel');
 
         // Users Management
         Route::patch('/users/{user}/roles', [AdminUserController::class, 'updateRoles'])->name('users.roles.update');

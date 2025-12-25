@@ -338,53 +338,90 @@
             </div>
             <div class="divide-y divide-gray-200">
                 @forelse($topProducts as $product)
-                    <div class="p-6 flex items-center justify-between hover:bg-gray-50">
+                    <div class="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors duration-150">
                         <div class="flex items-center space-x-4">
                             <div class="flex-shrink-0">
                                 @if ($product->image)
                                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                                        class="w-16 h-16 object-cover rounded-lg">
+                                        class="w-16 h-16 object-cover rounded-lg shadow-sm">
                                 @else
-                                    <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <div
+                                        class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center shadow-sm">
                                         <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                         </svg>
                                     </div>
                                 @endif
                             </div>
                             <div>
-                                <h3 class="text-sm font-medium text-gray-900">{{ $product->name }}</h3>
-                                <p class="text-sm text-gray-500">KES {{ number_format($product->price, 2) }}</p>
-                                <div class="flex items-center space-x-2 mt-1">
+                                <h3 class="text-sm font-medium text-gray-900 truncate max-w-xs">{{ $product->name }}</h3>
+                                <p class="text-sm text-gray-500 mt-1">Unit Price: KES
+                                    {{ number_format($product->price, 2) }}</p>
+                                <div class="flex items-center space-x-3 mt-2">
+                                    <!-- Stock Status -->
                                     <span
-                                        class="text-xs px-2 py-1 rounded-full 
-                                {{ $product->stock > 10
-                                    ? 'bg-green-100 text-green-800'
-                                    : ($product->stock > 0
-                                        ? 'bg-yellow-100 text-yellow-800'
-                                        : 'bg-red-100 text-red-800') }}">
-                                        {{ $product->stock }} in stock
+                                        class="text-xs font-medium px-2.5 py-1 rounded-full 
+                            @if ($product->stock_quantity > 10) bg-green-100 text-green-800 
+                            @elseif($product->stock_quantity > 0) 
+                                bg-yellow-100 text-yellow-800 
+                            @else 
+                                bg-red-100 text-red-800 @endif">
+                                        {{ $product->stock_quantity ?? 0 }} in stock
                                     </span>
-                                    <span class="text-xs text-gray-500">{{ $product->orders_count ?? 0 }} sold</span>
+
+                                    <!-- Number of Orders -->
+                                    <span class="text-xs text-gray-600 bg-gray-100 px-2.5 py-1 rounded-full">
+                                        <svg class="w-3 h-3 inline-block mr-1" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                        </svg>
+                                        {{ $product->orders_count ?? ($product->sold_count ?? 0) }} orders
+                                    </span>
+
+                                    <!-- Items Sold -->
+                                    <span class="text-xs text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
+                                        <svg class="w-3 h-3 inline-block mr-1" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                        </svg>
+                                        {{ $product->sold_count ?? 0 }} units sold
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-lg font-bold text-gray-900">KES {{ number_format($product->revenue ?? 0, 2) }}
+                            <!-- Revenue -->
+                            <p class="text-lg font-bold text-gray-900">
+                                KES {{ number_format($product->revenue ?? 0, 2) }}
                             </p>
-                            <p class="text-xs text-gray-500">Revenue</p>
+                            <p class="text-xs text-gray-500 mt-1">Total Revenue</p>
+
+                            <!-- Price per item -->
+                            <div class="mt-3 pt-3 border-t border-gray-100">
+                                <p class="text-sm font-medium text-green-600">
+                                    KES {{ number_format($product->price * ($product->sold_count ?? 1), 2) }}
+                                </p>
+                                <p class="text-xs text-gray-400">Avg. per order</p>
+                            </div>
                         </div>
                     </div>
                 @empty
-                    <div class="p-8 text-center text-gray-500">
-                        <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                        </svg>
-                        <p class="mt-2">No products yet</p>
+                    <div class="p-12 text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No product sales yet</h3>
+                        <p class="text-gray-500 max-w-sm mx-auto">
+                            Start selling products to see revenue analytics here. Completed orders will appear in this
+                            dashboard.
+                        </p>
                     </div>
                 @endforelse
             </div>

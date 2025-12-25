@@ -20,6 +20,8 @@ class Product extends Model
         'description',
         'model',
         'brand',
+        'stock_quantity',
+        'stock_status',
         'category_id',
         'slug',
     ];

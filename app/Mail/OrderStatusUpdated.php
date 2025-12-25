@@ -23,7 +23,7 @@ class OrderStatusUpdated extends Mailable
         $this->order = $order;
         $this->status = $status;
         $this->action = $action;
-        
+
         // Decode JSON products and prepare with base64 images
         $this->prepareProducts();
     }
@@ -31,8 +31,8 @@ class OrderStatusUpdated extends Mailable
     public function build()
     {
         return $this->subject("Order #{$this->order->order_number} Status: {$this->status}")
-                    ->view('emails.order-status-updated')
-                    ->from(config('mail.from.address'), config('mail.from.name'));
+            ->view('emails.order-status-updated')
+            ->from(config('mail.from.address'), config('mail.from.name'));
     }
 
     /**
@@ -43,15 +43,15 @@ class OrderStatusUpdated extends Mailable
         try {
             // Decode the JSON products string
             $productsData = json_decode($this->order->products, true);
-            
+
             if (!is_array($productsData) || empty($productsData)) {
                 return;
             }
-            
+
             foreach ($productsData as $productId => $product) {
                 $imageData = null;
                 $mimeType = 'image/jpeg';
-                
+
                 // Get base64 encoded image
                 if (!empty($product['image']) && Storage::exists($product['image'])) {
                     try {
@@ -63,7 +63,7 @@ class OrderStatusUpdated extends Mailable
                         $imageData = null;
                     }
                 }
-                
+
                 // Prepare product for email
                 $this->products[] = [
                     'id' => $productId,
@@ -76,7 +76,6 @@ class OrderStatusUpdated extends Mailable
                     'has_image' => !empty($imageData),
                 ];
             }
-            
         } catch (\Exception $e) {
             Log::error('Failed to prepare products: ' . $e->getMessage());
             $this->products = [];
@@ -89,7 +88,7 @@ class OrderStatusUpdated extends Mailable
     protected function getMimeType($filePath)
     {
         $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-        
+
         $mimeTypes = [
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
@@ -99,7 +98,7 @@ class OrderStatusUpdated extends Mailable
             'svg' => 'image/svg+xml',
             'bmp' => 'image/bmp',
         ];
-        
+
         return $mimeTypes[$extension] ?? mime_content_type($filePath) ?: 'image/jpeg';
     }
 }

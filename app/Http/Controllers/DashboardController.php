@@ -85,23 +85,24 @@ class DashboardController extends Controller
 
         // Top Products
 
-        $topProducts = Order::select(
-            'orders.id',
-            'orders.order_number',
-            'orders.total_amount',
-            DB::raw('COUNT(payments.id) as payments_count')
-        )
-            ->join('payments', 'payments.order_id', '=', 'orders.id')
-            ->where('payments.status', 'paid')
-            ->groupBy(
-                'orders.id',
-                'orders.order_number',
-                'orders.total_amount'
-            )
-            ->orderByDesc('orders.total_amount')
+        $topProducts = Product::select([
+            'products.id',
+            'products.name',
+            'products.price',
+            'products.image',
+            'products.stock_quantity',
+            DB::raw('COUNT(order_items.id) as orders_count'),
+            DB::raw('SUM(order_items.quantity * order_items.price) as revenue'),
+            DB::raw('SUM(order_items.quantity) as total_sold') // Added for completeness
+        ])
+            ->leftJoin('order_items', 'order_items.product_id', '=', 'products.id')
+            ->leftJoin('orders', 'orders.id', '=', 'order_items.order_id')
+            ->groupBy('products.id', 'products.name', 'products.price', 'products.image', 'products.stock_quantity')
+            ->having('orders_count', '>', 0) // Only products with orders
+            ->orderByDesc('revenue')
+            ->orderByDesc('orders_count')
             ->limit(5)
             ->get();
-
         // return $topProducts;
 
 

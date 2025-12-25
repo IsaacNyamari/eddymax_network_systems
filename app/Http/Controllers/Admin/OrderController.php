@@ -34,7 +34,10 @@ class OrderController extends Controller
         $orders = OrderReturns::with(['order.user'])->get();
         return view('dashboard.admin.orders.returns', compact('orders'));
     }
-
+    public function markOrderReturnCancelled(OrderReturns $order)
+    {
+        return $order;
+    }
     /**
      * Deliver an order
      */

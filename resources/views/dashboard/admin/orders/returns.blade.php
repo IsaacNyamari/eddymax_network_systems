@@ -10,7 +10,9 @@
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>Back
             </h2>
         </a>
+        <div id="returnStatus" class="position fixed top-10 right-5">
 
+        </div>
         @forelse ($orders as $return)
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
 
@@ -26,7 +28,7 @@
                     </div>
 
                     <!-- Return Status -->
-                   
+
                 </div>
 
                 <!-- Body -->
@@ -60,12 +62,24 @@
         @endforelse
 
     </div>
+    <script>
+        let returnStatus = document.getElementById("returnStatus");
 
-@endsection
-<script>
-    document.addEventListener('livewire:init', () => {
-        Livewire.on('return-updated', (event) => {
-            console.log(event[0]);
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('return-updated', (event) => {
+                let message = event[0].message;
+                let toast = document.createElement("div");
+                toast.classList.add('slide-in')
+                toast.classList.add('bg-green-500', 'text-white', 'p-3', 'border-l-black', 'border-l-4',
+                    'mb-2');
+                toast.innerHTML = message
+                returnStatus.appendChild(toast)
+                returnStatus.classList.remove('hidden');
+
+                setTimeout(() => {
+                    toast.remove()
+                }, 3000);
+            })
         })
-    })
-</script>
+    </script>
+@endsection

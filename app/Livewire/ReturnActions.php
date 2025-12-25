@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Mail\OrderReturns as MailOrderReturns;
 use App\Models\OrderReturns;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class ReturnActions extends Component
@@ -12,7 +14,7 @@ class ReturnActions extends Component
     public function updateRequestStatus(int $returnId, string $action)
     {
         $returnUpdate = OrderReturns::find($returnId);
-
+        // dd($returnUpdate->order->user->email);
         if ($returnUpdate) {
             $returnUpdate->update([
                 'status' => $action
@@ -20,9 +22,11 @@ class ReturnActions extends Component
 
             // Update the local return property
             $this->return->status = $action;
-            $this->dispatch('return-updated', $action);
             // Optional: Show success message
-            session()->flash('message', "Return {$action} successfully!");
+            Mail::to($returnUpdate->order->user->email)->send(new MailOrderReturns($returnUpdate, $this->return->status));
+            $this->dispatch('return-updated', [
+                "message" => "Return {$action} successfully!"
+            ]);
         }
     }
 
