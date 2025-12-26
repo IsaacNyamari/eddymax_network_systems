@@ -13,6 +13,7 @@ use App\Http\Controllers\Customer\AddressController as CustomerAddressController
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TrashController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -106,18 +107,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings');
         Route::patch('/settings/general', [SettingController::class, 'updateGeneral'])->name('settings.general.update');
-        Route::patch('/settings/payment', [SettingController::class, 'updatePayment'])->name('settings.payment.update');
+        Route::post('/settings/backup-database', [SettingController::class, 'createBackup'])->name('settings.backup.database');
         Route::patch('/settings/shipping', [SettingController::class, 'updateShipping'])->name('settings.shipping.update');
         Route::patch('/settings/email', [SettingController::class, 'updateEmail'])->name('settings.email.update');
 
-        // System
-        Route::get('/system/logs', function () {
-            return view('dashboard.admin.system.logs');
-        })->name('system.logs');
 
-        Route::get('/system/backup', function () {
-            return view('dashboard.admin.system.backup');
-        })->name('system.backup');
+        // // System
+        // Route::get('/system/logs', function () {
+        //     return view('dashboard.admin.system.logs');
+        // })->name('system.logs');
+
+        // Route::get('/system/backup', function () {
+        //     return view('dashboard.admin.system.backup');
+        // })->name('system.backup');
         // Dashboard-specific 404 fallback (must be last)
         Route::fallback(function () {
             return response()->view('dashboard.errors.404', [], 404);

@@ -148,7 +148,8 @@
                                 alt="{{ $product['name'] }}" class="w-24 h-24 object-cover rounded flex-shrink-0 mr-4">
 
                             <div class="flex-1 min-w-0">
-                                <h4 class="font-semibold text-gray-800 truncate">{{ $product['name'] }}</h4>
+                                <h4 class="font-semibold text-gray-800 truncate">
+                                    {{ Str::limit($product['name'], 20, '...') }}</h4>
                                 <p class="text-gray-500 text-sm">Quantity: {{ $product['quantity'] }}</p>
                                 <p class="text-gray-700 font-medium mt-1">Kshs.
                                     {{ number_format($product['price'], 2) }}

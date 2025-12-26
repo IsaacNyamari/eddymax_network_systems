@@ -114,7 +114,7 @@
 
 <body class="font-sans antialiased">
     <div id="cartAlert"
-        class="alert bg-red-600 w-80 hidden border-l-4 border-slate-950 text-white-800 px-4 py-2 fixed top-1 right-3 transition z-50">
+        class="alert bg-blue-600 text-white w-80 hidden border-l-4 border-slate-950 text-white-800 px-4 py-2 fixed top-1 right-3 transition z-50">
 
     </div>
     <div class="min-h-screen bg-gray-100">

@@ -9,28 +9,32 @@
         {{ ucfirst($return->status) }}
     </span>
     @if ($return->status != 'refunded')
+        <button id="checkTransaction" wire:click="confirmPayment('{{ $return->order->payments->reference }}')"
+            class="bg-purple-600 px-4 mb-2 py-2 rounded text-white hover:bg-purple-700 actionButtons">
+            Check Transaction
+        </button>
         @if ($return->status != 'pending')
             <button wire:click="updateRequestStatus({{ $return->id }}, 'pending')"
-                class="bg-red-600 px-4 py-2 rounded text-white hover:bg-red-700">
+                class="bg-red-600 px-4 py-2 rounded text-white hover:bg-red-700 actionButtons">
                 Pend
             </button>
         @endif
         @if ($return->status != 'approved')
             <button wire:click="updateRequestStatus({{ $return->id }}, 'approved')"
-                class="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700">
+                class="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700 actionButtons">
                 Approve
             </button>
         @endif
 
         @if ($return->status != 'rejected')
             <button wire:click="updateRequestStatus({{ $return->id }}, 'rejected')"
-                class="bg-orange-600 px-4 py-2 rounded text-white hover:bg-orange-700">
+                class="bg-orange-600 px-4 py-2 rounded text-white hover:bg-orange-700 actionButtons">
                 Reject
             </button>
         @endif
         @if ($return->status == 'approved')
             <button wire:click="updateRequestStatus({{ $return->id }}, 'refunded')"
-                class="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700">
+                class="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700 actionButtons">
                 Refund
             </button>
         @endif

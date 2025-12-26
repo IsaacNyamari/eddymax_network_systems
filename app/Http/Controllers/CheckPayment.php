@@ -48,16 +48,20 @@ class CheckPayment extends Controller
     }
     public function verifyPaystackTransaction(string $reference)
     {
+
         $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
             ->get("https://api.paystack.co/transaction/verify/{$reference}");
-
+        // dd([
+        //     'reference' => $reference,
+        //     'status' => $response->status(),
+        //     'body' => $response->json(),
+        // ]);
         if ($response->failed()) {
-            Log::error('Paystack verification failed', [
+            dd([
                 'reference' => $reference,
                 'status' => $response->status(),
                 'body' => $response->json(),
             ]);
-
             return false;
         }
 
@@ -67,13 +71,15 @@ class CheckPayment extends Controller
         if (!($payload['status'] ?? false)) {
             return false;
         }
-
-        // Transaction-level success
-        if (($payload['data']['status'] ?? '') !== 'success') {
-            return false;
-        }
-
-        return $payload['data']['receipt_number']; // ✅ clean verified data
+        $payment_info = [
+            "message" => $payload['message'],
+            "status" => $payload['data']['status'],
+            "receipt_number" => $payload['data']['receipt_number'],
+            "payment_method" => $payload['data']['authorization']['brand'],
+            "phone_number" => $payload['data']['authorization']['mobile_money_number']
+        ];
+        $payment_info = json_encode($payment_info, true);
+        return $payment_info;
     }
 
     public function refundPaystackTransaction(string $reference, int $amountKes = null)

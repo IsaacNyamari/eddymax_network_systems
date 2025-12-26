@@ -73,6 +73,41 @@ class ReturnActions extends Component
 
         return $payload['data']; // ✅ clean verified data
     }
+    public function confirmPayment(string $reference)
+    {
+
+        $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+            ->get("https://api.paystack.co/transaction/verify/{$reference}");
+        // dd([
+        //     'reference' => $reference,
+        //     'status' => $response->status(),
+        //     'body' => $response->json(),
+        // ]);
+        if ($response->failed()) {
+            dd([
+                'reference' => $reference,
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
+            return false;
+        }
+
+        $payload = $response->json();
+
+        // Paystack API-level success
+        if (!($payload['status'] ?? false)) {
+            return false;
+        }
+        $payment_info = [
+            "message" => $payload['message'],
+            // "status" => $payload['data']['status'],
+            "receipt" => $payload['data']['receipt_number'],
+            "brand" => $payload['data']['authorization']['brand'],
+            "phone" => $payload['data']['authorization']['mobile_money_number']
+        ];
+        $payment_info = json_encode($payment_info, true);
+        $this->dispatch('check-payment-success', [$payment_info]);
+    }
     public function refundPaystackTransaction(string $reference, int $amountKes)
     {
         $payload = [

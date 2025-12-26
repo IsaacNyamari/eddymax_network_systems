@@ -18,7 +18,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $recentOrders = Order::latest()->paginate(5);
+        $recentOrders = Order::latest()->with('payments')->paginate(5);
         return view('dashboard.admin.orders.index', compact('recentOrders'));
     }
 

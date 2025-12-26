@@ -10,7 +10,14 @@
             </svg>
             <span class="font-medium">Back to Orders</span>
         </a>
+        <div class="bg-blue-700 z-50 hidden text-white px-4 py-2 border-lime-500 border-l-4 rounded-r-lg fixed top-10 right-5 capitalize"
+            id="alertWait">
+            requesting. please wait!
+        </div>
+        <div id="paymentDetails"
+            class="grid z-50 grid-cols-2 justify-between fixed top-10 content-center items-center w-full">
 
+        </div>
         <!-- Header -->
         <div class="flex items-center justify-between">
             <div>
@@ -335,65 +342,7 @@
                     </div>
                 </div>
 
-                <script>
-                    // Video modal functions
-                    let currentVideoUrl = '';
 
-                    function openVideoModal(videoUrl) {
-                        const modal = document.getElementById('videoModal');
-                        const video = document.getElementById('modalVideo');
-
-                        currentVideoUrl = videoUrl;
-                        video.src = videoUrl;
-
-                        modal.classList.remove('hidden');
-                        modal.classList.add('flex');
-                        document.body.style.overflow = 'hidden';
-
-                        // Play video when modal opens
-                        video.load();
-                        video.play().catch(e => {
-                            console.log('Autoplay prevented, user can play manually');
-                        });
-                    }
-
-                    function closeVideoModal() {
-                        const modal = document.getElementById('videoModal');
-                        const video = document.getElementById('modalVideo');
-
-                        video.pause();
-                        video.currentTime = 0;
-
-                        modal.classList.remove('flex');
-                        modal.classList.add('hidden');
-                        document.body.style.overflow = 'auto';
-                    }
-
-                    function downloadCurrentVideo() {
-                        if (currentVideoUrl) {
-                            const link = document.createElement('a');
-                            link.href = currentVideoUrl;
-                            link.download = currentVideoUrl.split('/').pop();
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                        }
-                    }
-
-                    // Close modal on ESC key
-                    document.addEventListener('keydown', function(e) {
-                        if (e.key === 'Escape') {
-                            closeVideoModal();
-                        }
-                    });
-
-                    // Close modal when clicking outside
-                    document.getElementById('videoModal').addEventListener('click', function(e) {
-                        if (e.target.id === 'videoModal') {
-                            closeVideoModal();
-                        }
-                    });
-                </script>
             </div>
 
             <!-- Right Column - Actions & Timeline -->
@@ -702,6 +651,152 @@
                     document.body.appendChild(lightbox);
                 });
             });
+        });
+    </script>
+
+    <script>
+        let paymentDetails = document.getElementById('paymentDetails');
+        let alertWait = document.getElementById('alertWait');
+        document.addEventListener('livewire:init', () => {
+            document.querySelectorAll(".actionButtons").forEach(button => {
+                button.addEventListener('click', () => {
+                    alertWait.classList.remove("hidden")
+                })
+            })
+            Livewire.on('return-updated', (result) => {
+                alertWait.classList.add("hidden")
+            })
+            Livewire.on('check-payment-success', (result) => {
+                data = JSON.parse(result);
+                alertWait.classList.add("hidden")
+                paymentDetails.classList.remove("hidden")
+                paymentDetails.innerHTML = `
+                <div id="paymentModal" class="ml-auto grid grid-flow-row w-96 bg-gradient-to-b from-blue-200 via-blue-50 to-red-100 text-gray-800 p-0 rounded-2xl shadow-2xl overflow-hidden shadow-sm">
+    <!-- Header with maroon background -->
+    <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4">
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold text-white">Payment Details</h2>
+            <button 
+                onclick="closeModal(this.parentElement.parentElement.parentElement)" 
+                class="text-white hover:text-blue-200 text-xl font-bold transition-colors duration-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-white hover:bg-opacity-20"
+                id='closePaymentModalBtn'
+            >
+                ×
+            </button>
+        </div>
+    </div>
+
+    <!-- Content area with your original data display -->
+    <div class="p-6 space-y-4">
+        <!-- Status with blue highlight -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-md">
+            <p class="text-sm font-medium text-blue-100 mb-1">Status</p>
+            <p class="text-lg font-semibold">${data.message}</p>
+        </div>
+        
+        <!-- Your original fields with improved styling -->
+        <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm">
+            <p class="text-sm text-gray-600 font-medium mb-1">Paid via</p>
+            <p class="text-gray-800 font-semibold flex items-center">
+                <span class="w-6 h-6 rounded-full bg-maroon-600 flex items-center justify-center text-white text-xs mr-2">P</span>
+                ${data.brand}
+            </p>
+        </div>
+        
+        <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm">
+            <p class="text-sm text-gray-600 font-medium mb-1">M-Pesa Code</p>
+            <p class="text-gray-800 font-semibold flex items-center">
+                <span class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs mr-2">#</span>
+                ${data.receipt}
+            </p>
+        </div>
+        
+        <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm">
+            <p class="text-sm text-gray-600 font-medium mb-1">Phone Number</p>
+            <p class="text-gray-800 font-semibold flex items-center">
+                <span class="w-6 h-6 rounded-full bg-maroon-600 flex items-center justify-center text-white text-xs mr-2">📱</span>
+                ${data.phone}
+            </p>
+        </div>
+    </div>
+    
+    <!-- Footer with maroon button -->
+    <div class="bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-4 border-t border-blue-200">
+        <button 
+            onclick="closeModal(this.parentElement.parentElement)"
+            class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-3 rounded-lg font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-md"
+        >
+            Close Details
+        </button>
+    </div>
+</div>
+                `
+
+
+            })
+        })
+
+        function closeModal(element) {
+            element.classList.add('hidden')
+        }
+    </script>
+    <script>
+        // Video modal functions
+        let currentVideoUrl = '';
+
+        function openVideoModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+
+            currentVideoUrl = videoUrl;
+            video.src = videoUrl;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            // Play video when modal opens
+            video.load();
+            video.play().catch(e => {
+                console.log('Autoplay prevented, user can play manually');
+            });
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+
+            video.pause();
+            video.currentTime = 0;
+
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function downloadCurrentVideo() {
+            if (currentVideoUrl) {
+                const link = document.createElement('a');
+                link.href = currentVideoUrl;
+                link.download = currentVideoUrl.split('/').pop();
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target.id === 'videoModal') {
+                closeVideoModal();
+            }
         });
     </script>
 @endsection

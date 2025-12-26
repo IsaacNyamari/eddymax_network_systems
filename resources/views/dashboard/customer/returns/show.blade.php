@@ -31,6 +31,12 @@
                                     'border' => 'border-green-200',
                                     'icon' => 'M5 13l4 4L19 7',
                                 ],
+                                'refunded' => [
+                                    'bg' => 'bg-green-100',
+                                    'text' => 'text-green-800',
+                                    'border' => 'border-green-200',
+                                    'icon' => 'M5 13l4 4L19 7',
+                                ],
                                 'rejected' => [
                                     'bg' => 'bg-red-100',
                                     'text' => 'text-red-800',
@@ -110,6 +116,13 @@
                         'icon' => 'text-green-600',
                         'text' => 'text-green-800',
                         'title' => 'Return Approved!',
+                    ],
+                    'refunded' => [
+                        'bg' => 'from-green-50 to-emerald-50',
+                        'border' => 'border-green-200',
+                        'icon' => 'text-green-600',
+                        'text' => 'text-green-800',
+                        'title' => 'Return Refunded!',
                     ],
                     'rejected' => [
                         'bg' => 'from-red-50 to-pink-50',
@@ -403,8 +416,9 @@
                                 @endif
                                 <div class="flex-1">
                                     <h3 class="font-medium text-gray-900 text-lg">{{ $product['name'] }}</h3>
-                                    <p class="text-gray-600 text-sm mt-1">
-                                        {{ $product['description'] ?? 'No description available' }}</p>
+                                    <div class="text-gray-600 text-sm mt-1">
+
+                                        {!! Str::limit($product['description'], 100, '...') ?? 'No description' !!}</div>
                                     <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                                         <div class="bg-gray-50 p-3 rounded-lg">
                                             <p class="text-xs text-gray-500">Unit Price</p>
@@ -521,12 +535,9 @@
                 <div class="bg-white shadow rounded-lg p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Need Assistance?</h2>
                     <div class="space-y-3">
-                        <a href="mailto:support@example.com?subject=Return%20#{{ $return->id }}%20-%20Order%20#{{ $return->order->order_number }}"
+                        <a href="mailto:procodestechnologies@gmail.com?subject=Return%20%23{{ $return->id }}%20-%20Order%20%23{{ $return->order->order_number }}&body=Hello%20Support%2C%0D%0A%0D%0ARegarding%20Return%20%23{{ $return->id }}%20(Order%20%23{{ $return->order->order_number }})%0D%0A%0D%0AMy%20message%3A%0D%0A%0D%0A%3CPlease%20type%20your%20message%20here%3E%0D%0A%0D%0A%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%2D%0D%0A{{ urlencode(auth()->user()->name) }}%0D%0A{{ urlencode(auth()->user()->email) }}"
                             class="flex items-center justify-center w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
+                            <!-- SVG icon -->
                             Email Support
                         </a>
 
