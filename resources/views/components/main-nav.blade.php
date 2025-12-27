@@ -106,18 +106,19 @@
 
                     <!-- Mobile menu button -->
                     <button type="button" command="show-modal" commandfor="mobile-menu"
-                        class="rounded-md p-2 text-gray-400 lg:hidden">
+                        class="rounded-md p-2 flex text-gray-400 lg:hidden">
                         <span class="sr-only">Open menu</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-6">
                             <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round"
                                 stroke-linejoin="round" />
                         </svg>
+                        <span class="ml-1">Menu</span>
                     </button>
 
                     <!-- Logo -->
-                    <div class="ml-4 flex lg:ml-0">
+                    <div class="ml-4 hidden lg:flex">
                         <a href="/">
-                            <img src="{{ asset('images/edymax-logo.png') }}" class="h-16 w-auto" />
+                            <img src="{{ asset('images/edymax-logo.png') }}" class="h-16 w-auto" alt="EdyMax Logo" />
                         </a>
                     </div>
 

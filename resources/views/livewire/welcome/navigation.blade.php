@@ -11,22 +11,22 @@
     <nav class="bg-white border-default">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4 py-2.5">
             <!-- Mobile menu button (hidden on desktop) -->
-            <button data-collapse-toggle="navbar-dropdown" type="button"
-                class="inline-flex items-center p-2 w-10 h-10 justify-center text-heading bg-white box-border border border-white hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-base focus:outline-none md:hidden"
-                aria-controls="navbar-dropdown" aria-expanded="false">
-                <span class="sr-only">Open main menu</span>
+            <button type="button" data-collapse-toggle="navbar-dropdown" aria-controls="navbar-dropdown"
+                aria-expanded="false"
+                class="inline-flex items-center justify-center w-10 h-10 p-2 font-medium leading-5 text-heading bg-white border border-white rounded-base box-border hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary focus:outline-none md:hidden">
                 <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                     fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14" />
                 </svg>
             </button>
+            <span class="lg:hidden">Categories</span>
 
 
 
             <!-- Navigation menu (visible on all devices) -->
             <div class="w-full md:w-auto hidden md:block" id="navbar-dropdown">
                 <ul
-                    class="flex flex-col font-medium p-4 mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:mt-0 md:text-sm md:border-0 md:bg-white md:space-x-8 md:rtl:space-x-reverse md:space-y-0 md:p-0 space-y-0">
+                    class="flex flex-col font-medium  mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:mt-0 md:text-sm md:border-0 md:bg-white md:space-x-8 md:rtl:space-x-reverse md:space-y-0 md:p-0 space-y-0">
                     @foreach ($parents as $category)
                         <li class="relative group">
                             @if (isset($category->children) && $category->children->count() > 0)

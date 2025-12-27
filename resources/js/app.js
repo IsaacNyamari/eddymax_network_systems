@@ -5,7 +5,7 @@ import 'flowbite';
 import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
 
 // Import Alpine
-import Alpine from 'alpinejs';
+// import Alpine from 'alpinejs';
 
 // Import Chart.js
 import Chart from 'chart.js/auto';

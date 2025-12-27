@@ -156,7 +156,7 @@
 
         <!-- Submit Button -->
         <div class="pt-6 border-t">
-            <button type="submit" wire:loading.attr="disabled"
+            <button type="submit" id="saveSettingsButton" wire:loading.attr="disabled"
                 class="bg-green-800 text-white px-6 py-3 rounded-lg hover:bg-green-600 hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                 <span wire:loading wire:target="saveSiteSetting" class="flex items-center">
                     <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
@@ -179,3 +179,4 @@
         </div>
     </form>
 </div>
+

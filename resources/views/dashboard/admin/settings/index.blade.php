@@ -206,7 +206,7 @@
     </div>
 @endsection
 
-@push('scripts')
+{{-- @push('scripts')
     <script>
         // Auto-refresh the page when backup is created (optional)
         @if (session('success') && str_contains(session('success'), 'Backup'))
@@ -223,4 +223,4 @@
             return false;
         }
     </script>
-@endpush
+@endpush --}}
