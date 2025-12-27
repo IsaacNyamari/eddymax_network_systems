@@ -15,34 +15,51 @@ class ReturnActions extends Component
     public $return_status = 'pending';
     public function updateRequestStatus(OrderReturns $return, string $action)
     {
-        // $returnUpdate = OrderReturns::find($return);
         if ($action === 'refunded') {
             if ($return->order->payments) {
                 $reference = $return->order->payments->reference;
                 $data = $this->verifyPaystackTransaction($reference);
-                // dd($data['reference'], $data['amount']);
-                if ($data['status'] === "success") {
-                    $refund = $this->refundPaystackTransaction($data['reference'], $data['amount']);
-                    Mail::to($return->order->user->email)->send(new MailOrderReturns($return, $this->return->status));
 
+                if ($data['status'] === "success") {
+                    $refund_data = $this->refundPaystackTransaction($data['reference'], $data['amount']);
+                   
+                    // ⬇️ CRITICAL FIX: Check if refund succeeded
+                    if ($refund_data['status'] === false) {
+                        $this->dispatch('low-balance', $refund_data['message']);
+                        return false; // Stop here if refund failed
+                    }
+
+                    // Only send email if refund succeeded
+                    Mail::to($return->order->user->email)->send(new MailOrderReturns($return, $this->return->status));
                     $this->dispatch('refund-made', ['message' => "Order refund has been approved!"]);
+
+                    // ⬇️ Update status only if refund succeeded
+                    $return->update(['status' => $action]);
+                    $this->return->status = $action;
+
+                    return true; // Success
+                } else {
+                    $this->dispatch('verification-failed', ['message' => "Payment verification failed."]);
+                    return false; // Stop here
                 }
+            } else {
+                $this->dispatch('no-payment', ['message' => "No payment found for this order."]);
+                return false; // Stop here
             }
         }
-        // dd($returnUpdate->order->user->email);
-        if ($return) {
-            $return->update([
-                'status' => $action
-            ]);
 
-            // Update the local return property
+        // Handle non-refund actions
+        if ($return) {
+            $return->update(['status' => $action]);
             $this->return->status = $action;
-            // Optional: Show success message
             Mail::to($return->order->user->email)->send(new MailOrderReturns($return, $this->return->status));
             $this->dispatch('return-updated', [
                 "message" => "Return {$action} successfully!"
             ]);
+            return true;
         }
+
+        return false;
     }
     public function verifyPaystackTransaction(string $reference)
     {
@@ -123,23 +140,18 @@ class ReturnActions extends Component
             ->post('https://api.paystack.co/refund', $payload);
 
         if ($response->failed()) {
-            dd([
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
-            logger()->error('Paystack refund failed', [
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
-
-            throw new \Exception('Refund request failed.');
+            // $this->dispatch('low-balance', $response['message']);
+            // throw new \Exception('Refund request failed.');
+            return $response->json();
         }
 
         $data = $response->json();
 
-        if ($data['status'] !== true) {
-            throw new \Exception($data['message'] ?? 'Refund not successful.');
-        }
+        // if ($data['status'] !== true) {
+        //     // $this->dispatch('low-balance', $response['message']);
+        //     // throw new \Exception($data['message'] ?? 'Refund not successful.');
+        //     return $response->json;
+        // }
 
         return $data['data']['status'];
     }

@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string("file");
             $table->string("path");
+            $table->string("size");
+            $table->string("note")->nullable();
+            $table->integer("download_count")->default(0);
+            $table->timestamp("last_downloaded_at");
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ use App\Http\Controllers\FrontStoreController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
+use App\Livewire\SiteSettings;
 use App\Models\Brands;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
@@ -114,8 +115,6 @@ Route::get('/navigation', function () {
 //         'column_count' => count($columns)
 //     ]);
 // });
-
-// back-up database
 
 // Dashboard 
 require __DIR__ . '/dashboard.php';

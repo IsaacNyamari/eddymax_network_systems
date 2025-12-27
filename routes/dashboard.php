@@ -108,6 +108,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings');
         Route::patch('/settings/general', [SettingController::class, 'updateGeneral'])->name('settings.general.update');
         Route::post('/settings/backup-database', [SettingController::class, 'createBackup'])->name('settings.backup.database');
+        Route::post('/settings/backup/download/{path}', [SettingController::class, 'downloadFile'])->name('settings.backup.download');
+        Route::post('/settings/backup/delete/{path}', [SettingController::class, 'deleteBackup'])->name('settings.backup.delete');
         Route::patch('/settings/shipping', [SettingController::class, 'updateShipping'])->name('settings.shipping.update');
         Route::patch('/settings/email', [SettingController::class, 'updateEmail'])->name('settings.email.update');
 

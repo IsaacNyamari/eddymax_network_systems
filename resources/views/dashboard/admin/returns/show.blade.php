@@ -380,206 +380,7 @@
                     </div>
                 </div>
                 <!-- Timeline Card -->
-                <div class="bg-white shadow rounded-lg p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Return Timeline</h2>
-                    <div class="space-y-4">
-                        <!-- Timeline 1: Return Request Submitted -->
-                        <div class="flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                    </svg>
-                                </div>
-                                <div class="w-0.5 h-full bg-gray-200 mt-2"></div>
-                            </div>
-                            <div class="flex-1 pb-4">
-                                <p class="text-sm font-medium text-gray-900">Return Request Submitted</p>
-                                <p class="text-xs text-gray-500">
-                                    {{ $return->created_at->diffForHumans() }}</p>
-                                <p class="text-xs text-gray-600 mt-1">Customer requested return for order
-                                    #{{ $return->order_id }}</p>
-                            </div>
-                        </div>
-
-                        <!-- Timeline 2: Admin Review -->
-                        <div class="flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div
-                                    class="w-8 h-8 rounded-full {{ $return->status == 'pending' ? 'bg-yellow-100' : 'bg-green-100' }} flex items-center justify-center">
-                                    @if ($return->status == 'pending')
-                                        <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    @else
-                                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    @endif
-                                </div>
-                                <div class="w-0.5 h-full bg-gray-200 mt-2"></div>
-                            </div>
-                            <div class="flex-1 pb-4">
-                                <p class="text-sm font-medium text-gray-900">Under Review</p>
-                                @if ($return->status == 'pending')
-                                    <p class="text-xs text-yellow-600 font-medium">Currently reviewing</p>
-                                @else
-                                    <p class="text-xs text-gray-500">
-                                        {{ $return->updated_at->diffForhumans() }}
-                                    </p>
-                                    <p class="text-xs text-gray-600 mt-1">Return request reviewed by admin</p>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Timeline 3: Status Decision -->
-                        <div class="flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div
-                                    class="w-8 h-8 rounded-full 
-                    {{ $return->status == 'approved'
-                        ? 'bg-blue-100'
-                        : ($return->status == 'rejected'
-                            ? 'bg-red-100'
-                            : ($return->status == 'completed'
-                                ? 'bg-green-100'
-                                : 'bg-gray-100')) }} 
-                    flex items-center justify-center">
-                                    @if ($return->status == 'approved')
-                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    @elseif($return->status == 'rejected')
-                                        <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                    @elseif($return->status == 'completed')
-                                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                    @else
-                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    @endif
-                                </div>
-                                <div class="w-0.5 h-full bg-gray-200 mt-2"></div>
-                            </div>
-                            <div class="flex-1 pb-4">
-                                <p class="text-sm font-medium text-gray-900">Status Decision</p>
-                                @if (in_array($return->status, ['approved', 'rejected', 'completed']))
-                                    <p class="text-xs text-gray-500">
-                                        {{ $return->updated_at->diffForHumans() }}</p>
-                                    <p
-                                        class="text-xs 
-                        {{ $return->status == 'approved'
-                            ? 'text-blue-600'
-                            : ($return->status == 'rejected'
-                                ? 'text-red-600'
-                                : 'text-green-600') }} 
-                        font-medium mt-1">
-                                        Return {{ ucfirst($return->status) }}
-                                    </p>
-                                @else
-                                    <p class="text-xs text-gray-400">Pending decision</p>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Timeline 4: Item Collection/Shipping -->
-                        <div class="flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div
-                                    class="w-8 h-8 rounded-full 
-                    {{ $return->status == 'completed'
-                        ? 'bg-green-100'
-                        : ($return->status == 'approved'
-                            ? 'bg-blue-100'
-                            : 'bg-gray-100') }} 
-                    flex items-center justify-center">
-                                    @if ($return->status == 'completed' || $return->status == 'approved')
-                                        <svg class="w-4 h-4 {{ $return->status == 'completed' ? 'text-green-600' : 'text-blue-600' }}"
-                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                    @else
-                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                                        </svg>
-                                    @endif
-                                </div>
-                                <div class="w-0.5 h-full bg-gray-200 mt-2"></div>
-                            </div>
-                            <div class="flex-1 pb-4">
-                                <p class="text-sm font-medium text-gray-900">Item Collection</p>
-                                @if ($return->status == 'completed')
-                                    <p class="text-xs text-gray-500">
-                                        {{ $return->updated_at->diffForHumans() }}
-                                    </p>
-                                    <p class="text-xs text-gray-600 mt-1">Item collected by courier</p>
-                                @elseif($return->status == 'approved')
-                                    <p class="text-xs text-blue-600 font-medium">Awaiting collection</p>
-                                @else
-                                    <p class="text-xs text-gray-400">Not applicable</p>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Timeline 5: Refund/Completion -->
-                        <div class="flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div
-                                    class="w-8 h-8 rounded-full 
-                    {{ $return->status == 'completed' ? 'bg-green-100' : 'bg-gray-100' }} 
-                    flex items-center justify-center">
-                                    @if ($return->status == 'completed')
-                                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                                            </path>
-                                        </svg>
-                                    @else
-                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                            </path>
-                                        </svg>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-900">Refund Processed</p>
-                                @if ($return->status == 'completed')
-                                    <p class="text-xs text-gray-500">
-                                        {{ $return->updated_at->diffForHumans() }}</p>
-                                    <p class="text-xs text-green-600 font-medium mt-1">Refund of
-                                        ${{ number_format($return->refund_amount, 2) }} completed</p>
-                                @else
-                                    <p class="text-xs text-gray-400">Awaiting completion</p>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <livewire:admmin-returns-page-refresh :return="$return" />
 
                 <!-- Customer Info Card -->
                 <div class="bg-white shadow rounded-lg p-6">
@@ -594,8 +395,8 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="font-medium text-gray-900">User #{{ $return->order->user_id }}</p>
-                                <p class="text-sm text-gray-500">Customer ID</p>
+                                <p class="font-medium text-gray-900">{{ $return->order->user->name }}</p>
+                                <p class="text-sm text-gray-500">{{ $return->order->user->email }}</p>
                             </div>
                         </div>
                         <div class="pt-3 border-t">
@@ -654,91 +455,154 @@
         });
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        let paymentDetails = document.getElementById('paymentDetails');
-        let alertWait = document.getElementById('alertWait');
         document.addEventListener('livewire:init', () => {
+            // Show loading alert when action buttons are clicked
             document.querySelectorAll(".actionButtons").forEach(button => {
                 button.addEventListener('click', () => {
-                    alertWait.classList.remove("hidden")
-                })
-            })
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait while we process your request',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                });
+            });
+
+            // Handle successful return updates
             Livewire.on('return-updated', (result) => {
-                alertWait.classList.add("hidden")
-            })
+                Swal.close();
+
+                const message = Array.isArray(result) ?
+                    (result.message || result[0]) :
+                    (result.message || result);
+
+                Swal.fire({
+                    title: 'Success!',
+                    text: message || 'Return status updated successfully',
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            });
+
+            // Handle low balance errors
+            Livewire.on('low-balance', (result) => {
+                Swal.close();
+
+                const message = Array.isArray(result) ? result[0] : result;
+
+                Swal.fire({
+                    title: 'Insufficient Funds',
+                    text: message || 'Unable to process refund due to insufficient balance',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK',
+                    showCancelButton: true,
+                    cancelButtonText: 'Contact Support',
+                    cancelButtonColor: '#6c757d',
+                }).then((result) => {
+                    if (result.isDismissed && result.dismiss === 'cancel') {
+                        // User clicked "Contact Support"
+                        window.location.href = '/contact-support';
+                    }
+                });
+            });
+
+            // Handle payment success details
             Livewire.on('check-payment-success', (result) => {
-                data = JSON.parse(result);
-                alertWait.classList.add("hidden")
-                paymentDetails.classList.remove("hidden")
-                paymentDetails.innerHTML = `
-                <div id="paymentModal" class="ml-auto grid grid-flow-row w-96 bg-gradient-to-b from-blue-200 via-blue-50 to-red-100 text-gray-800 p-0 rounded-2xl shadow-2xl overflow-hidden shadow-sm">
-    <!-- Header with maroon background -->
-    <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-bold text-white">Payment Details</h2>
-            <button 
-                onclick="closeModal(this.parentElement.parentElement.parentElement)" 
-                class="text-white hover:text-blue-200 text-xl font-bold transition-colors duration-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-white hover:bg-opacity-20"
-                id='closePaymentModalBtn'
-            >
-                ×
-            </button>
-        </div>
-    </div>
+                Swal.close();
 
-    <!-- Content area with your original data display -->
-    <div class="p-6 space-y-4">
-        <!-- Status with blue highlight -->
-        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-md">
-            <p class="text-sm font-medium text-blue-100 mb-1">Status</p>
-            <p class="text-lg font-semibold">${data.message}</p>
-        </div>
-        
-        <!-- Your original fields with improved styling -->
-        <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm">
-            <p class="text-sm text-gray-600 font-medium mb-1">Paid via</p>
-            <p class="text-gray-800 font-semibold flex items-center">
-                <span class="w-6 h-6 rounded-full bg-maroon-600 flex items-center justify-center text-white text-xs mr-2">P</span>
-                ${data.brand}
-            </p>
-        </div>
-        
-        <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm">
-            <p class="text-sm text-gray-600 font-medium mb-1">M-Pesa Code</p>
-            <p class="text-gray-800 font-semibold flex items-center">
-                <span class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs mr-2">#</span>
-                ${data.receipt}
-            </p>
-        </div>
-        
-        <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm">
-            <p class="text-sm text-gray-600 font-medium mb-1">Phone Number</p>
-            <p class="text-gray-800 font-semibold flex items-center">
-                <span class="w-6 h-6 rounded-full bg-maroon-600 flex items-center justify-center text-white text-xs mr-2">📱</span>
-                ${data.phone}
-            </p>
-        </div>
-    </div>
-    
-    <!-- Footer with maroon button -->
-    <div class="bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-4 border-t border-blue-200">
-        <button 
-            onclick="closeModal(this.parentElement.parentElement)"
-            class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-3 rounded-lg font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-md"
-        >
-            Close Details
-        </button>
-    </div>
-</div>
-                `
+                try {
+                    const data = JSON.parse(result);
 
+                    Swal.fire({
+                        title: 'Payment Details',
+                        html: `
+                        <div class="text-left space-y-3">
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <p class="text-sm text-blue-700 font-medium mb-1">Status</p>
+                                <p class="text-lg font-semibold text-blue-800">${data.message || 'Success'}</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-gray-50 p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600 font-medium mb-1">Paid via</p>
+                                    <p class="text-gray-800 font-semibold">${data.brand || 'N/A'}</p>
+                                </div>
+                                
+                                <div class="bg-gray-50 p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600 font-medium mb-1">M-Pesa Code</p>
+                                    <p class="text-gray-800 font-semibold">${data.receipt || 'N/A'}</p>
+                                </div>
+                                
+                                <div class="bg-gray-50 p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600 font-medium mb-1">Phone Number</p>
+                                    <p class="text-gray-800 font-semibold">${data.phone || 'N/A'}</p>
+                                </div>
+                                
+                                <div class="bg-gray-50 p-3 rounded-lg">
+                                    <p class="text-sm text-gray-600 font-medium mb-1">Amount</p>
+                                    <p class="text-gray-800 font-semibold">${data.amount ? 'KES ' + data.amount : 'N/A'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                        icon: 'success',
+                        width: '500px',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Close',
+                        showCloseButton: true
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Unable to display payment details',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
 
-            })
-        })
+            // Handle refund success
+            Livewire.on('refund-made', (result) => {
+                Swal.close();
 
-        function closeModal(element) {
-            element.classList.add('hidden')
+                const message = Array.isArray(result) ?
+                    (result.message || result[0]) :
+                    (result.message || result);
+
+                Swal.fire({
+                    title: 'Refund Successful!',
+                    text: message || 'Refund has been processed successfully',
+                    icon: 'success',
+                    confirmButtonColor: '#10b981',
+                    confirmButtonText: 'OK',
+                    timer: 5000,
+                    timerProgressBar: true,
+                });
+            });
+        });
+
+        // Optional: Add custom CSS for SweetAlert
+        const style = document.createElement('style');
+        style.textContent = `
+        .swal2-popup {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
         }
+        .swal2-title {
+            color: #1f2937;
+        }
+        .swal2-html-container {
+            color: #4b5563;
+        }
+            `;
+        document.head.appendChild(style);
     </script>
     <script>
         // Video modal functions
