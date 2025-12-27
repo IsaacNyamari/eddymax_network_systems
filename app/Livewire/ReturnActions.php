@@ -22,7 +22,7 @@ class ReturnActions extends Component
 
                 if ($data['status'] === "success") {
                     $refund_data = $this->refundPaystackTransaction($data['reference'], $data['amount']);
-                   
+
                     // ⬇️ CRITICAL FIX: Check if refund succeeded
                     if ($refund_data['status'] === false) {
                         $this->dispatch('low-balance', $refund_data['message']);
@@ -115,9 +115,10 @@ class ReturnActions extends Component
         if (!($payload['status'] ?? false)) {
             return false;
         }
+
         $payment_info = [
             "message" => $payload['message'],
-            // "status" => $payload['data']['status'],
+            "amount" => ($payload['data']['amount']) / 100,
             "receipt" => $payload['data']['receipt_number'],
             "brand" => $payload['data']['authorization']['brand'],
             "phone" => $payload['data']['authorization']['mobile_money_number']

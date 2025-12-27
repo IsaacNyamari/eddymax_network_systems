@@ -428,7 +428,7 @@
 
     <!-- JavaScript for Image Lightbox -->
     <script>
-        // Simple image lightbox
+
         document.addEventListener('DOMContentLoaded', function() {
             const images = document.querySelectorAll('img[src*="storage"]');
             images.forEach(img => {
@@ -439,24 +439,66 @@
                     lightbox.className =
                         'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center';
                     lightbox.innerHTML = `
-                        <div class="relative max-w-4xl max-h-full">
-                            <img src="${src}" class="max-w-full max-h-screen">
-                            <button onclick="this.parentElement.parentElement.remove()" 
-                                    class="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                    `;
+                    <div class="relative max-w-4xl max-h-full">
+                        <img src="${src}" class="max-w-full max-h-screen">
+                        <button onclick="this.parentElement.parentElement.remove()" 
+                                class="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                `;
                     document.body.appendChild(lightbox);
                 });
             });
         });
-    </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+        // 2. Video modal functions
+        let currentVideoUrl = '';
+
+        function openVideoModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+
+            currentVideoUrl = videoUrl;
+            video.src = videoUrl;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            // Play video when modal opens
+            video.load();
+            video.play().catch(e => {
+                console.log('Autoplay prevented, user can play manually');
+            });
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+
+            video.pause();
+            video.currentTime = 0;
+
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function downloadCurrentVideo() {
+            if (currentVideoUrl) {
+                const link = document.createElement('a');
+                link.href = currentVideoUrl;
+                link.download = currentVideoUrl.split('/').pop();
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // 3. Livewire with SweetAlert integration
         document.addEventListener('livewire:init', () => {
             // Show loading alert when action buttons are clicked
             document.querySelectorAll(".actionButtons").forEach(button => {
@@ -524,35 +566,35 @@
                     Swal.fire({
                         title: 'Payment Details',
                         html: `
-                        <div class="text-left space-y-3">
-                            <div class="bg-blue-50 p-3 rounded-lg">
-                                <p class="text-sm text-blue-700 font-medium mb-1">Status</p>
-                                <p class="text-lg font-semibold text-blue-800">${data.message || 'Success'}</p>
+                    <div class="text-left space-y-3">
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <p class="text-sm text-blue-700 font-medium mb-1">Status</p>
+                            <p class="text-lg font-semibold text-blue-800">${data.message || 'Success'}</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <p class="text-sm text-gray-600 font-medium mb-1">Paid via</p>
+                                <p class="text-gray-800 font-semibold">${data.brand || 'N/A'}</p>
                             </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div class="bg-gray-50 p-3 rounded-lg">
-                                    <p class="text-sm text-gray-600 font-medium mb-1">Paid via</p>
-                                    <p class="text-gray-800 font-semibold">${data.brand || 'N/A'}</p>
-                                </div>
-                                
-                                <div class="bg-gray-50 p-3 rounded-lg">
-                                    <p class="text-sm text-gray-600 font-medium mb-1">M-Pesa Code</p>
-                                    <p class="text-gray-800 font-semibold">${data.receipt || 'N/A'}</p>
-                                </div>
-                                
-                                <div class="bg-gray-50 p-3 rounded-lg">
-                                    <p class="text-sm text-gray-600 font-medium mb-1">Phone Number</p>
-                                    <p class="text-gray-800 font-semibold">${data.phone || 'N/A'}</p>
-                                </div>
-                                
-                                <div class="bg-gray-50 p-3 rounded-lg">
-                                    <p class="text-sm text-gray-600 font-medium mb-1">Amount</p>
-                                    <p class="text-gray-800 font-semibold">${data.amount ? 'KES ' + data.amount : 'N/A'}</p>
-                                </div>
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <p class="text-sm text-gray-600 font-medium mb-1">M-Pesa Code</p>
+                                <p class="text-gray-800 font-semibold">${data.receipt || 'N/A'}</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <p class="text-sm text-gray-600 font-medium mb-1">Phone Number</p>
+                                <p class="text-gray-800 font-semibold">${data.phone || 'N/A'}</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <p class="text-sm text-gray-600 font-medium mb-1">Amount</p>
+                                <p class="text-gray-800 font-semibold">${data.amount ? 'KES ' + data.amount : 'N/A'}</p>
                             </div>
                         </div>
-                    `,
+                    </div>
+                `,
                         icon: 'success',
                         width: '500px',
                         confirmButtonColor: '#3085d6',
@@ -589,78 +631,41 @@
             });
         });
 
-        // Optional: Add custom CSS for SweetAlert
-        const style = document.createElement('style');
-        style.textContent = `
-        .swal2-popup {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        }
-        .swal2-title {
-            color: #1f2937;
-        }
-        .swal2-html-container {
-            color: #4b5563;
-        }
-            `;
-        document.head.appendChild(style);
-    </script>
-    <script>
-        // Video modal functions
-        let currentVideoUrl = '';
-
-        function openVideoModal(videoUrl) {
-            const modal = document.getElementById('videoModal');
-            const video = document.getElementById('modalVideo');
-
-            currentVideoUrl = videoUrl;
-            video.src = videoUrl;
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-
-            // Play video when modal opens
-            video.load();
-            video.play().catch(e => {
-                console.log('Autoplay prevented, user can play manually');
+        // 4. Event listeners for video modal
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close modal on ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeVideoModal();
+                }
             });
-        }
 
-        function closeVideoModal() {
-            const modal = document.getElementById('videoModal');
-            const video = document.getElementById('modalVideo');
-
-            video.pause();
-            video.currentTime = 0;
-
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        function downloadCurrentVideo() {
-            if (currentVideoUrl) {
-                const link = document.createElement('a');
-                link.href = currentVideoUrl;
-                link.download = currentVideoUrl.split('/').pop();
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        }
-
-        // Close modal on ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeVideoModal();
+            // Close modal when clicking outside (if videoModal exists)
+            const videoModal = document.getElementById('videoModal');
+            if (videoModal) {
+                videoModal.addEventListener('click', function(e) {
+                    if (e.target.id === 'videoModal') {
+                        closeVideoModal();
+                    }
+                });
             }
         });
 
-        // Close modal when clicking outside
-        document.getElementById('videoModal').addEventListener('click', function(e) {
-            if (e.target.id === 'videoModal') {
-                closeVideoModal();
+        // 5. Optional: Add custom CSS for SweetAlert
+        document.addEventListener('DOMContentLoaded', function() {
+            const style = document.createElement('style');
+            style.textContent = `
+            .swal2-popup {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             }
+            .swal2-title {
+                color: #1f2937;
+            }
+            .swal2-html-container {
+                color: #4b5563;
+            }
+        `;
+            document.head.appendChild(style);
         });
     </script>
 @endsection

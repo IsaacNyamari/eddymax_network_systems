@@ -9,7 +9,7 @@
         {{ ucfirst($return->status) }}
     </span>
     @if ($return->status != 'refunded')
-        <button id="checkTransaction" wire:target="updateRequestStatus"
+        <button id="checkTransaction" wire:target="confirmPayment"
             wire:click="confirmPayment('{{ $return->order->payments->reference }}')"
             class="bg-purple-600 px-4 mb-2 py-2 rounded text-white hover:bg-purple-700 actionButtons">
             Check Transaction
