@@ -402,7 +402,7 @@
             </main>
         </div>
     </div>
-    <script src="{{ asset('livewire/livewire.js') }}"></script>
+    @livewireScripts
     <!-- Additional Scripts -->
     @stack('scripts')
 </body>

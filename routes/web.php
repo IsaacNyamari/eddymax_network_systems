@@ -115,7 +115,6 @@ Route::get('/navigation', function () {
 //         'column_count' => count($columns)
 //     ]);
 // });
-
 // Dashboard 
 require __DIR__ . '/dashboard.php';
 // Authentication Routes (Laravel Breeze/Jetstream)
