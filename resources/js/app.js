@@ -2,9 +2,6 @@
 import './bootstrap';
 import 'flowbite';
 
-// Import Livewire
-// import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
-
 // Import Alpine
 import Alpine from 'alpinejs';
 
