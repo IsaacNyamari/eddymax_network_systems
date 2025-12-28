@@ -5,12 +5,7 @@
     <section class="relative py-16 px-4 sm:px-6 lg:px-8">
         <!-- Background Image with Clean Overlay -->
         <div class="absolute inset-0 z-0">
-            <!-- Semi-transparent overlay -->
-            <div class="absolute inset-0 bg-black/50"></div>
-
-            <!-- Subtle gradient -->
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-red-900/20 mix-blend-screen"></div>
-
+           
             <!-- Background Image -->
             <img src="{{ asset('images/Omada-SDN-Banner_High-Resolution.jpg') }}"
                 alt="{{ config('app.name') }} - Technology Solutions" class="w-full h-full object-cover object-center"

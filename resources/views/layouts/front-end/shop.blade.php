@@ -5,10 +5,10 @@
         <!-- Background Image with Clean Overlay -->
         <div class="absolute inset-0 z-0">
             <!-- Semi-transparent overlay -->
-            <div class="absolute inset-0 bg-black/50"></div>
+            {{-- <div class="absolute inset-0 bg-black/50"></div> --}}
 
             <!-- Subtle gradient -->
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-red-900/20 mix-blend-screen"></div>
+            {{-- <div class="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-red-900/20 mix-blend-screen"></div> --}}
 
             <!-- Background Image -->
             <img src="{{ asset('images/Omada-SDN-Banner_High-Resolution.jpg') }}"
@@ -29,31 +29,26 @@
 
 
         <!-- Featured Products -->
-        @foreach ($parent_categories as $index => $category)
-            <div class="mb-16">
-                {{-- @if ($index == 0)
-                    <!-- Category Banner -->
-                    <div class="relative overflow-hidden rounded-2xl mb-10 group cursor-pointer">
-                        <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-10"></div>
-                        <img src="{{ asset('storage/' . $category['image']) }}"
-                            class="w-full h-[400px] object-cover transform group-hover:scale-105 transition-transform duration-700"
-                            alt="{{ $category->name }}" loading="lazy"
-                            onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'">
-                        <div class="absolute bottom-8 left-8 z-20 text-white max-w-lg">
-                            <h3 class="text-3xl font-bold mb-3">Shop {{ $category->name }}</h3>
-                            <p class="text-lg opacity-90 mb-4">Premium quality products curated for you</p>
-                            <a href="{{ route('store.filter.category', $category->slug) }}"
-                                class="inline-flex items-center bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300">
-                                Shop Now
-                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                @endif --}}
+        @php
+            // Define the custom sort order
+            $order = [
+                'Networking' => 1,
+                'Security Systems' => 2,
+                'Computing' => 3,
+                'Solar Solutions' => 4,
+                'Electronics' => 5,
+                'Telephones' => 6,
+                'Accessories' => 7,
+            ];
 
+            // Sort the parent_categories collection based on the custom order
+            $sortedParentCategories = $parent_categories->sortBy(function ($category) use ($order) {
+                return $order[$category->name] ?? 999; // Default to high number for categories not in order list
+            });
+        @endphp
+
+        @foreach ($sortedParentCategories as $index => $category)
+            <div class="mb-16">
                 <!-- Category Header -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
                     <div class="mb-4 sm:mb-0">
@@ -79,7 +74,6 @@
                         <div
                             class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="relative overflow-hidden">
-
                                 <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
                                     class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500"
                                     loading="lazy" onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
@@ -122,13 +116,11 @@
                                             <span class="text-sm text-gray-500 line-through ml-2">Ksh 15,999</span>
                                         @endif
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
-
             </div>
         @endforeach
         <!-- Why Choose Us -->

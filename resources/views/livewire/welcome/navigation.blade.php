@@ -21,13 +21,35 @@
             </button>
             <span class="lg:hidden">Categories</span>
 
-
-
             <!-- Navigation menu (visible on all devices) -->
             <div class="w-full md:w-auto hidden md:block" id="navbar-dropdown">
+                @php
+                    // Define the custom sort order
+                    $order = [
+                        'Networking' => 1,
+                        'Security Systems' => 2,
+                        'Computing' => 3,
+                        'Solar Solutions' => 4,
+                        'Electronics' => 5,
+                        'Telephones' => 6,
+                        'Accessories' => 7,
+                    ];
+
+                    // Sort the parents collection based on the custom order
+                    $sortedParents = $parents->sortBy(function ($category) use ($order) {
+                        return $order[$category->name] ?? 999; // Default to high number for categories not in order list
+                    });
+                @endphp
+
                 <ul
-                    class="flex flex-col font-medium  mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:mt-0 md:text-sm md:border-0 md:bg-white md:space-x-8 md:rtl:space-x-reverse md:space-y-0 md:p-0 space-y-0">
-                    @foreach ($parents as $category)
+                    class="flex flex-col font-medium mt-4 border border-default rounded-base bg-neutral-secondary-soft md:flex-row md:mt-0 md:text-sm md:border-0 md:bg-white md:space-x-8 md:rtl:space-x-reverse md:space-y-0 md:p-0 space-y-0">
+                    @foreach ($sortedParents as $index => $category)
+                        @php
+                            // Your existing code for Networking category
+                            if ($category->name === 'Networking') {
+                                $category[$index] = $category;
+                            }
+                        @endphp
                         <li class="relative group">
                             @if (isset($category->children) && $category->children->count() > 0)
                                 <!-- Parent category with dropdown -->
@@ -45,23 +67,6 @@
                                 <!-- Dropdown menu for children - MOBILE (Full width) -->
                                 <div id="dropdownNavbar-mobile-{{ $category->slug }}"
                                     class="md:hidden bg-white border-t border-b border-default-medium shadow-lg w-full left-0 px-4 py-3">
-                                    {{-- <div
-                                        class="flex items-center justify-between mb-3 pb-2 border-b border-default-soft">
-                                        <button onclick="goBackToParent('{{ $category->slug }}')"
-                                            class="flex items-center text-fg-brand hover:text-fg-brand-dark">
-                                            <svg class="w-5 h-5 mr-2" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 12h14M5 12l4-4m-4 4 4 4" />
-                                            </svg>
-                                            <span class="font-semibold">Back</span>
-                                        </button>
-                                        <h3 class="text-lg font-bold text-heading">{{ $category->name }}</h3>
-                                        <div class="w-12"></div> <!-- Spacer for centering -->
-                                    </div> --}}
-
                                     <ul class="space-y-1">
                                         @foreach ($category->children as $child)
                                             <li class="border-b border-default-soft last:border-b-0">

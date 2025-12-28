@@ -11,10 +11,10 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    @livewireStyles
     <!-- Scripts -->
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
     {{-- sweetalert.js --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
@@ -402,7 +402,7 @@
             </main>
         </div>
     </div>
-    @livewireScripts
+    <script src="{{ asset('livewire/livewire.js') }}"></script>
     <!-- Additional Scripts -->
     @stack('scripts')
 </body>
