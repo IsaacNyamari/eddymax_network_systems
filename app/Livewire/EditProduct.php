@@ -17,6 +17,8 @@ class EditProduct extends Component
     public $product;
     public $brands = [];
 
+    #[Validate('required|int')]
+    public $brand;
     #[Validate('required|string|max:255|min:3')]
     public $name;
 
@@ -56,7 +58,7 @@ class EditProduct extends Component
         $this->existingImage = $product->image;
         $this->description = $product->description;
         $this->category_id = $product->category_id;
-        // $this->brand = $product->brand;
+        $this->brand = $product->brand;
         $this->model = $product->model;
         $this->stock = $product->stock_quantity;
         $this->stock_status = $product->stock_status ?? 'in_stock'; // Fallback to default
