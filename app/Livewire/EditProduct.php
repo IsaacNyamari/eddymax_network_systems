@@ -87,7 +87,7 @@ class EditProduct extends Component
             'description' => $this->description,
             'category_id' => $this->category_id,
             'model' => $this->model,
-            // 'brand' => $this->brand,
+            'brand_id' => $this->brand,
             'stock_quantity' => $this->stock,
             'stock_status' => $this->stock_status,
             'slug' => Str::slug($this->name),
