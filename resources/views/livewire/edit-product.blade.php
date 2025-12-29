@@ -93,11 +93,16 @@
                   @enderror
               </div>
               {{-- MODEL --}}
-              <div>
-                  <x-input-label for="brand">Brand</x-input-label>
-                  <x-text-input type="text" wire:brand.live="brand" id="brand" class="w-full" />
+              <div class="mt-4">
+                  <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
+                  <select name="" wire:model.live='brand'
+                      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
+                      @foreach ($brands as $brandInput)
+                          <option value="{{ $brandInput->id }}">{{ $brandInput->name }}</option>
+                      @endforeach
+                  </select>
                   @error('brand')
-                      <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                      <span class="text-red-600 text-sm">{{ $message }}</span>
                   @enderror
               </div>
 
@@ -125,7 +130,8 @@
                                       <label
                                           class="flex items-center space-x-3 p-2 bg-white rounded shadow-sm mb-2 hover:bg-gray-50 cursor-pointer">
                                           <input type="radio" name="category_id" wire:model.live="category_id"
-                                              value="{{ $parentCategory->id }}" class="text-red-600 focus:ring-red-500">
+                                              value="{{ $parentCategory->id }}"
+                                              class="text-red-600 focus:ring-red-500">
                                           <span class="font-semibold text-gray-800">{{ $parentCategory->name }}</span>
                                           <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">Parent
                                               Category</span>
