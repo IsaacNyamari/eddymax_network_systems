@@ -45,14 +45,13 @@ class DashboardController extends Controller
                 ->whereDate('created_at', today())
                 ->sum('total_amount'),
             'totalProducts' => Product::count(),
-            // 'lowStockProducts' => Product::where('stock', '<', 10)->count(),
-            // 'outOfStockProducts' => Product::where('stock', '<=', 0)->count(),
+            'lowStockProducts' => Product::where('stock_quantity', '<', 10)->count(),
+            'outOfStockProducts' => Product::where('stock_status', '=', 'out_of_stock')->count(),
             'totalCustomers' => User::role('customer')->count(),
             'newCustomers' => User::role('customer')
                 ->whereDate('created_at', '>=', now()->subMonth())
                 ->count(),
         ];
-
         // Calculate Average Order Value
         $completedOrdersCount = Order::where('status', 'delivered')->count();
         $stats['averageOrderValue'] = $completedOrdersCount > 0
