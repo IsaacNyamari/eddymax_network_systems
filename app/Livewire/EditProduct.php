@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Brands;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -14,6 +15,7 @@ class EditProduct extends Component
     use WithFileUploads;
 
     public $product;
+    public $brands = [];
 
     #[Validate('required|string|max:255|min:3')]
     public $name;
@@ -59,6 +61,7 @@ class EditProduct extends Component
         $this->stock = $product->stock_quantity;
         $this->stock_status = $product->stock_status ?? 'in_stock'; // Fallback to default
         $this->categories = Category::all();
+        $this->brands = Brands::all();
     }
 
     public function saveProduct()
