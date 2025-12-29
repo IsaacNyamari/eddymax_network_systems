@@ -1,5 +1,27 @@
   <div class="grid grid-row-1 lg:grid-row-2 gap-6">
-
+      @if ($errors->any())
+          <div class="mb-6 rounded-md bg-red-50 p-4">
+              <div class="flex">
+                  <div class="flex-shrink-0">
+                      <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clip-rule="evenodd" />
+                      </svg>
+                  </div>
+                  <div class="ml-3">
+                      <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                      <div class="mt-2 text-sm text-red-700">
+                          <ul class="list-disc pl-5 space-y-1">
+                              @foreach ($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                              @endforeach
+                          </ul>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      @endif
       <div id="editAlert"
           class="fixed top-5 right-5 rounded-r-lg text-white font-semibold hidden border-l-8 border-l-red-500 z-50 p-4 bg-green-500 justify-center ml-auto">
           Product updated
@@ -95,13 +117,17 @@
               {{-- MODEL --}}
               <div class="mt-4">
                   <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
-                  <select name="" wire:model.live='brand'
+                  <select wire:model.live="brandInputData" name="brandInputData" id="brand"
                       class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
-                      @foreach ($brands as $brandInput)
-                          <option value="{{ $brandInput->id }}">{{ $brandInput->name }}</option>
+                      <option value="">Select a Brand</option>
+                      @foreach ($brands as $brandItem)
+                          <option value="{{ $brandItem->id }}"
+                              {{ $brandInputData == $brandItem->id ? 'selected' : '' }}>
+                              {{ $brandItem->name }}
+                          </option>
                       @endforeach
                   </select>
-                  @error('brand')
+                  @error('brandInputData')
                       <span class="text-red-600 text-sm">{{ $message }}</span>
                   @enderror
               </div>
@@ -153,8 +179,8 @@
                                               <!-- This child category has no children, so it's selectable -->
                                               <label
                                                   class="flex items-center space-x-3 p-2 bg-white rounded shadow-sm mb-1 hover:bg-gray-50 cursor-pointer">
-                                                  <input type="radio" name="category_id" wire:model.live="category_id"
-                                                      value="{{ $childCategory->id }}"
+                                                  <input type="radio" name="category_id"
+                                                      wire:model.live="category_id" value="{{ $childCategory->id }}"
                                                       class="text-red-600 focus:ring-red-500">
                                                   <span
                                                       class="text-gray-700 font-medium">{{ $childCategory->name }}</span>

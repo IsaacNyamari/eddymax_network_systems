@@ -17,8 +17,10 @@ class EditProduct extends Component
     public $product;
     public $brands = [];
 
-    #[Validate('required|int')]
-    public $brand;
+    // Change validation to exists:brands,id since it should be an ID
+    #[Validate('required|exists:brands,id')]
+    public $brandInputData; // This should be the brand ID
+    
     #[Validate('required|string|max:255|min:3')]
     public $name;
 
@@ -28,14 +30,11 @@ class EditProduct extends Component
     #[Validate('required|string|min:0')]
     public $model;
 
-    // #[Validate('required|string|min:0')]
-    // public $brand;
-
     #[Validate('required|numeric|min:0')]
     public $stock;
 
     #[Validate('required|string|in:in_stock,out_of_stock,backorder')]
-    public $stock_status = 'in_stock'; // Default value already set
+    public $stock_status = 'in_stock';
 
     public $existingImage;
 
@@ -58,10 +57,13 @@ class EditProduct extends Component
         $this->existingImage = $product->image;
         $this->description = $product->description;
         $this->category_id = $product->category_id;
-        $this->brand = $product->brand;
+        
+        // FIX: Get just the brand ID, not the entire model
+        $this->brandInputData = $product->brand_id; // Changed from $product->brand
+        
         $this->model = $product->model;
         $this->stock = $product->stock_quantity;
-        $this->stock_status = $product->stock_status ?? 'in_stock'; // Fallback to default
+        $this->stock_status = $product->stock_status ?? 'in_stock';
         $this->categories = Category::all();
         $this->brands = Brands::all();
     }
@@ -82,6 +84,7 @@ class EditProduct extends Component
             $imagePath = $this->image->store('products', 'public');
         }
 
+        // FIX: Use brandInputData directly (it should be an ID now)
         $this->product->update([
             'name' => $this->name,
             'price' => $this->price,
@@ -89,7 +92,7 @@ class EditProduct extends Component
             'description' => $this->description,
             'category_id' => $this->category_id,
             'model' => $this->model,
-            'brand_id' => $this->brand,
+            'brand_id' => $this->brandInputData, // Changed from $this->brandInputData->id
             'stock_quantity' => $this->stock,
             'stock_status' => $this->stock_status,
             'slug' => Str::slug($this->name),
@@ -98,7 +101,7 @@ class EditProduct extends Component
         // Refresh existing image if new one was uploaded
         if ($this->image) {
             $this->existingImage = $imagePath;
-            $this->image = null; // Clear the uploaded file
+            $this->image = null;
         }
 
         session()->flash('message', 'Product updated successfully.');
