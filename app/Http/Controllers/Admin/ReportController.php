@@ -6,37 +6,32 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\PdfReportService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+    protected $pdfService;
+    
+    public function __construct(PdfReportService $pdfService)
+    {
+        $this->pdfService = $pdfService;
+    }
+    
     /**
      * Display a listing of the resource.
      */
-
+    public $statistics = [];
+    
     public function index()
     {
         $activities = [];
         // KPIs
-        $stats = [
-            'totalOrders' => Order::count(),
-            'deliveredOrders' => Order::where('status', 'delivered')->count(),
-            'pendingOrders' => Order::where('status', 'pending')->count(),
-            'processingOrders' => Order::where('status', 'processing')->count(),
-            'todayOrders' => Order::whereDate('created_at', today())->count(),
-            'totalRevenue' => Order::where('status', 'delivered')->sum('total_amount'),
-            'todayRevenue' => Order::where('status', 'delivered')
-                ->whereDate('created_at', today())
-                ->sum('total_amount'),
-            'totalProducts' => Product::count(),
-            // 'lowStockProducts' => Product::where('stock', '<', 10)->count(),
-            // 'outOfStockProducts' => Product::where('stock', '<=', 0)->count(),
-            'totalCustomers' => User::role('customer')->count(),
-            'newCustomers' => User::role('customer')
-                ->whereDate('created_at', '>=', now()->subMonth())
-                ->count(),
-        ];
+        $stats = $this->getStats();
+        $this->statistics = $stats;
+        
         $salesData = Order::select(
             DB::raw('DATE(created_at) as date'),
             DB::raw('SUM(total_amount) as total')
@@ -47,20 +42,81 @@ class ReportController extends Controller
             ->orderBy('date')
             ->get();
 
-        // Recent activities (your logic)
+        // Recent activities
         $activities = $this->getRecentActivities();
 
-        return view('dashboard.admin.reports.index', compact('stats', 'activities','salesData'));
+        return view('dashboard.admin.reports.index', compact('stats', 'activities', 'salesData'));
     }
+
     /**
-     * Show the form for creating a new resource.
+     * Print PDF report
      */
-    public function create()
+    public function print()
     {
-        //
+        $stats = $this->getStats();
+        
+        // Method 1: Using Service
+        $pdf = $this->pdfService->generateDashboardReport($stats);
+        return $pdf->download('dashboard-report-' . date('Y-m-d') . '.pdf');
+        
+        // Method 2: Direct in controller (alternative)
+        // return $this->generatePdf($stats);
     }
+    
+    /**
+     * Generate PDF directly (alternative method)
+     */
+    private function generatePdf($stats)
+    {
+        // Get logo path
+        $logoPath = public_path('storage/logo.png'); // Adjust path as needed
+        $logoBase64 = null;
+        
+        if (file_exists($logoPath)) {
+            $logoData = file_get_contents($logoPath);
+            $logoBase64 = 'data:image/' . pathinfo($logoPath, PATHINFO_EXTENSION) . ';base64,' . base64_encode($logoData);
+        }
+
+        $pdf = Pdf::loadView('pdf.dashboard-report', [
+            'data' => $stats,
+            'logo' => $logoBase64
+        ]);
+        
+        return $pdf->download('dashboard-report-' . date('Y-m-d') . '.pdf');
+        
+        // Alternative return options:
+        // return $pdf->stream('report.pdf'); // Display in browser
+        // return $pdf->save(storage_path('app/reports/report.pdf')); // Save to file
+    }
+    
+    /**
+     * Get statistics data
+     */
+    private function getStats()
+    {
+        return [
+            'totalOrders' => Order::count(),
+            'deliveredOrders' => Order::where('status', 'delivered')->count(),
+            'pendingOrders' => Order::where('status', 'pending')->count(),
+            'processingOrders' => Order::where('status', 'processing')->count(),
+            'todayOrders' => Order::whereDate('created_at', today())->count(),
+            'totalRevenue' => Order::where('status', 'delivered')->sum('total_amount'),
+            'todayRevenue' => Order::where('status', 'delivered')
+                ->whereDate('created_at', today())
+                ->sum('total_amount'),
+            'totalProducts' => Product::count(),
+            'lowStockProducts' => Product::where('stock_quantity', '<', 10)->count(),
+            'outOfStockProducts' => Product::where('stock_status', 'out_of_stock')->count(),
+            'totalCustomers' => User::role('customer')->count(),
+            'newCustomers' => User::role('customer')
+                ->whereDate('created_at', '>=', now()->subMonth())
+                ->count(),
+        ];
+    }
+    
     private function getRecentActivities()
     {
+        // ... (keep your existing getRecentActivities method)
         $activities = [];
 
         // Recent orders
@@ -109,43 +165,6 @@ class ReportController extends Controller
 
         return array_slice($activities, 0, 5);
     }
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    
+    // ... (keep other methods)
 }

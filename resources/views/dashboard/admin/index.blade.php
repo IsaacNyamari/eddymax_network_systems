@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.dashboard')
 
 @section('title', 'Admin Dashboard')
-
+{{-- 
 @section('header')
     <div class="flex justify-between items-center">
 
@@ -24,7 +24,7 @@
             </a>
         </div>
     </div>
-@endsection
+@endsection --}}
 
 @section('content')
     <!-- Stats Overview -->
@@ -83,6 +83,7 @@
                     <p class="text-sm text-gray-500 font-medium">Total Products</p>
                     <p class="text-2xl font-bold text-gray-900 mt-1">{{ $stats['totalProducts'] ?? 0 }}</p>
                     <p class="text-xs text-red-600 mt-1">{{ $stats['lowStockProducts'] ?? 0 }} low stock</p>
+                    <p class="text-xs text-red-600 mt-1">{{ $stats['outOfStockProducts'] ?? 0 }} out of stock</p>
                 </div>
                 <div class="p-3 bg-purple-50 rounded-xl">
                     <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

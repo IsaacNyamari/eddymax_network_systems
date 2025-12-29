@@ -6,9 +6,15 @@
 
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
-        <button onclick="window.print()" class="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-50">
-            Print Report
-        </button>
+        <!-- In your dashboard view -->
+        <a href="{{ route('admin.reports.print') }}"
+            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Download PDF Report
+        </a>
     </div>
 
     <!-- KPI Cards -->
@@ -47,7 +53,7 @@
         </div>
     </div>
 
-<!-- Charts and Recent Activity -->
+    <!-- Charts and Recent Activity -->
     <div class="grid grid-row-3 lg:grid-row-2 gap-6 mb-8">
         <!-- Sales Chart -->
         <div class="lg:col-span-1 bg-white rounded-xl shadow-sm p-6 border border-gray-200">
@@ -100,7 +106,7 @@
             </div>
         </div>
     </div>
- @push('scripts')
+    @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {

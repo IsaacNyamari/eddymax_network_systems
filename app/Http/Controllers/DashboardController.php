@@ -46,7 +46,7 @@ class DashboardController extends Controller
                 ->sum('total_amount'),
             'totalProducts' => Product::count(),
             'lowStockProducts' => Product::where('stock_quantity', '<', 10)->count(),
-            'outOfStockProducts' => Product::where('stock_status', '=', 'out_of_stock')->count(),
+            'outOfStockProducts' => Product::where('stock_status',  'out_of_stock')->count(),
             'totalCustomers' => User::role('customer')->count(),
             'newCustomers' => User::role('customer')
                 ->whereDate('created_at', '>=', now()->subMonth())

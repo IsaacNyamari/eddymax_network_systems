@@ -100,6 +100,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Reports
         Route::get('/reports', [ReportController::class, 'index'])->name('reports');
         Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+        Route::get('/reports/print', [ReportController::class, 'print'])->name('reports.print');
         Route::get('/reports/products', [ReportController::class, 'products'])->name('reports.products');
         Route::get('/reports/customers', [ReportController::class, 'customers'])->name('reports.customers');
         Route::get('/reports/export/{type}', [ReportController::class, 'export'])->name('reports.export');
