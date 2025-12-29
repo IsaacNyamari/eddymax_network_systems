@@ -41,18 +41,18 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white rounded-xl shadow-lg p-8 space-y-4">
                         <h2 class="text-2xl font-bold text-gray-900 mb-2">Our Address</h2>
-                        <p class="text-gray-700">123 Networking Street, Nairobi, Kenya</p>
+                        <p class="text-gray-700">{{ config("settings.location") }}</p>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-lg p-8 space-y-4">
                         <h2 class="text-2xl font-bold text-gray-900 mb-2">Call Us</h2>
-                        <p class="text-gray-700">+254 723 835 303</p>
+                        <p class="text-gray-700">{{ config('settings.phone') }}</p>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-lg p-8 space-y-4">
                     <h2 class="text-2xl font-bold text-gray-900 mb-2">Email Us</h2>
-                    <p class="text-gray-700">support@netequip.co.ke</p>
+                    <p class="text-gray-700">{{ config('settings.support_email') }}</p>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-lg p-8 space-y-4">

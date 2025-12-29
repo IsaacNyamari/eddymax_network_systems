@@ -17,7 +17,54 @@
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
+            <div class="mb-4">
+                <x-input-label for="instagram" class="mb-2">Instagram Page</x-input-label>
+                <x-text-input id="instagram" class="w-full" wire:model.live="instagram" placeholder="My Application" />
+                @error('instagram')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mb-4">
+                <x-input-label for="facebook" class="mb-2">Facebook Page</x-input-label>
+                <x-text-input id="facebook" class="w-full" wire:model.live="facebook" placeholder="My Application" />
+                @error('facebook')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mb-6">
+                <div class="mb-4">
+                    <x-input-label for="twitter" class="mb-2">X (twitter)</x-input-label>
+                    <x-text-input id="twitter" class="w-full" wire:model.live="twitter"
+                        placeholder="My Application" />
+                    @error('app_name')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+            <div class="mb-4">
+                <x-input-label for="phone" class="mb-2">Phone Number</x-input-label>
+                <x-text-input id="phone" class="w-full" wire:model.live="phone" placeholder="My Application" />
+                @error('phone')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mb-4">
+                <x-input-label for="location" class="mb-2">Location</x-input-label>
+                <x-text-input id="location" class="w-full" wire:model.live="location" placeholder="My Application" />
+                @error('location')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mb-4">
+                <x-input-label for="support_email" class="mb-2">Support Email</x-input-label>
+                <x-text-input id="support_email" class="w-full" wire:model.live="support_email"
+                    placeholder="My Application" />
+                @error('support_email')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
+
 
         <!-- Mail Settings -->
         <div class="border-t pt-6">
@@ -179,4 +226,3 @@
         </div>
     </form>
 </div>
-

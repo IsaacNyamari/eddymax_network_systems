@@ -84,16 +84,16 @@
                 <div class="flex flex-col sm:flex-row justify-between items-center h-10">
                     <!-- Left: Address -->
                     <div class="flex items-center space-x-4">
-                        <span class="hidden sm:inline">📍 123 Main Street, Nairobi, Kenya</span>
-                        <span>📧 info@example.com</span>
-                        <span>📞 +254 723 835 303</span>
+                        <span class="hidden sm:inline"><i class="fa fa-location" aria-hidden="true"></i> {{ config('settings.location') }}</span>
+                        <span><i class="fa fa-envelope" aria-hidden="true"></i> {{ config('settings.support_email') }}</span>
+                        <span><i class="fa fa-phone" aria-hidden="true"></i> {{ config('settings.phone') }}</span>
                     </div>
 
                     <!-- Right: Optional social links -->
                     <div class="mt-1 sm:mt-0 flex items-center space-x-4">
-                        <a href="#" class="hover:underline">Facebook</a>
-                        <a href="#" class="hover:underline">Twitter</a>
-                        <a href="#" class="hover:underline">Instagram</a>
+                        <a target="_blank" href="{{ config('settings.facebook') }}" class="text-white"><i class="fa-brands fa-facebook"></i></a>
+                        <a target="_blank" class="text-black" href="{{ config('settings.twitter') }}" ><i class="fa-brands fa-x-twitter"></i></a>
+                        <a target="_blank" href="{{ config('settings.instagram') }}" ><i class="fa-brands fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
