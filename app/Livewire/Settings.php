@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Services\EnvService;
+use Illuminate\Support\Facades\Artisan;
 use Livewire\Attributes\Validate;
 
 class Settings extends Component
@@ -198,7 +199,7 @@ class Settings extends Component
 
         // Clear config cache to apply changes
         if (function_exists('artisan')) {
-            \Artisan::call('config:clear');
+            Artisan::call('config:clear');
         }
 
         session()->flash('success', 'Settings updated successfully!');
