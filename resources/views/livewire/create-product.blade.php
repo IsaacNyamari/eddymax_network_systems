@@ -134,9 +134,16 @@
         </div>
         <div class="mt-4">
             <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
-            <input type="text" id="brand"
+            {{-- <input type="text" id="brand"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500"
-                wire:model.live='brand'>
+                > --}}
+
+            <select name="" wire:model.live='brand'
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
+                @foreach ($brands as $brandInput)
+                    <option value="{{ $brandInput->id }}">{{ $brandInput->name }}</option>
+                @endforeach
+            </select>
             @error('brand')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror

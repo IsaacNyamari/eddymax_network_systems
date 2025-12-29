@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Brands;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductImages;
@@ -14,7 +15,7 @@ class CreateProduct extends Component
 {
     use WithFileUploads;
 
-    #[Validate('required|string|max:255|min:3')]
+    #[Validate('required|int')]
     public $brand;
     #[Validate('required|string|max:255|min:3')]
     public $model;
@@ -39,11 +40,13 @@ class CreateProduct extends Component
 
     public $categories = [];
 
+    public $brands = [];
     // In your Livewire component
     // In your Livewire component
     public function mount()
     {
         $this->categories = $this->getNestedCategories();
+        $this->brands = Brands::all();
     }
 
     private function getNestedCategories()
@@ -86,7 +89,7 @@ class CreateProduct extends Component
             'short_description' => $this->short_description,
             'description' => $this->description,
             'model' => $this->model,
-            'brand' => $this->brand,
+            'brand_id' => $this->brand,
             'category_id' => $this->category_id,
             'slug' => Str::slug($this->name),
         ]);

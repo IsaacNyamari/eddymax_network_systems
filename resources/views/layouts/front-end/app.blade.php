@@ -112,76 +112,312 @@
     </style>
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased text-gray-900 bg-gray-50">
+    <!-- Cart Alert Notification -->
     <div id="cartAlert"
-        class="alert bg-blue-600 text-white w-80 hidden border-l-4 border-slate-950 text-white-800 px-4 py-2 fixed top-1 right-3 transition z-50">
-
+        class="alert bg-gradient-to-r from-blue-600 to-indigo-600 text-white hidden border-l-4 border-blue-800 shadow-lg px-4 py-3 fixed z-50 transition-all duration-300 transform -translate-y-full right-0 left-0 mx-4 top-4 rounded-xl md:w-96 md:left-auto md:right-4 md:mx-0 md:top-6"
+        role="alert" aria-live="polite" aria-atomic="true">
+        <div class="flex items-start">
+            <svg class="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+            </svg>
+            <div class="flex-1">
+                <p class="font-medium text-sm md:text-base cart-alert-message"></p>
+            </div>
+            <button onclick="closeCartAlert()" class="ml-4 text-white/80 hover:text-white focus:outline-none"
+                aria-label="Close notification">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
     </div>
-    <div class="min-h-screen bg-gray-100">
-        <x-main-nav />
-        <livewire:welcome.navigation />
-        <!-- Page Heading -->
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex flex-col bg-white">
+        <!-- Navigation -->
+        <div class="sticky top-0 z-40 w-full bg-white shadow-sm">
+            <x-main-nav />
+            <livewire:welcome.navigation />
+        </div>
+
+        <!-- Conditional Page Header -->
         @if (isset($header))
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
+            <header class="bg-white border-b border-gray-200">
+                <div class="w-full px-4 py-4 mx-auto sm:px-6 lg:px-8 max-w-screen-2xl">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        {{ $header }}
+                    </div>
                 </div>
             </header>
         @endif
 
-        <!-- Page Content -->
-        <main>
-            @yield('content')
+        <!-- Main Content Area -->
+        <main class="flex-1 w-full overflow-hidden">
+            <!-- Container with responsive padding -->
+            <div
+                class="w-full h-full px-3 py-4 mx-auto sm:px-4 sm:py-5 md:px-5 md:py-6 lg:px-6 lg:py-8 max-w-screen-2xl">
+                @yield('content')
+            </div>
         </main>
-        @include('layouts.front-end.footer')
+
+        <!-- Footer -->
+        <footer class="mt-auto bg-gray-900 text-white">
+            @include('layouts.front-end.footer')
+        </footer>
+
+        <!-- Overlay for modals/drawers -->
         @yield('overlay')
     </div>
-    @livewireScripts
-    <script>
-        new Swiper('.categorySwiper', {
-            loop: true,
-            spaceBetween: 24,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            autoplay: {
-                delay: 3000, // 3 seconds per slide
-                disableOnInteraction: false, // continues autoplay after user interaction
-            },
-            breakpoints: {
-                320: {
-                    slidesPerView: 1
-                },
-                640: {
-                    slidesPerView: 2
-                },
-                1024: {
-                    slidesPerView: 4
-                },
-            }
-        });
-    </script>
-    <script>
-        let cartAlert = document.getElementById('cartAlert')
-        Livewire.on('added-to-cart', (data) => {
-            cartAlert.innerHTML = data[0].message
-            cartAlert.classList.remove('hidden');
-            cartAlert.classList.add('slide-in')
-            setTimeout(() => {
-                cartAlert.classList.remove('slide-in')
-                cartAlert.classList.add('slide-out')
 
-            }, 5000);
+    @livewireScripts
+
+    <script>
+        // Cart Alert Management
+        const cartAlert = document.getElementById('cartAlert');
+        const cartAlertMessage = document.querySelector('.cart-alert-message');
+
+        // Function to close alert manually
+        function closeCartAlert() {
+            cartAlert.classList.remove('translate-y-0', 'opacity-100');
+            cartAlert.classList.add('-translate-y-full', 'opacity-0');
             setTimeout(() => {
                 cartAlert.classList.add('hidden');
-            }, 6000);
+            }, 300);
+        }
+
+        // Livewire event listener for cart actions
+        Livewire.on('added-to-cart', (data) => {
+            if (data[0] && data[0].message) {
+                // Update message
+                cartAlertMessage.textContent = data[0].message;
+
+                // Show alert with animation
+                cartAlert.classList.remove('hidden', '-translate-y-full', 'opacity-0');
+                cartAlert.classList.add('translate-y-0', 'opacity-100');
+
+                // Auto-hide after 5 seconds
+                setTimeout(closeCartAlert, 5000);
+
+                // Announce to screen readers
+                announceToScreenReader(data[0].message);
+            }
+        });
+
+        // Livewire event listener for errors
+        Livewire.on('cart-error', (data) => {
+            if (data[0] && data[0].message) {
+                // Change styling for error
+                cartAlert.classList.remove('bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'border-blue-800');
+                cartAlert.classList.add('bg-gradient-to-r', 'from-red-600', 'to-rose-600', 'border-red-800');
+
+                // Update message
+                cartAlertMessage.textContent = data[0].message;
+
+                // Show alert with animation
+                cartAlert.classList.remove('hidden', '-translate-y-full', 'opacity-0');
+                cartAlert.classList.add('translate-y-0', 'opacity-100');
+
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    closeCartAlert();
+                    // Reset styling
+                    cartAlert.classList.remove('bg-gradient-to-r', 'from-red-600', 'to-rose-600',
+                        'border-red-800');
+                    cartAlert.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-indigo-600',
+                        'border-blue-800');
+                }, 5000);
+
+                // Announce to screen readers
+                announceToScreenReader(data[0].message);
+            }
+        });
+
+        // Accessibility: Announce messages to screen readers
+        function announceToScreenReader(message) {
+            const announcement = document.getElementById('sr-announcement');
+            if (!announcement) {
+                const srDiv = document.createElement('div');
+                srDiv.id = 'sr-announcement';
+                srDiv.className = 'sr-only';
+                srDiv.setAttribute('aria-live', 'polite');
+                srDiv.setAttribute('aria-atomic', 'true');
+                document.body.appendChild(srDiv);
+            }
+            document.getElementById('sr-announcement').textContent = message;
+        }
+
+        // Touch gesture support for mobile
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartY = e.changedTouches[0].screenY;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndY = e.changedTouches[0].screenY;
+            // If swiping up on alert, close it
+            if (touchEndY < touchStartY - 50 && !cartAlert.classList.contains('hidden')) {
+                closeCartAlert();
+            }
+        });
+
+        // Handle escape key to close alert
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && !cartAlert.classList.contains('hidden')) {
+                closeCartAlert();
+            }
+        });
+
+        // Responsive breakpoint detection (optional)
+        function handleResponsiveChanges() {
+            const width = window.innerWidth;
+
+            // Adjust alert position based on screen size
+            if (width < 768) {
+                // Mobile: alert takes full width with margin
+                cartAlert.classList.remove('md:w-96', 'md:left-auto', 'md:right-4');
+                cartAlert.classList.add('left-0', 'right-0', 'mx-4');
+            } else {
+                // Desktop: fixed width and position
+                cartAlert.classList.add('md:w-96', 'md:left-auto', 'md:right-4');
+                cartAlert.classList.remove('left-0', 'right-0', 'mx-4');
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', handleResponsiveChanges);
+        window.addEventListener('resize', handleResponsiveChanges);
+
+        // Handle Livewire navigation events
+        document.addEventListener('livewire:navigating', () => {
+            closeCartAlert();
         });
     </script>
+
+    <!-- Additional CSS for responsiveness -->
+    <style>
+        /* Base responsive styles */
+        @media (max-width: 640px) {
+            html {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            /* Improve touch targets on mobile */
+            button,
+            a,
+            [role="button"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            /* Prevent horizontal overflow */
+            img,
+            video,
+            iframe {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .dark body {
+                background-color: #111827;
+                color: #f9fafb;
+            }
+
+            .dark .bg-white {
+                background-color: #1f2937;
+            }
+
+            .dark .bg-gray-100 {
+                background-color: #111827;
+            }
+
+            .dark .text-gray-900 {
+                color: #f9fafb;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+
+            .alert,
+            .sticky {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .alert {
+                border-width: 3px;
+            }
+
+            button,
+            a {
+                text-decoration: underline;
+            }
+        }
+
+        /* Custom scrollbar for desktop */
+        @media (min-width: 768px) {
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #993333;
+                border-radius: 5px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #4F46E5;
+            }
+        }
+
+        /* Safe area insets for modern mobile devices */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: min(0px, env(safe-area-inset-left));
+                padding-right: min(0px, env(safe-area-inset-right));
+                padding-top: min(0px, env(safe-area-inset-top));
+                padding-bottom: min(0px, env(safe-area-inset-bottom));
+            }
+
+            .alert {
+                margin-top: max(1rem, env(safe-area-inset-top));
+            }
+        }
+    </style>
 </body>
 
 </html>
