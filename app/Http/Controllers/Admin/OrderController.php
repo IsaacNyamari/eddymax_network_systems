@@ -7,15 +7,21 @@ use App\Mail\OrderStatusUpdated;
 use App\Models\Order;
 use App\Models\OrderReturns;
 use App\OrderStatus;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
+    public $sms;
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->sms = new SmsService();
+    }
     public function index()
     {
         $recentOrders = Order::latest()->with('payments')->paginate(5);
@@ -56,7 +62,10 @@ class OrderController extends Controller
 
         Mail::to($order->user->email)
             ->send(new OrderStatusUpdated($order, 'DELIVERED', 'Order Delivered'));
-
+        $userName = $order->user->name;
+        $userPhone = $order->user->addresses->first()->phone;
+        $smsMessage = "Hi $userName, your order: #$order_number has been delivered.\n Track your order at:" . route('customer.orders.show', $order_number);
+        $this->sms->send($userPhone, $smsMessage);
         return back()->with('success', "Order #{$order_number} marked as delivered! Email sent to customer.");
     }
 
@@ -69,7 +78,10 @@ class OrderController extends Controller
 
         $order->status = OrderStatus::SHIPPED->value;
         $order->save();
-
+        $userName = $order->user->name;
+        $userPhone = $order->user->addresses->first()->phone;
+        $smsMessage = "Hi $userName, your order: #$order_number has been dispatched.\n Track your order at:" . route('customer.orders.show', $order_number);
+        $this->sms->send($userPhone, $smsMessage);
         Mail::to($order->user->email)
             ->send(new OrderStatusUpdated($order, 'SHIPPED', 'Order Shipped'));
 
@@ -88,7 +100,10 @@ class OrderController extends Controller
 
         Mail::to($order->user->email)
             ->send(new OrderStatusUpdated($order, 'CANCELLED', 'Order Cancelled'));
-
+        $userName = $order->user->name;
+        $userPhone = $order->user->addresses->first()->phone;
+        $smsMessage = "Hi $userName, your order: #$order_number has been cancelled.\n Track your order at:" . route('customer.orders.show', $order_number);
+        $this->sms->send($userPhone, $smsMessage);
         return back()->with('success', "Order #{$order_number} cancelled! Email sent to customer.");
     }
 
@@ -104,7 +119,10 @@ class OrderController extends Controller
 
         Mail::to($order->user->email)
             ->send(new OrderStatusUpdated($order, 'PROCESSING', 'Order Processing Started'));
-
+        $userName = $order->user->name;
+        $userPhone = $order->user->addresses->first()->phone;
+        $smsMessage = "Hi $userName, your order: #$order_number has been processed.\n Track your order at:" . route('customer.orders.show', $order_number);
+        $this->sms->send($userPhone, $smsMessage);
         return back()->with('success', "Order #{$order_number} is now processing! Email sent to customer.");
     }
 
@@ -168,7 +186,10 @@ class OrderController extends Controller
 
         Mail::to($order->user->email)
             ->send(new OrderStatusUpdated($order, 'RETURNED', 'Order Returned'));
-
+        $userName = $order->user->name;
+        $userPhone = $order->user->addresses->first()->phone;
+        $smsMessage = "Hi $userName, your order: #$order_number has been returned.\n Track your order at:" . route('customer.orders.show', $order_number);
+        $this->sms->send($userPhone, $smsMessage);
         return back()->with('success', "Order #{$order_number} marked as returned! Email sent to customer.");
     }
 

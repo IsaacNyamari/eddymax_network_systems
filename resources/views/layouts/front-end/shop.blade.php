@@ -11,15 +11,16 @@
             {{-- <div class="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-red-900/20 mix-blend-screen"></div> --}}
 
             <!-- Background Image -->
-            <img src="{{ asset('images/banner.jpg') }}" alt="{{ config('app.name') }} - Technology Solutions"
-                class="w-full h-full object-cover object-center" loading="lazy" onerror="this.style.display='none'">
+            <img src="{{ asset('images/products-banner (1).png') }}" alt="{{ config('app.name') }} - Technology Solutions"
+                class="w-fit h-full lg:object-contain md:object-cover object-center" loading="lazy"
+                onerror="this.style.display='none'">
         </div>
 
         <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
             <!-- SEO Optimized Description -->
-            {{-- <div class="prose prose-lg max-w-fit text-gray-100 mb-10 bg-black/40 p-8 rounded-xl backdrop-blur-sm"> --}}
-            {{-- <h2 class="text-white text-5xl">SHOP</h2> --}}
-            {{-- </div> --}}
+            {{-- <div class="prose prose-lg max-w-fit text-gray-100 mb-10 bg-black/40 p-8 rounded-xl backdrop-blur-sm">
+                <h2 class="text-white text-5xl">SHOP</h2>
+            </div> --}}
         </div>
     </section>
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
