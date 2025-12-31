@@ -5,6 +5,19 @@
         <div class="mb-2">
             <x-input-label for="name" class="mb-2" value="Category Name" />
             <x-text-input class="w-full" wire:model.live="name" id="name" />
+            @error('name')
+                <p class="text-red-500">{{ $message }}</p>
+            @enderror
+        </div>
+        <div class="mb-2">
+            <x-input-label for="parent_id" class="mb-2" value="Parent Category" />
+            <select name="" id="" wire:model.live='parent_id' class="w-full rounded-md border-gray-300">
+                <option value="{{ null }}">No Parent</option>
+                @foreach ($categories as $category)
+                    <option {{ $parent_id === $category->id ? 'selected' : '' }} value="{{ $category->id }}">
+                        {{ $category->name }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="mb-2">

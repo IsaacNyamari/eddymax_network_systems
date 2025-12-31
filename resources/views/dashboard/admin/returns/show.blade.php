@@ -4,7 +4,7 @@
 @section('content')
     <div class="space-y-6">
         <!-- Back Button -->
-        <a href="{{ route('admin.orders.index') }}" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+        <a href="{{ route('admin.orders.index') }}" wire:navigate class="inline-flex items-center text-blue-600 hover:text-blue-800">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -364,7 +364,7 @@
                         <div class="pt-4 border-t">
                             <h3 class="text-sm font-medium text-gray-900 mb-3">Quick Actions</h3>
                             <div class="space-y-2">
-                                <a href="{{ route('admin.orders.show', $return->order->order_number) }}"
+                                <a href="{{ route('admin.orders.show', $return->order->order_number) }}" wire:navigate
                                     class="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                                     <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">

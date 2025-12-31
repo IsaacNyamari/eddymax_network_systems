@@ -100,11 +100,7 @@ class OrderController extends Controller
 
         Mail::to($order->user->email)
             ->send(new OrderStatusUpdated($order, 'CANCELLED', 'Order Cancelled'));
-        $userName = $order->user->name;
-        $userPhone = $order->user->addresses->first()->phone;
-        $smsMessage = "Hi $userName, your order: #$order_number has been cancelled.\n Track your order at:" . route('customer.orders.show', $order_number);
-        $this->sms->send($userPhone, $smsMessage);
-        return back()->with('success', "Order #{$order_number} cancelled! Email sent to customer.");
+           return back()->with('success', "Order #{$order_number} cancelled! Email sent to customer.");
     }
 
     /**

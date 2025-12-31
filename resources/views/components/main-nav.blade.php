@@ -25,17 +25,17 @@
                     <!-- MOBILE ECOMMERCE LINKS -->
                     <div class="space-y-6 border-t border-gray-200 px-4 py-6">
                         <div class="flow-root">
-                            <a href="/" class="-m-2 block p-2 font-medium text-gray-900">Home</a>
+                            <a href="{{ route('store.home') }}" class="-m-2 block p-2 font-medium text-gray-900">Home</a>
                         </div>
                         <div class="flow-root">
-                            <a href="/shop" class="-m-2 block p-2 font-medium text-gray-900">Shop</a>
+                            <a href="{{ route("store.shop") }}" class="-m-2 block p-2 font-medium text-gray-900">Shop</a>
                         </div>
                         <div class="flow-root">
-                            <a href="/cart" class="-m-2 block p-2 font-medium text-gray-900">Cart
+                            <a href="{{ route("store.cart") }}" class="-m-2 block p-2 font-medium text-gray-900">Cart
                                 <livewire:cart-count /> </a>
                         </div>
                         <div class="flow-root">
-                            <a href="/checkout" class="-m-2 block p-2 font-medium text-gray-900">Checkout</a>
+                            <a href="{{ route("store.checkout") }}" class="-m-2 block p-2 font-medium text-gray-900">Checkout</a>
                         </div>
                     </div>
 
@@ -117,7 +117,7 @@
 
                     <!-- Logo -->
                     <div class="ml-4 hidden lg:flex">
-                        <a href="/">
+                        <a href="{{ route('store.home') }}" >
                             <img src="{{ asset('images/edymax-logo.png') }}" class="h-16 w-auto" alt="EdyMax Logo" />
                         </a>
                     </div>
@@ -125,11 +125,11 @@
                     <!-- DESKTOP LEFT NAV (ECOMMERCE) -->
                     <el-popover-group class="hidden lg:ml-8 lg:block lg:self-stretch">
                         <div class="flex h-full space-x-8">
-                            <a href="/"
+                            <a href="{{ route('store.home') }}"
                                 class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">Home</a>
-                            <a href="/shop"
+                            <a href="{{ route("store.shop") }}"
                                 class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">Shop</a>
-                            <a href="/checkout"
+                            <a href="{{ route("store.checkout") }}"
                                 class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">Checkout</a>
                         </div>
                     </el-popover-group>
@@ -158,7 +158,7 @@
 
                         <!-- Cart -->
                         <div class="ml-4 lg:ml-6">
-                            <a href="/cart" class="flex items-center p-2">
+                            <a href="{{ route("store.cart") }}" class="flex items-center p-2">
                                 <?xml version="1.0" encoding="iso-8859-1"?>
                                 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
                                 <!DOCTYPE svg

@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\PaymentStatus;
+use App\Services\SmsService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -29,6 +30,7 @@ class CheckoutPage extends Component
     public $phone;
     public $address;
     public $city;
+    protected $smsService;
 
     public $createAccount = false;
     public $password;
@@ -37,7 +39,11 @@ class CheckoutPage extends Component
         'payment-successful' => 'paymentSuccessful',
         'payment-failed' => 'paymentFailed'
     ];
-
+    public function boot()
+    {
+        // Initialize SMS service using dependency injection
+        $this->smsService = app(SmsService::class);
+    }
     public function mount()
     {
         $this->cart = session()->get('cart', []);
@@ -229,7 +235,7 @@ class CheckoutPage extends Component
 
         // ✅ Create order now (only once)
         $order = $this->createOrder($reference);
-
+        $this->sendOrderSms($order);
         // Create payment record
         Payment::create([
             'order_id' => $order->id,
@@ -245,7 +251,49 @@ class CheckoutPage extends Component
 
         return redirect()->route('customer.orders.show', $order->order_number);
     }
+    protected function sendOrderSms($order)
+    {
+        try {
+            // Get user's phone from address
+            $address = $order->user->addresses->first();
 
+            if (!$address || !$address->phone) {
+                Log::warning('No phone number found for user', ['user_id' => $order->user_id]);
+                return;
+            }
+
+            $userName = $order->user->name;
+            $orderNumber = $order->order_number;
+            $trackingUrl = route('customer.orders.show', $orderNumber);
+
+            // Create SMS message
+            $smsMessage = "Hi {$userName}, your order #{$orderNumber} has been received and is being processed. Track your order at: {$trackingUrl}";
+
+            // Send SMS
+            $response = $this->smsService->send($address->phone, $smsMessage);
+
+            // Log SMS response
+            if (isset($response['success']) && $response['success']) {
+                Log::info('SMS sent successfully', [
+                    'order_id' => $order->id,
+                    'phone' => $address->phone,
+                    'response' => $response
+                ]);
+            } else {
+                Log::error('Failed to send SMS', [
+                    'order_id' => $order->id,
+                    'phone' => $address->phone,
+                    'response' => $response ?? 'No response'
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error sending SMS', [
+                'order_id' => $order->id ?? 'N/A',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+    }
     public function paymentFailed()
     {
         // Notify the frontend (toast)
@@ -307,7 +355,7 @@ class CheckoutPage extends Component
 
         // Optional: You might want to create order items separately if you need more structure
         foreach ($products_in_cart as $product) {
-             OrderItem::create([
+            OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $product['id'],
                 'quantity' => $product['quantity'],

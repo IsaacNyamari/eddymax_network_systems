@@ -90,7 +90,7 @@
                                                         <ul class="space-y-1">
                                                             @foreach ($child->children as $grandchild)
                                                                 <li>
-                                                                    <a href="{{ route('store.filter.category', $grandchild->slug) }}"
+                                                                    <a href="{{ route('store.filter.category', $grandchild->slug) }}" wire:navigate
                                                                         class="flex items-center w-full py-2 px-3 text-sm text-body hover:bg-neutral-secondary-soft hover:text-heading rounded-lg transition-colors duration-150">
                                                                         <span
                                                                             class="w-2 h-2 bg-neutral-tertiary rounded-full mr-3"></span>
@@ -102,7 +102,7 @@
                                                     </div>
                                                 @else
                                                     <!-- Child category without grandchildren (direct link) - MOBILE -->
-                                                    <a href="{{ route('store.filter.category', $child->slug) }}"
+                                                    <a href="{{ route('store.filter.category', $child->slug) }}" wire:navigate
                                                         class="flex items-center w-full py-3 px-2 text-body hover:bg-neutral-secondary-soft hover:text-heading rounded-lg transition-colors duration-150">
                                                         <span class="text-base font-medium">{{ $child->name }}</span>
                                                     </a>
@@ -152,7 +152,7 @@
                                                                 <ul class="space-y-1">
                                                                     @foreach ($child->children as $grandchild)
                                                                         <li>
-                                                                            <a href="{{ route('store.filter.category', $grandchild->slug) }}"
+                                                                            <a href="{{ route('store.filter.category', $grandchild->slug) }}" wire:navigate
                                                                                 class="flex items-center p-2 text-sm text-body hover:bg-neutral-secondary-soft hover:text-heading rounded-lg transition-colors duration-150">
                                                                                 <span
                                                                                     class="w-1.5 h-1.5 bg-neutral-tertiary rounded-full mr-3"></span>
@@ -165,7 +165,7 @@
                                                         </div>
                                                     @else
                                                         <!-- Child category without grandchildren - DESKTOP -->
-                                                        <a href="{{ route('store.filter.category', $child->slug) }}"
+                                                        <a href="{{ route('store.filter.category', $child->slug) }}" wire:navigate
                                                             class="flex items-center p-2 text-sm text-body hover:bg-neutral-secondary-soft hover:text-heading rounded-lg transition-colors duration-150">
                                                             <span class="font-medium">{{ $child->name }}</span>
                                                         </a>

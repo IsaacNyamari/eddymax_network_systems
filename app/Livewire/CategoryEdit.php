@@ -12,9 +12,15 @@ use Livewire\WithFileUploads;
 class CategoryEdit extends Component
 {
     use WithFileUploads;
+    public $categories;
 
     #[Validate('required|string|min:3')]
     public $name = '';
+
+    #[Validate('required|integer|min:3')]
+    public $parent_id = '';
+    
+    public $selectedParentCategory = '';
 
     #[Validate('nullable|image|mimes:jpg,jpeg,png,webp')]
     public $image;
@@ -24,32 +30,36 @@ class CategoryEdit extends Component
 
     public function mount(Category $category)
     {
+        $this->categories = Category::all();
         $this->category = $category;
         $this->name = $category->name;
+        $this->parent_id = $category->parent->id;
         $this->slug = $category->slug;
     }
 
-public function saveCategory()
-{
-    // Validate using Livewire
-    $this->validate();
+    public function saveCategory()
+    {
+        dd($this->category->parent_id);
+        // Validate using Livewire
+        $this->validate();
 
-    // Generate slug
-    $this->slug = Str::slug($this->name);
+        // Generate slug
+        $this->slug = Str::slug($this->name);
 
-    // Handle image upload
-    if ($this->image) {
-        $imagePath = $this->image->store('products/categories', 'public');
-        $this->category->image = $imagePath;
+        // Handle image upload
+        if ($this->image) {
+            $imagePath = $this->image->store('products/categories', 'public');
+            $this->category->image = $imagePath;
+        }
+
+        // Update category
+        $this->category->name = $this->name;
+        $this->category->parent_id = $this->parent_id;
+        $this->category->slug = $this->slug;
+        $this->category->save();
+
+        session()->flash('success', 'Category updated successfully.');
     }
-
-    // Update category
-    $this->category->name = $this->name;
-    $this->category->slug = $this->slug;
-    $this->category->save();
-
-    session()->flash('success', 'Category updated successfully.');
-}
 
 
     public function render()

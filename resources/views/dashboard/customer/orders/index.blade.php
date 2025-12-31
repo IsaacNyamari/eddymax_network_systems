@@ -10,7 +10,7 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Recent Orders</h2>
-                    <a href="{{ route('customer.orders.returns') }}"
+                    <a href="{{ route('customer.orders.returns') }}" wire:navigate
                         class="text-sm bg-green-400 px-4 py-2 text-black rounded-2xl hover:text-white font-medium">
                         View Returns →
                     </a>

@@ -41,6 +41,12 @@ class Cart extends Component
             $this->dispatch('cart-updated');
         }
     }
+    public function clearCart()
+    {
+        // Clear the cart from session
+        session()->forget('cart');
+        $this->dispatch('cart-updated');
+    }
     public function render()
     {
         return view('livewire.cart');

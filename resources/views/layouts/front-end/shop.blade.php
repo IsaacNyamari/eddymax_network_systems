@@ -102,7 +102,7 @@
                                 </button>
                             </div>
                             <div class="p-5">
-                                <a href="{{ route('products.show', $product->slug) }}">
+                                <a href="{{ route('products.show', $product->slug) }}" wire:navigate>
                                     <h3
                                         class="font-semibold text-lg text-gray-900 mb-2 group-hover:text-red-600 transition">
                                         {{ Str::limit($product['name'], 15, '...') }}
@@ -126,7 +126,7 @@
         <!-- Why Choose Us -->
         <div class="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 shadow-xl">
             <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Why Choose
-                {{ config('app.name', 'Eddymax Systems') }}?</h2>
+                {{ config('app.name', 'Edymax Systems and Networks') }}?</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @php
                     $features = [

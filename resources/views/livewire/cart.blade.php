@@ -1,8 +1,10 @@
 <div class="bg-white rounded-xl shadow-lg p-6">
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-900">Shopping Cart</h2>
-        <div class="text-sm text-gray-600">
+        <div class="text-sm text-gray-600 flex gap-2">
             {{ count($cart) }} {{ Str::plural('item', count($cart)) }}
+            <p class="text-red-500 capitalize underline cursor-pointer hover:text-red-600" wire:click='clearCart()'>clear
+                cart</p>
         </div>
     </div>
 
@@ -23,7 +25,8 @@
         <div class="space-y-4">
             <div class="space-y-4">
                 @foreach ($cart as $productId => $item)
-                    <div  wire:key="cart-item-{{ $productId }}" class="flex items-center justify-between border-b pb-4">
+                    <div wire:key="cart-item-{{ $productId }}"
+                        class="flex items-center justify-between border-b pb-4">
                         <div class="flex items-center space-x-4">
                             <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
                                 @if (!empty($item['image']))

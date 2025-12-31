@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - Dashboard</title>
+    <title>{{ config('app.name', 'Edymax Systems and Networks') }} - Dashboard</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -76,7 +76,7 @@
 
                         <!-- Customer Links -->
                         @hasrole('customer')
-                            <a href="{{ route('customer.orders.index') }}"
+                            <a href="{{ route('customer.orders.index') }}" wire:navigate
                                 class="{{ request()->routeIs('customer.orders.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -85,7 +85,7 @@
                                 My Orders
                             </a>
 
-                            <a href="{{ route('customer.profile.edit') }}"
+                            <a href="{{ route('customer.profile.edit') }}" wire:navigate
                                 class="{{ request()->routeIs('customer.profile.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -103,7 +103,7 @@
                                 </h3>
                             </div>
 
-                            <a href="{{ route('admin.orders.index') }}"
+                            <a href="{{ route('admin.orders.index') }}" wire:navigate
                                 class="{{ request()->routeIs('admin.orders.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -112,7 +112,7 @@
                                 Orders
                             </a>
 
-                            <a href="{{ route('admin.products.index') }}"
+                            <a href="{{ route('admin.products.index') }}" wire:navigate
                                 class="{{ request()->routeIs('admin.products.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -121,7 +121,7 @@
                                 Products
                             </a>
 
-                            <a href="{{ route('admin.users.index') }}"
+                            <a href="{{ route('admin.users.index') }}" wire:navigate
                                 class="{{ request()->routeIs('admin.users.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -130,7 +130,7 @@
                                 Customers
                             </a>
 
-                            <a href="{{ route('admin.categories.index') }}"
+                            <a href="{{ route('admin.categories.index') }}" wire:navigate
                                 class="{{ request()->routeIs('admin.categories.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -139,7 +139,7 @@
                                 Categories
                             </a>
 
-                            <a href="{{ route('admin.reports') }}"
+                            <a href="{{ route('admin.reports') }}" wire:navigate
                                 class="{{ request()->routeIs('admin.reports') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -158,7 +158,7 @@
             <!-- Top Navigation -->
             <header class="bg-white shadow">
                 <div class="flex justify-between items-center px-4 py-3 sm:px-6 lg:px-8">
-                    <div class="flex items-center">
+                    <div class="flex items-center gap-2">
                         <!-- Mobile menu button -->
                         <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden mr-3">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,6 +169,9 @@
                         <h1 class="text-lg font-semibold text-gray-900">
                             @yield('title', 'Dashboard')
                         </h1>
+                        <a class="px-4 py-2 bg-green-500 hover:bg-green-600 hover:text-white capitalize rounded-lg"
+                            href="{{ route('store.shop') }}" wire:navigate><i class="fa fa-globe"
+                                aria-hidden="true"></i> website</a>
                     </div>
 
                     <!-- User Dropdown -->
@@ -321,7 +324,7 @@
                                     </a>
                                 @endhasrole
                                 @hasrole('admin')
-                                    <a href="{{ route('admin.settings') }}"
+                                    <a href="{{ route('admin.settings') }}" wire:navigate
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         Admin Settings
                                     </a>

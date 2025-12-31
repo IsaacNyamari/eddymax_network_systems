@@ -22,7 +22,6 @@ class ReturnActions extends Component
 
                 if ($data['status'] === "success") {
                     $refund_data = $this->refundPaystackTransaction($data['reference'], $data['amount']);
-
                     // ⬇️ CRITICAL FIX: Check if refund succeeded
                     if ($refund_data['status'] === false) {
                         $this->dispatch('low-balance', $refund_data['message']);
@@ -38,8 +37,11 @@ class ReturnActions extends Component
                     $this->return->status = $action;
 
                     return true; // Success
-                } else {
+                } else if ($data['status'] === 'failed') {
                     $this->dispatch('verification-failed', ['message' => "Payment verification failed."]);
+
+                    $this->dispatch('low-balance', "low balance!");
+
                     return false; // Stop here
                 }
             } else {
@@ -73,7 +75,10 @@ class ReturnActions extends Component
                 'body' => $response->json(),
             ]);
 
-            return false;
+            $status = [
+                'status' => 'failed'
+            ];
+            return $status;
         }
 
         $payload = $response->json();
@@ -85,7 +90,10 @@ class ReturnActions extends Component
 
         // Transaction-level success
         if (($payload['data']['status'] ?? '') !== 'success') {
-            return false;
+            $status = [
+                'status' => 'failed'
+            ];
+            return $status;
         }
 
         return $payload['data']; // ✅ clean verified data
