@@ -104,6 +104,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reports/products', [ReportController::class, 'products'])->name('reports.products');
         Route::get('/reports/customers', [ReportController::class, 'customers'])->name('reports.customers');
         Route::get('/reports/export/{type}', [ReportController::class, 'export'])->name('reports.export');
+        Route::get('/reports/excel', [ReportController::class, 'excel'])->name('reports.excel');
 
         // Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings');

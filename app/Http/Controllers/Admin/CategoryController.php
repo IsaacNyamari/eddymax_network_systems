@@ -81,18 +81,19 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(string $slug)
     {
-        $category = Category::where('id', $id)->first();
+        $category = Category::where('slug', $slug)->with(['children', 'products'])->first();
         return view('dashboard.admin.categories.show', compact('category'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit(string $slug)
     {
-       return view('dashboard.admin.categories.edit',compact('category'));
+        $category = Category::where('slug', $slug)->get()->first();
+        return view('dashboard.admin.categories.edit', compact('category'));
     }
 
     /**
@@ -106,8 +107,12 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
-        //
+        if ($category->image) {
+            unlink(public_path("/storage/".$category->image));
+        }
+        $category->delete();
+        return back()->with('success', "Category deleted successfully!");
     }
 }

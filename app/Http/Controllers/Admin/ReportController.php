@@ -10,28 +10,30 @@ use App\Services\PdfReportService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DashboardReportExport;
 
 class ReportController extends Controller
 {
     protected $pdfService;
-    
+
     public function __construct(PdfReportService $pdfService)
     {
         $this->pdfService = $pdfService;
     }
-    
+
     /**
      * Display a listing of the resource.
      */
     public $statistics = [];
-    
+
     public function index()
     {
         $activities = [];
         // KPIs
         $stats = $this->getStats();
         $this->statistics = $stats;
-        
+
         $salesData = Order::select(
             DB::raw('DATE(created_at) as date'),
             DB::raw('SUM(total_amount) as total')
@@ -44,8 +46,38 @@ class ReportController extends Controller
 
         // Recent activities
         $activities = $this->getRecentActivities();
+        $topProducts = Product::select([
+            'products.id',
+            'products.name',
+            'products.price',
+            'products.image',
+            'products.category_id',
+            'products.stock_quantity',
+            DB::raw('COUNT(order_items.id) as orders_count'),
+            DB::raw('SUM(order_items.quantity * order_items.price) as revenue'),
+            DB::raw('SUM(order_items.quantity) as total_sold') // Added for completeness
+        ])
+            ->leftJoin('order_items', 'order_items.product_id', '=', 'products.id')
+            ->leftJoin('orders', 'orders.id', '=', 'order_items.order_id')
+            ->groupBy('products.id', 'products.name', 'products.price', 'products.image', 'products.category_id', 'products.stock_quantity')
+            ->having('orders_count', '>', 0) // Only products with orders
+            ->with('category')
+            ->orderByDesc('revenue')
+            ->orderByDesc('orders_count')
+            ->limit(5)
+            ->get();
 
-        return view('dashboard.admin.reports.index', compact('stats', 'activities', 'salesData'));
+        // Order status distribution
+        $orderStatusDistribution = Order::select(
+            'status',
+            DB::raw('COUNT(*) as count'),
+            DB::raw('ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM orders), 1) as percentage')
+        )
+            ->groupBy('status')
+            ->get()
+            ->keyBy('status');
+
+        return view('dashboard.admin.reports.index', compact('stats', 'activities', 'salesData', 'topProducts', 'orderStatusDistribution'));
     }
 
     /**
@@ -54,15 +86,73 @@ class ReportController extends Controller
     public function print()
     {
         $stats = $this->getStats();
-        
+
         // Method 1: Using Service
         $pdf = $this->pdfService->generateDashboardReport($stats);
         return $pdf->download('dashboard-report-' . date('Y-m-d') . '.pdf');
-        
+
         // Method 2: Direct in controller (alternative)
         // return $this->generatePdf($stats);
     }
-    
+
+    /**
+     * Export Excel report
+     */
+    public function excel()
+    {
+        $stats = $this->getStats();
+        $salesData = Order::select(
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('SUM(total_amount) as total')
+        )
+            ->where('status', 'delivered')
+            ->where('created_at', '>=', now()->subDays(30))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        $topProducts = Product::select([
+            'products.id',
+            'products.name',
+            'products.price',
+            DB::raw('COUNT(order_items.id) as orders_count'),
+            DB::raw('SUM(order_items.quantity * order_items.price) as revenue'),
+            DB::raw('SUM(order_items.quantity) as total_sold')
+        ])
+            ->leftJoin('order_items', 'order_items.product_id', '=', 'products.id')
+            ->leftJoin('orders', 'orders.id', '=', 'order_items.order_id')
+            ->groupBy('products.id', 'products.name', 'products.price')
+            ->having('orders_count', '>', 0)
+            ->orderByDesc('revenue')
+            ->orderByDesc('orders_count')
+            ->limit(10)
+            ->get();
+
+        $orderStatusDistribution = Order::select(
+            'status',
+            DB::raw('COUNT(*) as count'),
+            DB::raw('ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM orders), 1) as percentage')
+        )
+            ->groupBy('status')
+            ->get();
+
+        // FIX: Load relationships properly
+        $recentOrders = Order::with(['user', 'orderItems'])->latest()->take(20)->get();
+
+        $reportData = [
+            'stats' => $stats,
+            'salesData' => $salesData,
+            'topProducts' => $topProducts,
+            'orderStatusDistribution' => $orderStatusDistribution,
+            'recentOrders' => $recentOrders,
+            'generated_at' => now()->format('Y-m-d H:i:s')
+        ];
+
+        $filename = 'dashboard-report-' . date('Y-m-d-H-i-s') . '.xlsx';
+
+        return Excel::download(new DashboardReportExport($reportData), $filename);
+    }
+
     /**
      * Generate PDF directly (alternative method)
      */
@@ -71,7 +161,7 @@ class ReportController extends Controller
         // Get logo path
         $logoPath = public_path('storage/logo.png'); // Adjust path as needed
         $logoBase64 = null;
-        
+
         if (file_exists($logoPath)) {
             $logoData = file_get_contents($logoPath);
             $logoBase64 = 'data:image/' . pathinfo($logoPath, PATHINFO_EXTENSION) . ';base64,' . base64_encode($logoData);
@@ -81,14 +171,10 @@ class ReportController extends Controller
             'data' => $stats,
             'logo' => $logoBase64
         ]);
-        
+
         return $pdf->download('dashboard-report-' . date('Y-m-d') . '.pdf');
-        
-        // Alternative return options:
-        // return $pdf->stream('report.pdf'); // Display in browser
-        // return $pdf->save(storage_path('app/reports/report.pdf')); // Save to file
     }
-    
+
     /**
      * Get statistics data
      */
@@ -99,6 +185,8 @@ class ReportController extends Controller
             'deliveredOrders' => Order::where('status', 'delivered')->count(),
             'pendingOrders' => Order::where('status', 'pending')->count(),
             'processingOrders' => Order::where('status', 'processing')->count(),
+            'shippedOrders' => Order::where('status', 'shipped')->count(),
+            'cancelledOrders' => Order::where('status', 'cancelled')->count(),
             'todayOrders' => Order::whereDate('created_at', today())->count(),
             'totalRevenue' => Order::where('status', 'delivered')->sum('total_amount'),
             'todayRevenue' => Order::where('status', 'delivered')
@@ -113,10 +201,9 @@ class ReportController extends Controller
                 ->count(),
         ];
     }
-    
+
     private function getRecentActivities()
     {
-        // ... (keep your existing getRecentActivities method)
         $activities = [];
 
         // Recent orders
@@ -165,6 +252,4 @@ class ReportController extends Controller
 
         return array_slice($activities, 0, 5);
     }
-    
-    // ... (keep other methods)
 }

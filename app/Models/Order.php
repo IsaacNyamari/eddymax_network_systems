@@ -33,11 +33,11 @@ class Order extends Model
     }
     public function orderItems()
     {
-        $this->hasMany(OrderItem::class);
+       return $this->hasMany(OrderItem::class);
     }
     public function product()
     {
-        $this->belongsTo(Product::class, "product_id");
+       return $this->belongsTo(Product::class, "product_id");
     }
     public function orderReturns(): HasOne
     {
