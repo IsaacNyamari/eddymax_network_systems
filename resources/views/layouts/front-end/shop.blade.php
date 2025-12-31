@@ -48,7 +48,27 @@
         @endphp
 
         @foreach ($sortedParentCategories as $index => $category)
-            @if ($category->children->count() > 0)
+            @php
+                // Check if this category or any of its children have products
+                $hasProducts = false;
+
+                // Check if parent category has products
+                if ($category->products && $category->products->count() > 0) {
+                    $hasProducts = true;
+                }
+
+                // If parent doesn't have products, check children
+                if (!$hasProducts && $category->children->count() > 0) {
+                    foreach ($category->children as $child) {
+                        if ($child->products && $child->products->count() > 0) {
+                            $hasProducts = true;
+                            break;
+                        }
+                    }
+                }
+            @endphp
+
+            @if ($category->children->count() > 0 && $hasProducts)
                 <div class="mb-16">
                     <!-- Category Header -->
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
@@ -69,17 +89,20 @@
                         </a>
                     </div>
                     <!-- Products Grid -->
-                    <div class="grid grid-cols-1 h-fit sm:grid-cols-2 lg:grid-cols-5 mb-4 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-4">
                         @foreach ($category->getAllProducts() as $product)
-                            <!-- Changed from $category->products -->
                             <div
-                                class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                                <div class="relative overflow-hidden">
-                                    <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
-                                        class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500"
-                                        loading="lazy" onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
+                                class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
+                                <!-- Image Section -->
+                                <div class="relative overflow-hidden flex-shrink-0">
+                                    <div class="aspect-square bg-gray-100">
+                                        <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
+                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            loading="lazy"
+                                            onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
+                                    </div>
 
-                                    <!-- ADD THIS CART BUTTON OVERLAY -->
+                                    <!-- Cart Button Overlay -->
                                     <div
                                         class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <div
@@ -88,12 +111,20 @@
                                         </div>
                                     </div>
 
+                                    <!-- Stock Status Badge -->
                                     @if ($product['stock_status'])
                                         <div
-                                            class="absolute top-3 left-3 bg-{{ $product['stock_status'] == 'Sale' ? 'red' : ($product['stock_status'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                                            class="absolute top-3 left-3 px-3 py-1.5 rounded-full text-xs font-bold text-white 
+                        {{ $product['stock_status'] == 'Sale'
+                            ? 'bg-red-600'
+                            : ($product['stock_status'] == 'New'
+                                ? 'bg-green-600'
+                                : 'bg-blue-600') }}">
                                             {{ Str::replace('_', ' ', $product['stock_status']) }}
                                         </div>
                                     @endif
+
+                                    <!-- Wishlist Button -->
                                     <button
                                         class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition opacity-0 group-hover:opacity-100">
                                         <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
@@ -103,63 +134,96 @@
                                         </svg>
                                     </button>
                                 </div>
-                                <div class="p-5">
-                                    <a href="{{ route('products.show', $product->slug) }}" wire:navigate>
+
+                                <!-- Content Section -->
+                                <div class="p-4 flex flex-col flex-grow">
+                                    <!-- Product Name -->
+                                    <a href="{{ route('products.show', $product->slug) }}" wire:navigate
+                                        class="mb-2 flex-grow">
                                         <h3
-                                            class="font-semibold text-md text-gray-900 mb-2 group-hover:text-red-600 transition">
-                                            {{ Str::limit($product['name'], 15, '...') }}
+                                            class="font-semibold text-gray-900 group-hover:text-red-600 transition-colors duration-200 line-clamp-2">
+                                            {{ $product['name'] }}
+                                        </h3>
                                     </a>
-                                    </h3>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex gap-2">
-                                            <span class="text-sm font-bold text-red-600 block">Ksh
-                                                {{ number_format($product['price'], 2) }}</span>
-                                            @if ($product->ratings->count() > 0)
-                                                <div class="flex text-yellow-600">
-                                                    @php
-                                                        // Get the average rating
-                                                        $averageRating = $product->ratings->avg('rate_count') ?? 0;
-                                                        $ratingCount = $product->ratings->count();
 
-                                                        // Round to nearest half for display
-                                                        $roundedRating = round($averageRating * 2) / 2;
-                                                    @endphp
+                                    <!-- Price -->
+                                    <div class="mb-3">
+                                        <span class="text-lg font-bold text-red-600">
+                                            Ksh {{ number_format($product['price'], 2) }}
+                                        </span>
+                                    </div>
 
-                                                    {{-- Display stars based on average rating --}}
-                                                    @for ($i = 1; $i <= 5; $i++)
-                                                        @if ($i <= floor($roundedRating))
-                                                            {{-- Full star --}}
-                                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path
-                                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                            </svg>
-                                                        @elseif ($i - 0.5 == $roundedRating)
-                                                            {{-- Half star --}}
-                                                            <div class="relative">
-                                                                <svg class="w-5 h-5 text-gray-300" fill="currentColor"
-                                                                    viewBox="0 0 20 20">
-                                                                    <path
-                                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                                </svg>
-                                                                <div class="absolute top-0 left-0 w-1/2 overflow-hidden">
-                                                                    <svg class="w-5 h-5 text-yellow-600" fill="currentColor"
-                                                                        viewBox="0 0 20 20">
-                                                                        <path
-                                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                                    </svg>
-                                                                </div>
-                                                            </div>
-                                                        @else
-                                                            {{-- Empty star --}}
-                                                            <svg class="w-5 h-5 text-gray-300" fill="currentColor"
+                                    <!-- Rating -->
+                                    @if ($product->ratings->count() > 0)
+                                        <div class="flex items-center space-x-2 mb-3">
+                                            <!-- Stars -->
+                                            <div class="flex items-center">
+                                                @php
+                                                    $averageRating = $product->ratings->avg('rate_count') ?? 0;
+                                                    $ratingCount = $product->ratings->count();
+                                                    $roundedRating = round($averageRating * 2) / 2;
+                                                @endphp
+
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= floor($roundedRating))
+                                                        <!-- Full star -->
+                                                        <svg class="w-4 h-4 text-yellow-500 flex-shrink-0"
+                                                            fill="currentColor" viewBox="0 0 20 20">
+                                                            <path
+                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                        </svg>
+                                                    @elseif ($i - 0.5 == $roundedRating)
+                                                        <!-- Half star -->
+                                                        <div class="relative w-4 h-4">
+                                                            <svg class="w-4 h-4 text-gray-300 absolute" fill="currentColor"
                                                                 viewBox="0 0 20 20">
                                                                 <path
                                                                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                             </svg>
-                                                        @endif
-                                                    @endfor
-                                                </div>
-                                            @endif
+                                                            <div class="absolute top-0 left-0 w-1/2 overflow-hidden">
+                                                                <svg class="w-4 h-4 text-yellow-500" fill="currentColor"
+                                                                    viewBox="0 0 20 20">
+                                                                    <path
+                                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <!-- Empty star -->
+                                                        <svg class="w-4 h-4 text-gray-300 flex-shrink-0" fill="currentColor"
+                                                            viewBox="0 0 20 20">
+                                                            <path
+                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                        </svg>
+                                                    @endif
+                                                @endfor
+                                            </div>
+
+                                            <!-- Rating Count -->
+                                            <span class="text-sm text-gray-500">
+                                                ({{ $ratingCount }})
+                                            </span>
+                                        </div>
+                                    @else
+                                        <!-- No ratings yet -->
+                                        <div class="flex items-center space-x-2 mb-3">
+                                            <div class="flex items-center">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <svg class="w-4 h-4 text-gray-300 flex-shrink-0" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path
+                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                    </svg>
+                                                @endfor
+                                            </div>
+                                            <span class="text-sm text-gray-400">No reviews</span>
+                                        </div>
+                                    @endif
+
+                                    <!-- Add to Cart Button (Mobile/Secondary) -->
+                                    <div class="mt-auto pt-2">
+                                        <div class="lg:hidden">
+                                            <livewire:add-to-cart-button :product="$product" small />
                                         </div>
                                     </div>
                                 </div>

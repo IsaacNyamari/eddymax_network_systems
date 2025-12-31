@@ -5,7 +5,7 @@
     <section class="relative py-16 px-4 sm:px-6 lg:px-8">
         <!-- Background Image with Clean Overlay -->
         <div class="absolute inset-0 z-0">
-           
+
             <!-- Background Image -->
             <img src="{{ asset('images/Omada-SDN-Banner_High-Resolution.jpg') }}"
                 alt="{{ config('app.name') }} - Technology Solutions" class="w-full h-full object-cover object-center"
@@ -15,7 +15,7 @@
         <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
             <!-- SEO Optimized Description -->
             {{-- <div class="prose prose-lg max-w-fit text-gray-100 mb-10 bg-black/40 p-8 rounded-xl backdrop-blur-sm"> --}}
-                {{-- <h2 class="text-white text-5xl">SHOP</h2> --}}
+            {{-- <h2 class="text-white text-5xl">SHOP</h2> --}}
             {{-- </div> --}}
         </div>
     </section>
@@ -51,19 +51,17 @@
 
             <!-- MAIN CONTENT -->
             <main class="lg:col-span-3">
-
                 <!-- Products Container -->
                 <div class="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
-
                     @if (!isset($productsSorted))
                         <!-- Grid Container -->
                         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                             @foreach ($products as $product)
                                 <div
-                                    class="group bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                                    class="group bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
 
                                     <!-- Image Container -->
-                                    <div class="relative aspect-square overflow-hidden bg-gray-50">
+                                    <div class="relative aspect-square overflow-hidden bg-gray-50 flex-shrink-0">
                                         <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             loading="lazy"
@@ -81,7 +79,8 @@
                                         <!-- Badge -->
                                         @if ($product['badge'])
                                             <div
-                                                class="absolute top-2 left-2 bg-{{ $product['badge'] == 'Sale' ? 'red' : ($product['badge'] == 'New' ? 'green' : 'blue') }}-600 text-white px-2 py-1 rounded text-xs font-bold">
+                                                class="absolute top-2 left-2 px-2.5 py-1 rounded text-xs font-bold text-white 
+                                    {{ $product['badge'] == 'Sale' ? 'bg-red-600' : ($product['badge'] == 'New' ? 'bg-green-600' : 'bg-blue-600') }}">
                                                 {{ $product['badge'] }}
                                             </div>
                                         @endif
@@ -98,68 +97,89 @@
                                     </div>
 
                                     <!-- Product Info -->
-                                    <div class="p-3">
-                                        <a href="{{ route('products.show', $product->slug) }}" class="block">
+                                    <div class="p-3 flex flex-col flex-grow">
+                                        <!-- Product Name -->
+                                        <a href="{{ route('products.show', $product->slug) }}"
+                                            class="block mb-2 flex-grow">
                                             <h3
-                                                class="font-medium text-sm md:text-base text-gray-900 mb-1 group-hover:text-red-600 transition line-clamp-2">
+                                                class="font-medium text-sm md:text-base text-gray-900 group-hover:text-red-600 transition line-clamp-2">
                                                 {{ $product['name'] }}
                                             </h3>
                                         </a>
 
-                                        <div class="mt-2">
-                                            <div class="flex items-center justify-between">
-                                    <div class="flex gap-2">
-                                        <span class="text-sm font-bold text-red-600 block">Ksh
-                                            {{ number_format($product['price'], 2) }}</span>
+                                        <!-- Price -->
+                                        <div class="mb-2">
+                                            <span class="text-base font-bold text-red-600">
+                                                Ksh {{ number_format($product['price'], 2) }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Rating -->
                                         @if ($product->ratings->count() > 0)
-                                            <div class="flex text-yellow-600">
-                                                @php
-                                                    // Get the average rating
-                                                    $averageRating = $product->ratings->avg('rate_count') ?? 0;
-                                                    $ratingCount = $product->ratings->count();
+                                            <div class="flex items-center space-x-1.5 mt-auto">
+                                                <!-- Stars -->
+                                                <div class="flex items-center">
+                                                    @php
+                                                        $averageRating = $product->ratings->avg('rate_count') ?? 0;
+                                                        $ratingCount = $product->ratings->count();
+                                                        $roundedRating = round($averageRating * 2) / 2;
+                                                    @endphp
 
-                                                    // Round to nearest half for display
-                                                    $roundedRating = round($averageRating * 2) / 2;
-                                                @endphp
-
-                                                {{-- Display stars based on average rating --}}
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    @if ($i <= floor($roundedRating))
-                                                        {{-- Full star --}}
-                                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path
-                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                        </svg>
-                                                    @elseif ($i - 0.5 == $roundedRating)
-                                                        {{-- Half star --}}
-                                                        <div class="relative">
-                                                            <svg class="w-5 h-5 text-gray-300" fill="currentColor"
-                                                                viewBox="0 0 20 20">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= floor($roundedRating))
+                                                            <!-- Full star -->
+                                                            <svg class="w-3.5 h-3.5 text-yellow-500 flex-shrink-0"
+                                                                fill="currentColor" viewBox="0 0 20 20">
                                                                 <path
                                                                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                             </svg>
-                                                            <div class="absolute top-0 left-0 w-1/2 overflow-hidden">
-                                                                <svg class="w-5 h-5 text-yellow-600" fill="currentColor"
-                                                                    viewBox="0 0 20 20">
+                                                        @elseif ($i - 0.5 == $roundedRating)
+                                                            <!-- Half star -->
+                                                            <div class="relative w-3.5 h-3.5">
+                                                                <svg class="w-3.5 h-3.5 text-gray-300 absolute"
+                                                                    fill="currentColor" viewBox="0 0 20 20">
                                                                     <path
                                                                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                                 </svg>
+                                                                <div class="absolute top-0 left-0 w-1/2 overflow-hidden">
+                                                                    <svg class="w-3.5 h-3.5 text-yellow-500"
+                                                                        fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path
+                                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                                    </svg>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    @else
-                                                        {{-- Empty star --}}
-                                                        <svg class="w-5 h-5 text-gray-300" fill="currentColor"
-                                                            viewBox="0 0 20 20">
+                                                        @else
+                                                            <!-- Empty star -->
+                                                            <svg class="w-3.5 h-3.5 text-gray-300 flex-shrink-0"
+                                                                fill="currentColor" viewBox="0 0 20 20">
+                                                                <path
+                                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                            </svg>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+
+                                                <!-- Rating Count -->
+                                                <span class="text-xs text-gray-500">
+                                                    ({{ $ratingCount }})
+                                                </span>
+                                            </div>
+                                        @else
+                                            <!-- No ratings yet -->
+                                            <div class="flex items-center space-x-1.5 mt-auto">
+                                                <div class="flex items-center">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <svg class="w-3.5 h-3.5 text-gray-300 flex-shrink-0"
+                                                            fill="currentColor" viewBox="0 0 20 20">
                                                             <path
                                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                         </svg>
-                                                    @endif
-                                                @endfor
+                                                    @endfor
+                                                </div>
+                                                <span class="text-xs text-gray-400">No reviews</span>
                                             </div>
                                         @endif
-                                    </div>
-                                </div>
-                                        </div>
                                     </div>
                                 </div>
                             @endforeach
