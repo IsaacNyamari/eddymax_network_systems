@@ -10,7 +10,7 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Trashed Products</h2>
-                    <a href="{{ route('admin.products.index') }}"
+                    <a href="{{ route('admin.products.index') }}" wire:navigate
                         class="text-sm text-white bg-green-600 px-4 rounded py-2 hover:text-white font-medium">
                         <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back
                     </a>
@@ -54,7 +54,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
-                                    <a href="{{ route('admin.product.trash.restore', $product->id) }}"
+                                    <a href="{{ route('admin.product.trash.restore', $product->id) }}" wire:navigate
                                         class="text-white px-4 py-2 rounded bg-orange-500 hover:text-white"><i
                                             class="fa fa-refresh" aria-hidden="true"></i> Restore</a>
 

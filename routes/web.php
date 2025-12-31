@@ -8,6 +8,7 @@ use App\Http\Controllers\SitemapController;
 use App\Livewire\SiteSettings;
 use App\Models\Brands;
 use App\Models\OrderItem;
+use App\Models\ProductRating;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -115,6 +116,7 @@ Route::get('/navigation', function () {
 //         'column_count' => count($columns)
 //     ]);
 // });
+
 // Dashboard 
 require __DIR__ . '/dashboard.php';
 // Authentication Routes (Laravel Breeze/Jetstream)

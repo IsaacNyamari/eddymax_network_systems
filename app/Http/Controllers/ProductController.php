@@ -40,7 +40,7 @@ class ProductController extends Controller
     public function show(string $slug)
     {
         // First try exact slug match (most specific)
-        $product = Product::where('slug', trim($slug))->first();
+        $product = Product::where('slug', trim($slug))->with('ratings')->first();
 
         // If no exact slug match, show 404
         if (!$product) {

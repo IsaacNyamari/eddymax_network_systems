@@ -11,11 +11,13 @@
         </div>
         <div class="mb-2">
             <x-input-label for="parent_id" class="mb-2" value="Parent Category" />
-            <select name="" id="" wire:model.live='parent_id' class="w-full rounded-md border-gray-300">
-                <option value="{{ null }}">No Parent</option>
+            <select name="parent_id" id="parent_id" wire:model.live='selectedParentCategory'
+                class="w-full rounded-md border-gray-300">
+                <option value="" {{ is_null($parent_id) ? 'selected' : '' }}>No Parent</option>
                 @foreach ($categories as $category)
                     <option {{ $parent_id === $category->id ? 'selected' : '' }} value="{{ $category->id }}">
-                        {{ $category->name }}</option>
+                        {{ $category->name }}
+                    </option>
                 @endforeach
             </select>
         </div>

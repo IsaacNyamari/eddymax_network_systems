@@ -17,9 +17,9 @@ class CategoryEdit extends Component
     #[Validate('required|string|min:3')]
     public $name = '';
 
-    #[Validate('required|integer|min:3')]
-    public $parent_id = '';
-    
+    #[Validate('nullable|exists:categories,id')]
+    public $parent_id = null;
+
     public $selectedParentCategory = '';
 
     #[Validate('nullable|image|mimes:jpg,jpeg,png,webp')]
@@ -33,15 +33,17 @@ class CategoryEdit extends Component
         $this->categories = Category::all();
         $this->category = $category;
         $this->name = $category->name;
-        $this->parent_id = $category->parent->id;
+        // Fix: Check if parent exists before accessing id
+        $this->parent_id = $category->parent ? $category->parent->id : null;
         $this->slug = $category->slug;
     }
 
     public function saveCategory()
     {
-        dd($this->category->parent_id);
+
         // Validate using Livewire
         $this->validate();
+        $this->selectedParentCategory == "" ? $this->selectedParentCategory = null : "";
 
         // Generate slug
         $this->slug = Str::slug($this->name);
@@ -54,7 +56,7 @@ class CategoryEdit extends Component
 
         // Update category
         $this->category->name = $this->name;
-        $this->category->parent_id = $this->parent_id;
+        $this->category->parent_id = $this->selectedParentCategory;
         $this->category->slug = $this->slug;
         $this->category->save();
 

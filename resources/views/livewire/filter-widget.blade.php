@@ -73,8 +73,8 @@
                     <label
                         class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-150 {{ $selectedCategory == $category->slug ? 'bg-red-50 border border-red-100' : '' }}">
                         <div class="relative flex items-center">
-                            <input type="radio" wire:model.live="selectedCategory" name="selectedCategory" value="{{ $category->slug }}"
-                                class="sr-only peer">
+                            <input type="radio" wire:model.live="selectedCategory" name="selectedCategory"
+                                value="{{ $category->slug }}" class="sr-only peer">
                             <div
                                 class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:border-red-600 peer-checked:bg-red-600 flex items-center justify-center transition-all duration-200">
                                 <div class="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100"></div>
@@ -153,12 +153,13 @@
                 </h3>
 
                 <div class="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                    @foreach ($brands as $brand)
+                    @foreach ($brands as $brandItem)
                         <label
-                            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-150 {{ in_array($brand, $selectedBrands) ? 'bg-red-50 border border-red-100' : '' }}">
+                            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-150 {{ in_array($brandItem['id'], $selectedBrands) ? 'bg-red-50 border border-red-100' : '' }}">
                             <div class="relative flex items-center">
-                                <input type="checkbox" wire:click="toggleBrand('{{ $brand }}')"
-                                    class="sr-only peer" {{ in_array($brand, $selectedBrands) ? 'checked' : '' }}>
+                                <input type="radio" name="brand" wire:click="toggleBrand({{ $brandItem['id'] }})"
+                                    class="sr-only peer"
+                                    {{ in_array($brandItem['id'], $selectedBrands) ? 'checked' : '' }}>
                                 <div
                                     class="w-5 h-5 border-2 border-gray-300 rounded peer-checked:border-red-600 peer-checked:bg-red-600 flex items-center justify-center transition-all duration-200">
                                     <svg class="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-200"
@@ -167,7 +168,11 @@
                                             d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
-                                <span class="ml-3 text-sm font-medium text-gray-700">{{ $brand }}</span>
+                                <span class="ml-3 text-sm font-medium text-gray-700">{{ $brandItem['name'] }}</span>
+                                @if ($brandItem['products_count'] ?? false)
+                                    <span
+                                        class="ml-auto text-xs text-gray-500">({{ $brandItem['products_count'] }})</span>
+                                @endif
                             </div>
                         </label>
                     @endforeach

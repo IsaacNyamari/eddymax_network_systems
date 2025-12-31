@@ -84,15 +84,15 @@ class CategoryController extends Controller
     public function show(int $id)
     {
         $category = Category::where('id', $id)->first();
-        return view('dashboard.admin.categories.edit', compact('category'));
+        return view('dashboard.admin.categories.show', compact('category'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Category $category)
     {
-        //
+       return view('dashboard.admin.categories.edit',compact('category'));
     }
 
     /**

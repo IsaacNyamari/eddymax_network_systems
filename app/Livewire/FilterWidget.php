@@ -42,13 +42,18 @@ class FilterWidget extends Component
         $this->max_price = $this->fixedMaxPrice;
         $this->priceRange = [$this->fixedMinPrice, $this->fixedMaxPrice];
 
-        // Get unique brands from products
-        $this->brands = Brands::with('products')
-            ->whereNotNull('name')
-            ->distinct()
-            ->pluck('brands.name')
-            ->filter()
-            ->values()
+        // Get brands with products (using relationship)
+        $this->brands = Brands::whereHas('products')
+            ->withCount('products')
+            ->orderBy('name')
+            ->get()
+            ->map(function ($brand) {
+                return [
+                    'id' => $brand->id,
+                    'name' => $brand->name,
+                    'products_count' => $brand->products_count
+                ];
+            })
             ->toArray();
     }
 
@@ -98,9 +103,11 @@ class FilterWidget extends Component
         // Price range
         $query->whereBetween('price', [$this->min_price, $this->max_price]);
 
-        // Brand filter
+        // Brand filter - UPDATED: using relationship with brand_id
         if (!empty($this->selectedBrands)) {
-            $query->whereIn('brand', $this->selectedBrands);
+            $query->whereHas('brand', function ($q) {
+                $q->whereIn('brands.id', $this->selectedBrands);
+            });
         }
 
         // Rating filter
@@ -175,12 +182,12 @@ class FilterWidget extends Component
         $this->max_price = $value[1];
     }
 
-    public function toggleBrand($brand)
+    public function toggleBrand($brandId)
     {
-        if (in_array($brand, $this->selectedBrands)) {
-            $this->selectedBrands = array_diff($this->selectedBrands, [$brand]);
+        if (in_array($brandId, $this->selectedBrands)) {
+            $this->selectedBrands = array_diff($this->selectedBrands, [$brandId]);
         } else {
-            $this->selectedBrands[] = $brand;
+            $this->selectedBrands[] = $brandId;
         }
     }
 

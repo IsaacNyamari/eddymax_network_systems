@@ -10,11 +10,11 @@
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Active Products</h2>
                     <div class="float-end flex gap-3">
-                        <a href="{{ route('admin.product.trash') }}"
+                        <a href="{{ route('admin.product.trash') }}" wire:navigate
                             class="text-sm text-white bg-red-600 px-4 rounded py-2 hover:text-white font-medium">
                             <i class="fas fa-trash-alt"></i> Trash
                         </a>
-                        <a href="{{ route('admin.products.create') }}"
+                        <a href="{{ route('admin.products.create') }}" wire:navigate
                             class="text-sm text-white bg-green-600 px-4 rounded py-2 hover:text-white font-medium">
                             + New
                         </a>

@@ -89,7 +89,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('admin.orders.show', $order->order_number) }}"
+                                    <a href="{{ route('admin.orders.show', $order->order_number) }}" wire:navigate
                                         class="text-red-600 hover:text-red-900 mr-3">View</a>
 
                                     @php
@@ -113,7 +113,7 @@
                                     @endphp
 
                                     @foreach ($nextActions as $actionRoute => $actionLabel)
-                                        <a href="{{ route('admin.orders.status.' . $actionRoute, $order->order_number) }}"
+                                        <a href="{{ route('admin.orders.status.' . $actionRoute, $order->order_number) }}" wire:navigate
                                             class="text-green-600 px-2 py-1 hover:text-green-900" {{-- Optional: remove   if dynamically rendered to avoid JS errors --}}>
                                             {{ $actionLabel }}
                                         </a>
