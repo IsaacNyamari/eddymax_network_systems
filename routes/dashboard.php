@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Customer\AddressController as CustomerAddressController;
@@ -115,6 +116,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/settings/shipping', [SettingController::class, 'updateShipping'])->name('settings.shipping.update');
         Route::patch('/settings/email', [SettingController::class, 'updateEmail'])->name('settings.email.update');
 
+        // brands
+        Route::resource('/brands', BrandsController::class);
+        // Route::get('/brands', [BrandsController::class, 'index'])->name('brands');
 
         // // System
         // Route::get('/system/logs', function () {
