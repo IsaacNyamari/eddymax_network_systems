@@ -48,123 +48,126 @@
         @endphp
 
         @foreach ($sortedParentCategories as $index => $category)
-            <div class="mb-16">
-                <!-- Category Header -->
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-                    <div class="mb-4 sm:mb-0">
-                        <h2 class="text-4xl font-bold text-gray-900 mb-2">{{ $category->name }}</h2>
-                        <p class="text-gray-600">Discover our premium collection</p>
+            @if ($category->children->count() > 0)
+                <div class="mb-16">
+                    <!-- Category Header -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+                        <div class="mb-4 sm:mb-0">
+                            <h2 class="text-4xl font-bold text-gray-900 mb-2">{{ $category->name }}</h2>
+                            <p class="text-gray-600">Discover our premium collection</p>
+                        </div>
+                        <a href="{{ route('store.filter.category', $category->slug) }}"
+                            class="group relative inline-flex items-center text-lg font-semibold text-red-600 hover:text-red-700 transition-colors duration-300">
+                            <span class="mr-2">Explore Collection</span>
+                            <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                            <span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"></span>
+                        </a>
                     </div>
-                    <a href="{{ route('store.filter.category', $category->slug) }}"
-                        class="group relative inline-flex items-center text-lg font-semibold text-red-600 hover:text-red-700 transition-colors duration-300">
-                        <span class="mr-2">Explore Collection</span>
-                        <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                        <span
-                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"></span>
-                    </a>
-                </div>
-                <!-- Products Grid -->
-                <div class="grid grid-cols-1 h-fit sm:grid-cols-2 lg:grid-cols-5 mb-4 gap-6">
-                    @foreach ($category->getAllProducts() as $product)
-                        <!-- Changed from $category->products -->
-                        <div
-                            class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                            <div class="relative overflow-hidden">
-                                <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
-                                    class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500"
-                                    loading="lazy" onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
+                    <!-- Products Grid -->
+                    <div class="grid grid-cols-1 h-fit sm:grid-cols-2 lg:grid-cols-5 mb-4 gap-6">
+                        @foreach ($category->getAllProducts() as $product)
+                            <!-- Changed from $category->products -->
+                            <div
+                                class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                                <div class="relative overflow-hidden">
+                                    <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
+                                        class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500"
+                                        loading="lazy" onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
 
-                                <!-- ADD THIS CART BUTTON OVERLAY -->
-                                <div
-                                    class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <div class="transform scale-90 group-hover:scale-100 transition-transform duration-300">
-                                        <livewire:add-to-cart-button :product="$product" />
-                                    </div>
-                                </div>
-
-                                @if ($product['stock_status'])
+                                    <!-- ADD THIS CART BUTTON OVERLAY -->
                                     <div
-                                        class="absolute top-3 left-3 bg-{{ $product['stock_status'] == 'Sale' ? 'red' : ($product['stock_status'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                                        {{ Str::replace('_', ' ', $product['stock_status']) }}
+                                        class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <div
+                                            class="transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                                            <livewire:add-to-cart-button :product="$product" />
+                                        </div>
                                     </div>
-                                @endif
-                                <button
-                                    class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition opacity-0 group-hover:opacity-100">
-                                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="p-5">
-                                <a href="{{ route('products.show', $product->slug) }}" wire:navigate>
-                                    <h3
-                                        class="font-semibold text-md text-gray-900 mb-2 group-hover:text-red-600 transition">
-                                        {{ Str::limit($product['name'], 15, '...') }}
-                                </a>
-                                </h3>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex gap-2">
-                                        <span class="text-sm font-bold text-red-600 block">Ksh
-                                            {{ number_format($product['price'], 2) }}</span>
-                                        @if ($product->ratings->count() > 0)
-                                            <div class="flex text-yellow-600">
-                                                @php
-                                                    // Get the average rating
-                                                    $averageRating = $product->ratings->avg('rate_count') ?? 0;
-                                                    $ratingCount = $product->ratings->count();
 
-                                                    // Round to nearest half for display
-                                                    $roundedRating = round($averageRating * 2) / 2;
-                                                @endphp
+                                    @if ($product['stock_status'])
+                                        <div
+                                            class="absolute top-3 left-3 bg-{{ $product['stock_status'] == 'Sale' ? 'red' : ($product['stock_status'] == 'New' ? 'green' : 'blue') }}-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                                            {{ Str::replace('_', ' ', $product['stock_status']) }}
+                                        </div>
+                                    @endif
+                                    <button
+                                        class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition opacity-0 group-hover:opacity-100">
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="p-5">
+                                    <a href="{{ route('products.show', $product->slug) }}" wire:navigate>
+                                        <h3
+                                            class="font-semibold text-md text-gray-900 mb-2 group-hover:text-red-600 transition">
+                                            {{ Str::limit($product['name'], 15, '...') }}
+                                    </a>
+                                    </h3>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex gap-2">
+                                            <span class="text-sm font-bold text-red-600 block">Ksh
+                                                {{ number_format($product['price'], 2) }}</span>
+                                            @if ($product->ratings->count() > 0)
+                                                <div class="flex text-yellow-600">
+                                                    @php
+                                                        // Get the average rating
+                                                        $averageRating = $product->ratings->avg('rate_count') ?? 0;
+                                                        $ratingCount = $product->ratings->count();
 
-                                                {{-- Display stars based on average rating --}}
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    @if ($i <= floor($roundedRating))
-                                                        {{-- Full star --}}
-                                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path
-                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                        </svg>
-                                                    @elseif ($i - 0.5 == $roundedRating)
-                                                        {{-- Half star --}}
-                                                        <div class="relative">
+                                                        // Round to nearest half for display
+                                                        $roundedRating = round($averageRating * 2) / 2;
+                                                    @endphp
+
+                                                    {{-- Display stars based on average rating --}}
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= floor($roundedRating))
+                                                            {{-- Full star --}}
+                                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path
+                                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                            </svg>
+                                                        @elseif ($i - 0.5 == $roundedRating)
+                                                            {{-- Half star --}}
+                                                            <div class="relative">
+                                                                <svg class="w-5 h-5 text-gray-300" fill="currentColor"
+                                                                    viewBox="0 0 20 20">
+                                                                    <path
+                                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                                </svg>
+                                                                <div class="absolute top-0 left-0 w-1/2 overflow-hidden">
+                                                                    <svg class="w-5 h-5 text-yellow-600" fill="currentColor"
+                                                                        viewBox="0 0 20 20">
+                                                                        <path
+                                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        @else
+                                                            {{-- Empty star --}}
                                                             <svg class="w-5 h-5 text-gray-300" fill="currentColor"
                                                                 viewBox="0 0 20 20">
                                                                 <path
                                                                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                             </svg>
-                                                            <div class="absolute top-0 left-0 w-1/2 overflow-hidden">
-                                                                <svg class="w-5 h-5 text-yellow-600" fill="currentColor"
-                                                                    viewBox="0 0 20 20">
-                                                                    <path
-                                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                                </svg>
-                                                            </div>
-                                                        </div>
-                                                    @else
-                                                        {{-- Empty star --}}
-                                                        <svg class="w-5 h-5 text-gray-300" fill="currentColor"
-                                                            viewBox="0 0 20 20">
-                                                            <path
-                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                        </svg>
-                                                    @endif
-                                                @endfor
-                                            </div>
-                                        @endif
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
         @endforeach
         <!-- Why Choose Us -->
         <div class="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 shadow-xl">
