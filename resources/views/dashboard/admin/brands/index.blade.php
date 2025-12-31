@@ -247,7 +247,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
                                         <!-- view Button -->
-                                        <a href="{{ route('admin.brands.show', $brand) }}"
+                                        <a href="{{ route('admin.brands.show', $brand) }}" wire:navigate
                                             class="p-2 text-gray-600 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors duration-200 group"
                                             title="View Brand">
                                         <i class="fa fa-eye" aria-hidden="true"></i>
