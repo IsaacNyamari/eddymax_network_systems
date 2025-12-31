@@ -139,7 +139,7 @@
                                 Categories
                             </a>
 
-                            <a href="{{ route('admin.reports') }}" wire:navigate
+                            <a href="{{ route('admin.reports') }}"
                                 class="{{ request()->routeIs('admin.reports') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
