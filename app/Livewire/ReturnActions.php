@@ -23,7 +23,7 @@ class ReturnActions extends Component
                 if ($data['status'] === "success") {
                     $refund_data = $this->refundPaystackTransaction($data['reference'], $data['amount']);
                     // ⬇️ CRITICAL FIX: Check if refund succeeded
-                    if ($refund_data['status'] === false) {
+                    if ($refund_data != 'processing') {
                         $this->dispatch('low-balance', $refund_data['message']);
                         return false; // Stop here if refund failed
                     }
@@ -103,20 +103,11 @@ class ReturnActions extends Component
 
         $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
             ->get("https://api.paystack.co/transaction/verify/{$reference}");
-        // dd([
-        //     'reference' => $reference,
-        //     'status' => $response->status(),
-        //     'body' => $response->json(),
-        // ]);
+
         if ($response->failed()) {
-            dd([
-                'reference' => $reference,
-                'status' => $response->status(),
-                'body' => $response->json(),
-            ]);
+            $this->dispatch();
             return false;
         }
-
         $payload = $response->json();
 
         // Paystack API-level success
@@ -125,6 +116,11 @@ class ReturnActions extends Component
         }
 
         $payment_info = [
+            "status" => match ($payload['data']['status']) {
+                'reversed' => 'refunded',
+                'success' => 'paid',
+                default => $payload['data']['status']
+            },
             "message" => $payload['message'],
             "amount" => ($payload['data']['amount']) / 100,
             "receipt" => $payload['data']['receipt_number'],

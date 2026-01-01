@@ -39,11 +39,16 @@ class CheckoutPage extends Component
         'payment-successful' => 'paymentSuccessful',
         'payment-failed' => 'paymentFailed'
     ];
+    
+    // Store order reference temporarily between payment initiation and completion
+    public $temporaryOrderReference = null;
+    
     public function boot()
     {
         // Initialize SMS service using dependency injection
         $this->smsService = app(SmsService::class);
     }
+    
     public function mount()
     {
         $this->cart = session()->get('cart', []);
@@ -111,12 +116,16 @@ class CheckoutPage extends Component
             return;
         }
 
-        // Create order
-        $order = $this->createOrder($validated);
+        // Save user address (but don't create order yet)
+        $this->saveUserAddress($user->id);
 
-        if (!$order) {
-            return;
-        }
+        // Generate a unique order reference to pass to Paystack
+        // This is NOT the actual order, just a reference for the payment
+        do {
+            $temporaryOrderReference = strtoupper(Str::random(9));
+        } while (Order::where('order_number', $temporaryOrderReference)->exists());
+        
+        $this->temporaryOrderReference = $temporaryOrderReference;
 
         // Dispatch event to open Paystack modal
         $this->dispatch('paystack-payment', [
@@ -124,7 +133,7 @@ class CheckoutPage extends Component
             'amount' => $this->total * 100, // Convert to kobo
             'name' => $this->name,
             'phone' => $this->phone,
-            'order_id' => $order->order_number,
+            'order_id' => $temporaryOrderReference, // Pass temporary reference
         ]);
     }
 
@@ -224,26 +233,41 @@ class CheckoutPage extends Component
         }
     }
 
-
     public function paymentSuccessful($reference)
     {
-        $user = Auth::user();
-
-        if ($user) {
-            $this->saveUserAddress($user->id);
+        // Verify the payment first
+        $transactionCode = $this->verifyPaystackTransaction($reference['reference']);
+        
+        if (!$transactionCode) {
+            $this->dispatch('show-toast', [
+                'message' => 'Payment verification failed. Please contact support.',
+                'type' => 'error'
+            ]);
+            return;
         }
 
-        // ✅ Create order now (only once)
+        // ✅ Create order ONLY here after successful payment
         $order = $this->createOrder($reference);
-        $this->sendOrderSms($order);
+        
+        if (!$order) {
+            $this->dispatch('show-toast', [
+                'message' => 'Failed to create order. Please contact support.',
+                'type' => 'error'
+            ]);
+            return;
+        }
+
         // Create payment record
         Payment::create([
             'order_id' => $order->id,
             'amount' => $this->total,
             'reference' => $reference['reference'],
-            'transaction_code' => $this->verifyPaystackTransaction($reference['reference']),
+            'transaction_code' => $transactionCode,
             'status' => PaymentStatus::PAID->value
         ]);
+
+        // Send SMS notification
+        $this->sendOrderSms($order);
 
         // ✅ Clear cart after order is created
         session()->forget('cart');
@@ -251,6 +275,7 @@ class CheckoutPage extends Component
 
         return redirect()->route('customer.orders.show', $order->order_number);
     }
+
     protected function sendOrderSms($order)
     {
         try {
@@ -294,8 +319,12 @@ class CheckoutPage extends Component
             ]);
         }
     }
+
     public function paymentFailed()
     {
+        // Clear the temporary order reference
+        $this->temporaryOrderReference = null;
+        
         // Notify the frontend (toast)
         $this->dispatch('show-toast', [
             'message' => 'Payment failed or was canceled. Please try again.',
@@ -330,20 +359,18 @@ class CheckoutPage extends Component
             return false;
         }
 
-        return $payload['data']['receipt_number']; // ✅ clean verified data
+        return $payload['data']['receipt_number'] ?? $reference; // Use receipt number or fallback to reference
     }
 
     protected function createOrder($paymentData)
     {
-        // Generate unique order number
-        do {
-            $orderNumber = strtoupper(Str::random(9));
-        } while (Order::where('order_number', $orderNumber)->exists());
-
         // Get products from cart
         $products_in_cart = $this->cart;
 
-        // Create ONE order with all products
+        // Generate final order number (use the temporary reference or generate new)
+        $orderNumber = $this->temporaryOrderReference ?? strtoupper(Str::random(9));
+        
+        // Create the actual order
         $order = Order::create([
             'user_id' => Auth::id(),
             'order_number' => $orderNumber,
@@ -353,7 +380,7 @@ class CheckoutPage extends Component
             'status' => 'pending',
         ]);
 
-        // Optional: You might want to create order items separately if you need more structure
+        // Create order items
         foreach ($products_in_cart as $product) {
             OrderItem::create([
                 'order_id' => $order->id,
@@ -364,6 +391,9 @@ class CheckoutPage extends Component
             ]);
         }
 
+        // Clear the temporary reference
+        $this->temporaryOrderReference = null;
+
         return $order;
     }
 
@@ -371,6 +401,4 @@ class CheckoutPage extends Component
     {
         return Auth::check();
     }
-
-    // Remove the old registerUserDetails method as it's now handled in ensureUserAuthenticated
 }

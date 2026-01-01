@@ -4,7 +4,8 @@
 @section('content')
     <div class="space-y-6">
         <!-- Back Button -->
-        <a href="{{ route('admin.orders.index') }}" wire:navigate class="inline-flex items-center text-blue-600 hover:text-blue-800">
+        <a href="{{ route('admin.orders.index') }}" wire:navigate
+            class="inline-flex items-center text-blue-600 hover:text-blue-800">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -409,26 +410,10 @@
             </div>
         </div>
 
-        <!-- Notes Section -->
-        {{-- <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Admin Notes</h2>
-            <form action="{{ route('admin.returns.add-note', $return->id) }}" method="POST">
-                @csrf
-                <textarea name="notes" rows="3" 
-                          class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                          placeholder="Add notes about this return..."></textarea>
-                <div class="mt-3 flex justify-end">
-                    <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900">
-                        Save Note
-                    </button>
-                </div>
-            </form>
-        </div> --}}
     </div>
 
     <!-- JavaScript for Image Lightbox -->
     <script>
-
         document.addEventListener('DOMContentLoaded', function() {
             const images = document.querySelectorAll('img[src*="storage"]');
             images.forEach(img => {
@@ -578,11 +563,15 @@
                                 <p class="text-gray-800 font-semibold">${data.brand || 'N/A'}</p>
                             </div>
                             
+                           
                             <div class="bg-gray-50 p-3 rounded-lg">
                                 <p class="text-sm text-gray-600 font-medium mb-1">M-Pesa Code</p>
                                 <p class="text-gray-800 font-semibold">${data.receipt || 'N/A'}</p>
                             </div>
-                            
+                             <div class="bg-gray-50 p-3 rounded-lg">
+                                <p class="text-sm text-gray-600 font-medium mb-1">Status</p>
+                                <p class="text-gray-800 font-semibold">${data.status || 'N/A'}</p>
+                            </div>
                             <div class="bg-gray-50 p-3 rounded-lg">
                                 <p class="text-sm text-gray-600 font-medium mb-1">Phone Number</p>
                                 <p class="text-gray-800 font-semibold">${data.phone || 'N/A'}</p>

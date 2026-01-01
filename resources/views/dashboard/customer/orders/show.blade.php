@@ -146,79 +146,91 @@
                         <div class="flex items-center w-full sm:w-auto">
                             <img src="{{ asset('storage/' . ($product['image'] ?? 'placeholder.png')) }}"
                                 alt="{{ $product['name'] }}" class="w-24 h-24 object-cover rounded flex-shrink-0 mr-4">
-
                             <div class="flex-1 min-w-0">
                                 <h4 class="font-semibold text-gray-800 truncate">
                                     {{ Str::limit($product['name'], 20, '...') }}</h4>
                                 <p class="text-gray-500 text-sm">Quantity: {{ $product['quantity'] }}</p>
-                                <p class="text-gray-700 font-medium mt-1">Kshs.
-                                    {{ number_format($product['price'], 2) }}
+                                <p class="text-gray-700 font-medium mt-1">Kshs. {{ number_format($product['price'], 2) }}
                                 </p>
                                 <p class="text-gray-500 text-sm">Total Amount: Kshs.
                                     {{ number_format($product['quantity'] * $product['price'], 2) }}</p>
                             </div>
                         </div>
-                        @php
-                            $order_status = $order->status;
-                        @endphp
-                        @if ($order_status != 'rejected')
-                        @endif
-                        {{-- Cancel button --}}
+
+                        {{-- Cancel/Return Form --}}
                         <div class="mt-4 sm:mt-0 sm:ml-4">
-
-
                             <div x-data="{
                                 showForm: false,
                                 actionType: null
                             }" class="space-y-3">
-
+                                @if ($errors->any())
+                                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                                        @foreach ($errors->all() as $error)
+                                            <p class="text-red-700">{{ $error }}</p>
+                                        @endforeach
+                                    </div>
+                                @endif
                                 {{-- Buttons --}}
+                                @php
+                                    $order_status = $order->status;
+                                @endphp
+
                                 @if ($order_status === 'pending' || $order_status === 'processing')
-                                    <button type="button" @click="showForm = true; actionType = 'cancel'"
+                                    <button type="button" @click="showForm = !showForm; actionType = 'cancel'"
+                                        x-text="showForm && actionType === 'cancel' ? 'Hide Form' : 'Cancel Order'"
                                         class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
-                                        Cancel
                                     </button>
                                 @endif
 
                                 @if ($order_status === 'shipped' || $order_status === 'delivered')
-                                    <button type="button" @click="showForm = true; actionType = 'return'"
+                                    <button type="button" @click="showForm = !showForm; actionType = 'return'"
+                                        x-text="showForm && actionType === 'return' ? 'Hide Form' : 'Return & Refund'"
                                         class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition">
-                                        Return & Refund
                                     </button>
                                 @endif
 
-                                {{-- Shared Form (ONE URL) --}}
-                                <form x-show="showForm" enctype="multipart/form-data" x-transition
+                                {{-- Shared Form --}}
+                                <form x-show="showForm" x-cloak enctype="multipart/form-data"
                                     action="{{ route('customer.orders.cancel', $order) }}" method="POST"
-                                    class="space-y-2">
+                                    class="space-y-3 p-4 bg-white border rounded-lg shadow mt-3">
                                     @csrf
-                                    <label for="proof_image" class="block text-sm font-medium text-gray-700 mb-1">
-                                        Proof Images
-                                    </label>
-                                    <input type="file" name="proof_image[]" id="proof_image"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        multiple required
-                                        x-bind:placeholder="actionType === 'cancel' ? 'Proof image for cancellation' :
-                                            'Proof image for return & refund'">
-                                    <x-input-label for="reason">Reason</x-input-label>
-                                    <x-text-input name="reason" id="reason" :placeholder="''"
-                                        x-bind:placeholder="actionType === 'cancel'
-                                            ?
-                                            'Reason for cancellation' :
-                                            'Reason for return & refund'"
-                                        class="w-full" required />
 
-                                    <input type="hidden" name="type" :value="actionType">
 
-                                    <div class="flex gap-2">
+                                    <input type="hidden" name="type" x-model="actionType">
+
+                                    <div>
+                                        <label for="proof_image" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Proof Images <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="file" name="proof_image[]" id="proof_image" accept="image/*"
+                                            multiple
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            x-bind:placeholder="actionType === 'cancel' ? 'Upload proof images for cancellation' :
+                                                'Upload proof images for return & refund'">
+                                        <p class="text-xs text-gray-500 mt-1">Upload images as proof for your request</p>
+                                    </div>
+
+                                    <div>
+                                        <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Reason <span class="text-red-500">*</span>
+                                        </label>
+                                        <textarea name="reason" id="reason" rows="3"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            x-bind:placeholder="actionType === 'cancel' ?
+                                                'Please provide detailed reason for cancellation (minimum 20 characters)...' :
+                                                'Please provide detailed reason for return & refund (minimum 20 characters)...'"></textarea>
+                                        <p class="text-xs text-gray-500 mt-1">Minimum 20 characters required</p>
+                                    </div>
+
+                                    <div class="flex gap-2 pt-2">
                                         <button type="submit"
-                                            class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">
-                                            Submit
+                                            class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition">
+                                            Submit Request
                                         </button>
 
-                                        <button type="button" @click="showForm = false"
-                                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
-                                            Close
+                                        <button type="button" @click="showForm = false; actionType = null"
+                                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition">
+                                            Cancel
                                         </button>
                                     </div>
                                 </form>

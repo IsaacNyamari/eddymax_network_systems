@@ -41,7 +41,7 @@ class OrderController extends Controller
     {
         $data = $request->validate([
             'reason' => 'required|min:20',
-            'proof_image' => 'required',
+            'proof_image' => 'required|array',
         ]);
         $data['order_id'] = $order->id;
 
