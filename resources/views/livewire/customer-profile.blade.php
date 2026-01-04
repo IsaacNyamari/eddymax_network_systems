@@ -1,7 +1,7 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900 ">
-            {{ __('Profile Information') }}
+            {{ __('Profile Information And Password') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600 ">
@@ -50,8 +50,8 @@
         </div>
         <div>
             <x-input-label for="address" :value="__('Address')" />
-            <x-text-input wire:model.live="address" id="address" name="address" type="text" class="mt-1 block w-full"
-                required autofocus autocomplete="address" />
+            <x-text-input wire:model.live="address" id="address" name="address" type="text"
+                class="mt-1 block w-full" required autofocus autocomplete="address" />
             <x-input-error class="mt-2" :messages="$errors->get('address')" />
         </div>
         <div class="flex items-center gap-4">
@@ -62,4 +62,6 @@
             </x-action-message>
         </div>
     </form>
+
+    <livewire:profile.update-password-form />
 </section>

@@ -1,5 +1,8 @@
 <?php
 
+use Ladumor\LaravelPwa\LaravelPwa;
+use Ladumor\LaravelPwa\PWAServiceProvider;
+
 return [
 
     /*
@@ -122,6 +125,4 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
-
-
 ];

@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- web app --}}
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#6777ef">
 
     <title>{{ config('app.name', 'Edymax Systems & Networks') }}</title>
     <link rel="shortcut icon" href="{{ asset('images/edymax-logo-bg.jpeg') }}" type="image/*">
@@ -421,6 +424,12 @@
             }
         }
     </style>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
+
 </body>
 
 </html>

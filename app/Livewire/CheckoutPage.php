@@ -39,16 +39,16 @@ class CheckoutPage extends Component
         'payment-successful' => 'paymentSuccessful',
         'payment-failed' => 'paymentFailed'
     ];
-    
+
     // Store order reference temporarily between payment initiation and completion
     public $temporaryOrderReference = null;
-    
+
     public function boot()
     {
         // Initialize SMS service using dependency injection
         $this->smsService = app(SmsService::class);
     }
-    
+
     public function mount()
     {
         $this->cart = session()->get('cart', []);
@@ -124,7 +124,7 @@ class CheckoutPage extends Component
         do {
             $temporaryOrderReference = strtoupper(Str::random(9));
         } while (Order::where('order_number', $temporaryOrderReference)->exists());
-        
+
         $this->temporaryOrderReference = $temporaryOrderReference;
 
         // Dispatch event to open Paystack modal
@@ -222,7 +222,11 @@ class CheckoutPage extends Component
             'city' => $this->city,
             'county_id' => $this->selectedCounty,
         ];
-
+        $message = "Thanks for registering on Edymax Systems and Networks. 
+        Your password is: password.
+        Please update your password on the dashboard for security purposes.";
+        // send sms with the password and prompt to change password
+        $this->smsService->send($this->phone, $message);
         // Check if an address already exists for this user
         $existingAddress = Adresses::where('user_id', $userId)->first();
 
@@ -237,7 +241,7 @@ class CheckoutPage extends Component
     {
         // Verify the payment first
         $transactionCode = $this->verifyPaystackTransaction($reference['reference']);
-        
+
         if (!$transactionCode) {
             $this->dispatch('show-toast', [
                 'message' => 'Payment verification failed. Please contact support.',
@@ -248,7 +252,7 @@ class CheckoutPage extends Component
 
         // ✅ Create order ONLY here after successful payment
         $order = $this->createOrder($reference);
-        
+
         if (!$order) {
             $this->dispatch('show-toast', [
                 'message' => 'Failed to create order. Please contact support.',
@@ -324,7 +328,7 @@ class CheckoutPage extends Component
     {
         // Clear the temporary order reference
         $this->temporaryOrderReference = null;
-        
+
         // Notify the frontend (toast)
         $this->dispatch('show-toast', [
             'message' => 'Payment failed or was canceled. Please try again.',
@@ -369,7 +373,7 @@ class CheckoutPage extends Component
 
         // Generate final order number (use the temporary reference or generate new)
         $orderNumber = $this->temporaryOrderReference ?? strtoupper(Str::random(9));
-        
+
         // Create the actual order
         $order = Order::create([
             'user_id' => Auth::id(),

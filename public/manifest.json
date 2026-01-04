@@ -1,0 +1,12 @@
+{
+  "name": "Edymax Systems",
+  "short_name": "EdymaxSystems",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6777ef",
+  "icons": [
+    { "src": "/images/edymax-logo-bg.jpeg", "sizes": "192x192", "type": "image/png" },
+    { "src": "/images/edymax-logo-bg.jpeg", "sizes": "512x512", "type": "image/png" }
+  ]
+}
