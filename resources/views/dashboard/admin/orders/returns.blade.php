@@ -37,7 +37,7 @@
                     <div class="left-0">
                         <p>
                             <span class="font-medium">Order Status:</span>
-                            {{ ucfirst($return->order->status) }}
+                            {{ ucfirst($return->status) }}
                         </p>
 
                         <p>

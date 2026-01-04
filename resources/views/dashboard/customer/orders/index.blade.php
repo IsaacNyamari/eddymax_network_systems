@@ -60,7 +60,7 @@
                                             : ($order->status === 'cancelled'
                                                 ? 'bg-red-100 text-red-800'
                                                 : 'bg-gray-100 text-gray-800'))) }}">
-                                        {{ ucfirst($order->status) }}
+                                        {{ ucfirst($order->orderReturns ? $order->orderReturns->status : $order->status) }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

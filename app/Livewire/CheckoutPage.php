@@ -18,6 +18,16 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
+
+//random password trait
+class RandomPassword
+{
+    public function generate($length = 8)
+    {
+        $password = Str::random($length);
+        return $password;
+    }
+}
 class CheckoutPage extends Component
 {
     public $cart = [];
@@ -32,6 +42,7 @@ class CheckoutPage extends Component
     public $city;
     protected $smsService;
 
+    public  $randomPassword = "";
     public $createAccount = false;
     public $password;
 
@@ -54,7 +65,8 @@ class CheckoutPage extends Component
         $this->cart = session()->get('cart', []);
         $this->calculateTotal();
         $this->counties = Counties::all();
-
+        $randPass = new RandomPassword();
+        $this->randomPassword = $randPass->generate();
         if ($user = Auth::user()) {
             $this->name = $user->name;
             $this->email = $user->email;
@@ -172,7 +184,7 @@ class CheckoutPage extends Component
         $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
-            'password' => Hash::make('password'), // Random password
+            'password' => Hash::make($this->randomPassword), // Random password
         ]);
         $user->syncRoles(['customer']);
         if (!$user) {
@@ -182,7 +194,11 @@ class CheckoutPage extends Component
             ]);
             return null;
         }
-
+        $message = "Thanks for registering on Edymax Systems and Networks. 
+        Your password is: " . $this->randomPassword . "
+        Please update your password on the dashboard for security purposes.";
+        // send sms with the password and prompt to change password
+        $this->smsService->send($this->phone, $message);
         // Log the user in
         Auth::login($user);
 
@@ -222,11 +238,7 @@ class CheckoutPage extends Component
             'city' => $this->city,
             'county_id' => $this->selectedCounty,
         ];
-        $message = "Thanks for registering on Edymax Systems and Networks. 
-        Your password is: password.
-        Please update your password on the dashboard for security purposes.";
-        // send sms with the password and prompt to change password
-        $this->smsService->send($this->phone, $message);
+
         // Check if an address already exists for this user
         $existingAddress = Adresses::where('user_id', $userId)->first();
 

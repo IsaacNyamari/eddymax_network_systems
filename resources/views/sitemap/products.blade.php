@@ -7,7 +7,6 @@
             <lastmod>{{ $product->updated_at->format('Y-m-d') }}</lastmod>
             <changefreq>always</changefreq>
             <priority>{{ $product->stock_status == 'in_stock' ? '0.8' : '0.6' }}</priority>
-
             @if ($product->image)
                 <image:image>
                     <image:loc>{{ asset('storage/' . $product->image) }}</image:loc>
