@@ -32,7 +32,8 @@
         @php
             // Define the custom sort order
             $order = [
-                'Networking' => 1,
+                'Fiber Optics' => 1,
+                'Networking' => 0,
                 'Security Systems' => 2,
                 'Computing' => 3,
                 'Solar Solutions' => 4,

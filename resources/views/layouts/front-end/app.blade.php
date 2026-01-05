@@ -429,7 +429,7 @@
             navigator.serviceWorker.register('/sw.js');
         }
     </script>
-
+    @include('cookie-consent::index')
 </body>
 
 </html>
