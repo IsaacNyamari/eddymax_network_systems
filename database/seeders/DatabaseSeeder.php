@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,11 +24,6 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         // create 10 networking categories
-        Category::factory()->create([
-            [
-                'name' => 'Routers',
-                'slug' => 'routers'
-            ]
-        ]);
+       $this->call(MessageSeeder::class);
     }
 }

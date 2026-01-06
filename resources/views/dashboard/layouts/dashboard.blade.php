@@ -147,6 +147,11 @@
                                 Categories
                             </a>
 
+                            <a href="{{ route('admin.messages.index') }}"
+                                class="{{ request()->routeIs('admin.messages') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
+                                <i class="fa fa-comments" aria-hidden="true"></i>
+                                Messages
+                            </a>
                             <a href="{{ route('admin.reports') }}"
                                 class="{{ request()->routeIs('admin.reports') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\BrandsController;
@@ -129,6 +130,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         //     return view('dashboard.admin.system.backup');
         // })->name('system.backup');
         // Dashboard-specific 404 fallback (must be last)
+
+        // messages 
+        Route::get('/message', [MessageController::class, 'index'])->name('messages');
+        Route::resource('/messages', MessageController::class);
         Route::fallback(function () {
             return response()->view('dashboard.errors.404', [], 404);
         });

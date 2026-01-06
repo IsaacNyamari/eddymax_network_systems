@@ -9,32 +9,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
             <!-- Contact Form -->
-            <div class="bg-white rounded-xl shadow-lg p-8 space-y-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">Send Us a Message</h2>
-                <form>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="name" class="block text-gray-700 font-semibold mb-1">Name</label>
-                            <input type="text" id="name" name="name" placeholder="Your Name"
-                                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500">
-                        </div>
-                        <div>
-                            <label for="email" class="block text-gray-700 font-semibold mb-1">Email</label>
-                            <input type="email" id="email" name="email" placeholder="Your Email"
-                                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500">
-                        </div>
-                        <div>
-                            <label for="message" class="block text-gray-700 font-semibold mb-1">Message</label>
-                            <textarea id="message" name="message" rows="5" placeholder="Your Message"
-                                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
-                        </div>
-                        <button type="submit"
-                            class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition transform hover:-translate-y-1 shadow-lg">
-                            Send Message
-                        </button>
-                    </div>
-                </form>
-            </div>
+        <livewire:contact-page />
 
             <!-- Contact Info -->
             <div class="space-y-6">
