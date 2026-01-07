@@ -17,9 +17,9 @@ class CreateProduct extends Component
 
     #[Validate('required|int')]
     public $brand;
-    #[Validate('required|string|max:255|min:3')]
+    #[Validate('required|string|max:255')]
     public $model;
-    #[Validate('required|string|max:255|min:3')]
+    #[Validate('required|string|max:255')]
     public $name;
 
     #[Validate('required|numeric|min:0')]

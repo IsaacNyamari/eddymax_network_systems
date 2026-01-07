@@ -50,7 +50,15 @@ class FrontStoreController extends Controller
     public function shop()
     {
         $categories = Category::all();
-        $products = Product::all();
+
+        $seed = session()->get('product_seed');
+        if (!$seed) {
+            $seed = rand();
+            session()->put('product_seed', $seed);
+        }
+
+        $products = Product::orderByRaw("RAND($seed)")->paginate(20);
+
         return view('layouts.front-end.products.index', compact('categories', 'products'));
     }
     public function cart()

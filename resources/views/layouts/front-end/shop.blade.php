@@ -2,257 +2,252 @@
 
 @section('content')
     <section class="relative py-16 px-4 sm:px-6 lg:px-8 mb-2">
-        <!-- Background Image with Clean Overlay -->
+        <!-- Background Image -->
         <div class="absolute inset-0 z-0">
-            <!-- Semi-transparent overlay -->
-            {{-- <div class="absolute inset-0 bg-black/50"></div> --}}
-
-            <!-- Subtle gradient -->
-            {{-- <div class="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-red-900/20 mix-blend-screen"></div> --}}
-
-            <!-- Background Image -->
-            <img src="{{ asset('images/products-banner (1).png') }}" alt="{{ config('app.name') }} - Technology Solutions"
-                class="w-fit h-full lg:object-contain md:object-cover object-center" loading="lazy"
-                onerror="this.style.display='none'">
+            <img src="{{ asset('images/products-banner (1).png') }}" 
+                 alt="{{ config('app.name') }} - Technology Solutions"
+                 class="w-fit h-full lg:object-contain md:object-cover object-center" 
+                 loading="lazy"
+                 onerror="this.style.display='none'">
         </div>
 
         <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
-            <!-- SEO Optimized Description -->
-            {{-- <div class="prose prose-lg max-w-fit text-gray-100 mb-10 bg-black/40 p-8 rounded-xl backdrop-blur-sm">
-                <h2 class="text-white text-5xl">SHOP</h2>
-            </div> --}}
+            <!-- Optional content -->
         </div>
     </section>
+
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
-        <!-- Add this section to your shop page -->
+        <!-- Debug: Check if we have categories -->
+        {{-- @dd($parent_categories) --}}
 
-
-
-        <!-- Featured Products -->
         @php
             // Define the custom sort order
             $order = [
-                'Fiber Optics' => 1,
-                'Networking' => 0,
-                'Security Systems' => 2,
-                'Computing' => 3,
-                'Solar Solutions' => 4,
-                'Electronics' => 5,
-                'Telephones' => 6,
-                'Accessories' => 7,
+                'Fiber Optics' => 2,
+                'Networking' => 1,
+                'Security Systems' => 3,
+                'Computing' => 4,
+                'Solar Solutions' => 5,
+                'Electronics' => 6,
+                'Telephones' => 7,
+                'Accessories' => 8,
             ];
 
-            // Sort the parent_categories collection based on the custom order
-            $sortedParentCategories = $parent_categories->sortBy(function ($category) use ($order) {
-                return $order[$category->name] ?? 999; // Default to high number for categories not in order list
-            });
+            // Sort the parent_categories collection
+            if(isset($parent_categories) && $parent_categories) {
+                $sortedParentCategories = $parent_categories->sortBy(function ($category) use ($order) {
+                    return $order[$category->name] ?? 999;
+                });
+            } else {
+                $sortedParentCategories = collect();
+            }
         @endphp
 
-        @foreach ($sortedParentCategories as $index => $category)
-            @php
-                // Check if this category or any of its children have products
-                $hasProducts = false;
-
-                // Check if parent category has products
-                if ($category->products && $category->products->count() > 0) {
-                    $hasProducts = true;
-                }
-
-                // If parent doesn't have products, check children
-                if (!$hasProducts && $category->children->count() > 0) {
-                    foreach ($category->children as $child) {
-                        if ($child->products && $child->products->count() > 0) {
-                            $hasProducts = true;
-                            break;
-                        }
+        @if($sortedParentCategories->count() > 0)
+            @foreach ($sortedParentCategories as $category)
+                @php
+                    try {
+                        // Try to get all products
+                        $allProducts = $category->getAllProducts();
+                        $hasProducts = $allProducts && $allProducts->count() > 0;
+                    } catch (\Exception $e) {
+                        // If there's an error, skip this category
+                        $hasProducts = false;
                     }
-                }
-            @endphp
+                @endphp
 
-            @if ($category->children->count() > 0 && $hasProducts)
-                <div class="mb-16">
-                    <!-- Category Header -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-                        <div class="mb-4 sm:mb-0">
-                            <h2 class="text-4xl font-bold text-gray-900 mb-2">{{ $category->name }}</h2>
-                            <p class="text-gray-600">Discover our premium collection</p>
+                @if ($hasProducts)
+                    <div class="mb-16">
+                        <!-- Category Header -->
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+                            <div class="mb-4 sm:mb-0">
+                                <h2 class="text-4xl font-bold text-gray-900 mb-2">{{ $category->name }}</h2>
+                                <p class="text-gray-600">Discover our premium collection</p>
+                            </div>
+                            <a href="{{ route('store.filter.category', $category->slug) }}"
+                                class="group relative inline-flex items-center text-lg font-semibold text-red-600 hover:text-red-700 transition-colors duration-300">
+                                <span class="mr-2">Explore Collection</span>
+                                <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                                <span
+                                    class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"></span>
+                            </a>
                         </div>
-                        <a href="{{ route('store.filter.category', $category->slug) }}"
-                            class="group relative inline-flex items-center text-lg font-semibold text-red-600 hover:text-red-700 transition-colors duration-300">
-                            <span class="mr-2">Explore Collection</span>
-                            <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                            <span
-                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"></span>
-                        </a>
-                    </div>
-                    <!-- Products Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-4">
-                        @foreach ($category->getAllProducts() as $product)
-                            <div
-                                class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
-                                <!-- Image Section -->
-                                <div class="relative overflow-hidden flex-shrink-0">
-                                    <div class="aspect-square bg-gray-100">
-                                        <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
-                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                            loading="lazy"
-                                            onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
-                                    </div>
-
-                                    <!-- Cart Button Overlay -->
-                                    <div
-                                        class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div
-                                            class="transform scale-90 group-hover:scale-100 transition-transform duration-300">
-                                            <livewire:add-to-cart-button :product="$product" />
+                        <!-- Products Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-4">
+                            @foreach ($allProducts as $product)
+                                <div
+                                    class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
+                                    <!-- Image Section -->
+                                    <div class="relative overflow-hidden flex-shrink-0">
+                                        <div class="aspect-square bg-gray-100">
+                                            @php
+                                                $imageSrc = isset($product['image']) && !empty($product['image']) 
+                                                    ? asset('storage/' . $product['image'])
+                                                    : asset('images/no-image-icon-23492.png');
+                                            @endphp
+                                            <img src="{{ $imageSrc }}" 
+                                                 alt="{{ $product['name'] ?? 'Product Image' }}"
+                                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                 loading="lazy"
+                                                 onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
                                         </div>
-                                    </div>
 
-                                    <!-- Stock Status Badge -->
-                                    @if ($product['stock_status'])
+                                        <!-- Cart Button Overlay -->
                                         <div
-                                            class="absolute top-3 left-3 px-3 py-1.5 rounded-full text-xs font-bold text-white 
-                        {{ $product['stock_status'] == 'Sale'
-                            ? 'bg-red-600'
-                            : ($product['stock_status'] == 'New'
-                                ? 'bg-green-600'
-                                : 'bg-blue-600') }}">
-                                            {{ Str::replace('_', ' ', $product['stock_status']) }}
+                                            class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <div
+                                                class="transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                                                <livewire:add-to-cart-button :product="$product" />
+                                            </div>
                                         </div>
-                                    @endif
 
-                                    <!-- Wishlist Button -->
-                                    <button
-                                        class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition opacity-0 group-hover:opacity-100">
-                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                        </svg>
-                                    </button>
-                                </div>
+                                        <!-- Stock Status Badge -->
+                                        @if (isset($product['stock_status']) && $product['stock_status'])
+                                            <div
+                                                class="absolute top-3 left-3 px-3 py-1.5 rounded-full text-xs font-bold text-white 
+                                                {{ $product['stock_status'] == 'Sale' ? 'bg-red-600' : 
+                                                   ($product['stock_status'] == 'New' ? 'bg-green-600' : 'bg-blue-600') }}">
+                                                {{ Str::replace('_', ' ', $product['stock_status']) }}
+                                            </div>
+                                        @endif
 
-                                <!-- Content Section -->
-                                <div class="p-4 flex flex-col flex-grow">
-                                    <!-- Product Name -->
-                                    <a href="{{ route('products.show', $product->slug) }}" wire:navigate
-                                        class="mb-2 flex-grow">
-                                        <h3
-                                            class="font-semibold text-gray-900 group-hover:text-red-600 transition-colors duration-200 line-clamp-2">
-                                            {{ $product['name'] }}
-                                        </h3>
-                                    </a>
-
-                                    <!-- Price -->
-                                    <div class="mb-3">
-                                        <span class="text-lg font-bold text-red-600">
-                                            Ksh {{ number_format($product['price'], 2) }}
-                                        </span>
+                                        <!-- Wishlist Button -->
+                                        <button
+                                            class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition opacity-0 group-hover:opacity-100">
+                                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                            </svg>
+                                        </button>
                                     </div>
 
-                                    <!-- Rating -->
-                                    @if ($product->ratings->count() > 0)
-                                        <div class="flex items-center space-x-2 mb-3">
-                                            <!-- Stars -->
-                                            <div class="flex items-center">
-                                                @php
-                                                    $averageRating = $product->ratings->avg('rate_count') ?? 0;
-                                                    $ratingCount = $product->ratings->count();
-                                                    $roundedRating = round($averageRating * 2) / 2;
-                                                @endphp
+                                    <!-- Content Section -->
+                                    <div class="p-4 flex flex-col flex-grow">
+                                        <!-- Product Name -->
+                                        <a href="{{ route('products.show', $product->slug) }}" 
+                                           wire:navigate
+                                           class="mb-2 flex-grow">
+                                            <h3
+                                                class="font-semibold text-gray-900 group-hover:text-red-600 transition-colors duration-200 line-clamp-2">
+                                                {{ $product['name'] ?? 'Product Name' }}
+                                            </h3>
+                                        </a>
 
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    @if ($i <= floor($roundedRating))
-                                                        <!-- Full star -->
-                                                        <svg class="w-4 h-4 text-yellow-500 flex-shrink-0"
-                                                            fill="currentColor" viewBox="0 0 20 20">
-                                                            <path
-                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                        </svg>
-                                                    @elseif ($i - 0.5 == $roundedRating)
-                                                        <!-- Half star -->
-                                                        <div class="relative w-4 h-4">
-                                                            <svg class="w-4 h-4 text-gray-300 absolute" fill="currentColor"
-                                                                viewBox="0 0 20 20">
+                                        <!-- Price -->
+                                        <div class="mb-3">
+                                            <span class="text-lg font-bold text-red-600">
+                                                Ksh {{ number_format($product['price'] ?? 0, 2) }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Rating -->
+                                        @if (isset($product->ratings) && $product->ratings->count() > 0)
+                                            <div class="flex items-center space-x-2 mb-3">
+                                                <!-- Stars -->
+                                                <div class="flex items-center">
+                                                    @php
+                                                        $averageRating = $product->ratings->avg('rate_count') ?? 0;
+                                                        $ratingCount = $product->ratings->count();
+                                                        $roundedRating = round($averageRating * 2) / 2;
+                                                    @endphp
+
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= floor($roundedRating))
+                                                            <!-- Full star -->
+                                                            <svg class="w-4 h-4 text-yellow-500 flex-shrink-0"
+                                                                fill="currentColor" viewBox="0 0 20 20">
                                                                 <path
                                                                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                             </svg>
-                                                            <div class="absolute top-0 left-0 w-1/2 overflow-hidden">
-                                                                <svg class="w-4 h-4 text-yellow-500" fill="currentColor"
+                                                        @elseif ($i - 0.5 == $roundedRating)
+                                                            <!-- Half star -->
+                                                            <div class="relative w-4 h-4">
+                                                                <svg class="w-4 h-4 text-gray-300 absolute" fill="currentColor"
                                                                     viewBox="0 0 20 20">
                                                                     <path
                                                                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                                 </svg>
+                                                                <div class="absolute top-0 left-0 w-1/2 overflow-hidden">
+                                                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor"
+                                                                        viewBox="0 0 20 20">
+                                                                        <path
+                                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                                    </svg>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    @else
-                                                        <!-- Empty star -->
+                                                        @else
+                                                            <!-- Empty star -->
+                                                            <svg class="w-4 h-4 text-gray-300 flex-shrink-0" fill="currentColor"
+                                                                viewBox="0 0 20 20">
+                                                                <path
+                                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                            </svg>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+
+                                                <!-- Rating Count -->
+                                                <span class="text-sm text-gray-500">
+                                                    ({{ $ratingCount }})
+                                                </span>
+                                            </div>
+                                        @else
+                                            <!-- No ratings yet -->
+                                            <div class="flex items-center space-x-2 mb-3">
+                                                <div class="flex items-center">
+                                                    @for ($i = 1; $i <= 5; $i++)
                                                         <svg class="w-4 h-4 text-gray-300 flex-shrink-0" fill="currentColor"
                                                             viewBox="0 0 20 20">
                                                             <path
                                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                         </svg>
-                                                    @endif
-                                                @endfor
+                                                    @endfor
+                                                </div>
+                                                <span class="text-sm text-gray-400">No reviews</span>
                                             </div>
+                                        @endif
 
-                                            <!-- Rating Count -->
-                                            <span class="text-sm text-gray-500">
-                                                ({{ $ratingCount }})
-                                            </span>
-                                        </div>
-                                    @else
-                                        <!-- No ratings yet -->
-                                        <div class="flex items-center space-x-2 mb-3">
-                                            <div class="flex items-center">
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    <svg class="w-4 h-4 text-gray-300 flex-shrink-0" fill="currentColor"
-                                                        viewBox="0 0 20 20">
-                                                        <path
-                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                    </svg>
-                                                @endfor
+                                        <!-- Add to Cart Button (Mobile/Secondary) -->
+                                        <div class="mt-auto pt-2">
+                                            <div class="lg:hidden">
+                                                <livewire:add-to-cart-button :product="$product" small />
                                             </div>
-                                            <span class="text-sm text-gray-400">No reviews</span>
-                                        </div>
-                                    @endif
-
-                                    <!-- Add to Cart Button (Mobile/Secondary) -->
-                                    <div class="mt-auto pt-2">
-                                        <div class="lg:hidden">
-                                            <livewire:add-to-cart-button :product="$product" small />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-            @endif
-        @endforeach
-        <!-- Why Choose Us -->
+                @endif
+            @endforeach
+        @else
+            <!-- Show message if no categories -->
+            <div class="text-center py-12">
+                <h2 class="text-2xl font-bold text-gray-700">No categories found</h2>
+                <p class="text-gray-500 mt-2">Please check back later for our product collections.</p>
+            </div>
+        @endif
+
+        <!-- Why Choose Us Section -->
         <div class="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 shadow-xl">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Why Choose
-                {{ config('app.name', 'Edymax Systems and Networks') }}?</h2>
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Why Choose {{ config('app.name', 'Edymax Systems and Networks') }}?</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @php
                     $features = [
                         [
-                            'icon' =>
-                                'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+                            'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
                             'title' => 'Genuine Products',
                             'desc' => '100% authentic branded networking equipment with original manufacturer warranty',
                         ],
                         [
-                            'icon' =>
-                                'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
+                            'icon' => 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
                             'title' => 'Secure Payments',
-                            'desc' =>
-                                'Safe transactions with M-Pesa, cards, and bank transfers. SSL encrypted checkout',
+                            'desc' => 'Safe transactions with M-Pesa, cards, and bank transfers. SSL encrypted checkout',
                         ],
                         [
                             'icon' => 'M5 13l4 4L19 7',
@@ -268,10 +263,8 @@
                 @endphp
 
                 @foreach ($features as $feature)
-                    <div
-                        class="group bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-red-100">
-                        <div
-                            class="w-14 h-14 bg-gradient-to-br from-red-50 to-red-100 rounded-2xl flex items-center justify-center mb-4 group-hover:from-red-100 group-hover:to-red-200 transition">
+                    <div class="group bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-red-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-red-50 to-red-100 rounded-2xl flex items-center justify-center mb-4 group-hover:from-red-100 group-hover:to-red-200 transition">
                             <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="{{ $feature['icon'] }}" />
@@ -295,7 +288,7 @@
                     class="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
                     Contact Sales
                 </a>
-                <a href="tel:+254712345678"
+                <a href="tel:+254723835303"
                     class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-3 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:-translate-y-1">
                     <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -305,7 +298,6 @@
                 </a>
             </div>
         </div>
-
     </div>
 @endsection
 

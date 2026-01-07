@@ -220,6 +220,7 @@
                         <livewire:products-sorted-by-category :productsSorted="$productsSorted" />
                     @endif
                 </div>
+                <div class="">{{ $products->links() }}</div>
             </main>
 
         </div>

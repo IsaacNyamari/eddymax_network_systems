@@ -121,7 +121,7 @@
                     <div class="flex-1">
                         <label class="block text-xs font-medium text-gray-500 mb-1">Min Price</label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Ksh</span>
                             <input type="number" wire:model.live="min_price" min="{{ $fixedMinPrice }}"
                                 max="{{ $fixedMaxPrice }}"
                                 class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
@@ -131,7 +131,7 @@
                     <div class="flex-1">
                         <label class="block text-xs font-medium text-gray-500 mb-1">Max Price</label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Ksh</span>
                             <input type="number" wire:model.live="max_price" min="{{ $fixedMinPrice }}"
                                 max="{{ $fixedMaxPrice }}"
                                 class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">

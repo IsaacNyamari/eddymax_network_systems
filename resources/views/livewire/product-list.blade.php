@@ -1,5 +1,5 @@
 <div class="grid grid-cols-1 h-fit sm:grid-cols-2 lg:grid-cols-5 mb-4 gap-6">
-    @foreach ($products as $product)
+    @foreach ($products->inRandomOrder() as $product)
         <div
             class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
             <div class="relative overflow-hidden">
@@ -60,4 +60,6 @@
             </div>
         </div>
     @endforeach
+
+
 </div>
