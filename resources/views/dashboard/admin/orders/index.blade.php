@@ -15,7 +15,8 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900"> Orders</h2>
-                    <a href="{{ route('admin.orders.returns') }}" wire:navigate class="text-sm bg-green-400 px-4 py-2 text-black rounded-2xl hover:text-white font-medium">
+                    <a href="{{ route('admin.orders.returns') }}" wire:navigate
+                        class="text-sm bg-green-400 px-4 py-2 text-black rounded-2xl hover:text-white font-medium">
                         View Returns →
                     </a>
                 </div>
@@ -71,7 +72,8 @@
                                     <p class="text-sm font-medium text-gray-900">
                                         @if ($order->payments)
                                             {{ $order->payments->transaction_code }}
-                                        @endif</p>
+                                        @endif
+                                    </p>
                                 </td>
                                 <td class="px-1 py-2 whitespace-nowrap">
                                     <span
@@ -90,17 +92,20 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <a href="{{ route('admin.orders.show', $order->order_number) }}" wire:navigate
-                                        class="text-red-600 hover:text-red-900 mr-3">View</a>
+                                        class="text-red-600 hover:text-red-900 mr-3">
+                                        View
+                                    </a>
 
                                     @php
-                                        // Convert string status to enum case
+                                        $hasBlockedReturn =
+                                            $order->orderReturns &&
+                                            in_array($order->orderReturns->status, ['approved', 'refunded']);
+
                                         $statusEnum = App\OrderStatus::from($order->status);
 
-                                        // Define allowed next actions dynamically
                                         $nextActions = match ($statusEnum) {
                                             App\OrderStatus::PENDING => [
                                                 'process' => 'Process',
-                                                // 'ship' => 'Ship',
                                             ],
                                             App\OrderStatus::PROCESSING => [
                                                 'ship' => 'Ship',
@@ -112,14 +117,22 @@
                                         };
                                     @endphp
 
-                                    @foreach ($nextActions as $actionRoute => $actionLabel)
-                                        <a href="{{ route('admin.orders.status.' . $actionRoute, $order->order_number) }}" wire:navigate
-                                            class="text-green-600 px-2 py-1 hover:text-green-900" {{-- Optional: remove   if dynamically rendered to avoid JS errors --}}>
-                                            {{ $actionLabel }}
-                                        </a>
-                                    @endforeach
-
+                                    @if ($hasBlockedReturn)
+                                        <span
+                                            class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full
+                                                {{ $order->orderReturns->status === 'refunded' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
+                                            {{ ucfirst($order->orderReturns->status) }}
+                                        </span>
+                                    @else
+                                        @foreach ($nextActions as $actionRoute => $actionLabel)
+                                            <a href="{{ route('admin.orders.status.' . $actionRoute, $order->order_number) }}"
+                                                wire:navigate class="text-green-600 px-2 py-1 hover:text-green-900">
+                                                {{ $actionLabel }}
+                                            </a>
+                                        @endforeach
+                                    @endif
                                 </td>
+
                             </tr>
                         @empty
                             <tr>
@@ -128,8 +141,8 @@
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 5H7a2 2 0 00-2 2v12a2 2
-                                                                                                                0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
-                                                                                                                        5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                                                                                                        0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
+                                                                                                                                5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
                                     <p class="mt-2">No orders yet</p>
                                 </td>

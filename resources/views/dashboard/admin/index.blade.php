@@ -224,7 +224,7 @@
                         @forelse($recentOrders as $order)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <a wire:navigate href="{{ route('admin.orders.show', $order) }}"
+                                    <a wire:navigate href="{{ route('admin.orders.show', $order->order_number) }}"
                                         class="text-red-600 hover:text-red-800 font-medium">
                                         {{ $order->order_number }}
                                     </a>
@@ -265,7 +265,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a wire:navigate href="{{ route('admin.orders.show', $order) }}"
+                                    <a wire:navigate href="{{ route('admin.orders.show', $order->order_number) }}"
                                         class="text-red-600 hover:text-red-900 mr-3">View</a>
                                     @if ($order->status === 'pending')
                                         <a href="#" class="text-green-600 hover:text-green-900">Process</a>

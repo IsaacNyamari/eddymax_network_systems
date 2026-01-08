@@ -2,106 +2,132 @@
 @section('content')
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-0">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Order Status</h3>
-
-        <!-- Progress Bar -->
-        <div class="mb-6">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-medium text-gray-700">Shipping Progress</span>
-                <span
-                    class="text-sm font-semibold {{ $order->status === 'delivered' ? 'text-green-600' : 'text-blue-600' }}">
-                    {{ ucfirst($order->status) }}
-                </span>
+        @if ($order->orderReturns)
+            @php
+                $ostatus = $order->orderReturns->status;
+            @endphp
+            <div
+                class="mb-2 @switch( $ostatus )
+                @case('refunded')
+                    bg-blue-500
+                    @break
+                @case('approved')
+                    bg-green-500
+                    @break
+                @case('rejected')
+                    bg-red-500
+                    @break
+                @case('pending')
+                    bg-orange-500
+                    @break
+            
+                @default
+                    
+            @endswitch text-white rounded px-4 py-2">
+                This order return is {{ $ostatus }}
             </div>
+        @endif
+        @if (!$order->orderReturns || !in_array($order->orderReturns->status, ['refunded', 'approved']))
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Shipping Progress</span>
+                    <span
+                        class="text-sm font-semibold {{ $order->status === 'delivered' ? 'text-green-600' : 'text-blue-600' }}">
+                        {{ ucfirst($order->status) }}
+                    </span>
+                </div>
 
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                @php
-                    $progress = [
-                        'pending' => 10,
-                        'confirmed' => 25,
-                        'processing' => 40,
-                        'shipped' => 70,
-                        'out_for_delivery' => 85,
-                        'delivered' => 100,
-                    ];
-                    $currentProgress = $progress[$order->status] ?? 10;
-                @endphp
-                <div class="bg-gradient-to-r from-blue-500 to-green-500 h-2.5 rounded-full transition-all duration-500"
-                    style="width: {{ $currentProgress }}%"></div>
-            </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    @php
+                        $progress = [
+                            'pending' => 10,
+                            'confirmed' => 25,
+                            'processing' => 40,
+                            'shipped' => 70,
+                            'out_for_delivery' => 85,
+                            'delivered' => 100,
+                        ];
+                        $currentProgress = $progress[$order->status] ?? 10;
+                    @endphp
+                    <div class="bg-gradient-to-r from-blue-500 to-green-500 h-2.5 rounded-full transition-all duration-500"
+                        style="width: {{ $currentProgress }}%"></div>
+                </div>
 
-            <!-- Status Steps -->
-            <div class="flex justify-between mt-3">
-                @foreach (['pending', 'processing', 'shipped', 'delivered'] as $step)
-                    <div class="text-center">
-                        <div
-                            class="w-8 h-8 mx-auto rounded-full flex items-center justify-center mb-1 
+                <!-- Status Steps -->
+                <div class="flex justify-between mt-3">
+                    @foreach (['pending', 'processing', 'shipped', 'delivered'] as $step)
+                        <div class="text-center">
+                            <div
+                                class="w-8 h-8 mx-auto rounded-full flex items-center justify-center mb-1 
                         {{ $order->status === $step
                             ? 'bg-green-100 border-2 border-green-500'
                             : ($currentProgress >= $progress[$step]
                                 ? 'bg-blue-100 border-2 border-blue-500'
                                 : 'bg-gray-100 border-2 border-gray-300') }}">
-                            @switch($step)
-                                @case('pending')
-                                    <svg class="w-4 h-4 {{ $order->status === $step
-                                        ? 'text-green-600'
-                                        : ($currentProgress >= $progress[$step]
-                                            ? 'text-blue-600'
-                                            : 'text-gray-400') }}"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                @break
+                                @switch($step)
+                                    @case('pending')
+                                        <svg class="w-4 h-4 {{ $order->status === $step
+                                            ? 'text-green-600'
+                                            : ($currentProgress >= $progress[$step]
+                                                ? 'text-blue-600'
+                                                : 'text-gray-400') }}"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    @break
 
-                                @case('processing')
-                                    <svg class="w-4 h-4 {{ $order->status === $step
-                                        ? 'text-green-600'
-                                        : ($currentProgress >= $progress[$step]
-                                            ? 'text-blue-600'
-                                            : 'text-gray-400') }}"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                                    </svg>
-                                @break
+                                    @case('processing')
+                                        <svg class="w-4 h-4 {{ $order->status === $step
+                                            ? 'text-green-600'
+                                            : ($currentProgress >= $progress[$step]
+                                                ? 'text-blue-600'
+                                                : 'text-gray-400') }}"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                        </svg>
+                                    @break
 
-                                @case('shipped')
-                                    <svg class="w-4 h-4 {{ $order->status === $step
-                                        ? 'text-green-600'
-                                        : ($currentProgress >= $progress[$step]
-                                            ? 'text-blue-600'
-                                            : 'text-gray-400') }}"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                    </svg>
-                                @break
+                                    @case('shipped')
+                                        <svg class="w-4 h-4 {{ $order->status === $step
+                                            ? 'text-green-600'
+                                            : ($currentProgress >= $progress[$step]
+                                                ? 'text-blue-600'
+                                                : 'text-gray-400') }}"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                        </svg>
+                                    @break
 
-                                @case('delivered')
-                                    <svg class="w-4 h-4 {{ $order->status === $step
-                                        ? 'text-green-600'
-                                        : ($currentProgress >= $progress[$step]
-                                            ? 'text-blue-600'
-                                            : 'text-gray-400') }}"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                @break
-                            @endswitch
+                                    @case('delivered')
+                                        <svg class="w-4 h-4 {{ $order->status === $step
+                                            ? 'text-green-600'
+                                            : ($currentProgress >= $progress[$step]
+                                                ? 'text-blue-600'
+                                                : 'text-gray-400') }}"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    @break
+                                @endswitch
+                            </div>
+                            <span
+                                class="text-xs font-medium {{ $order->status === $step
+                                    ? 'text-green-600'
+                                    : ($currentProgress >= $progress[$step]
+                                        ? 'text-blue-600'
+                                        : 'text-gray-500') }}">
+                                {{ ucfirst($step) }}
+                            </span>
                         </div>
-                        <span
-                            class="text-xs font-medium {{ $order->status === $step
-                                ? 'text-green-600'
-                                : ($currentProgress >= $progress[$step]
-                                    ? 'text-blue-600'
-                                    : 'text-gray-500') }}">
-                            {{ ucfirst($step) }}
-                        </span>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-        </div>
-
+        @endif
         <!-- Customer Details -->
         <div class="space-y-6">
             <!-- Customer Information -->

@@ -132,8 +132,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Dashboard-specific 404 fallback (must be last)
 
         // messages 
-        Route::get('/message', [MessageController::class, 'index'])->name('messages');
-        Route::resource('/messages', MessageController::class);
+        // Messages (if you have a messaging system)
+        Route::get('/messages/index', function () {
+            return view('dashboard.account.messages');
+        })->name('messages');
+        Route::resource('/messages', controller: MessageController::class);
+        Route::post('/messages/mark/read/{message}/',  [MessageController::class, 'markAsRead'])->name('mark.messages.read');
+        Route::post('/messages/mark/unread/{message}/',  [MessageController::class, 'markAsUnread'])->name('mark.messages.unread');
+
         Route::fallback(function () {
             return response()->view('dashboard.errors.404', [], 404);
         });
@@ -159,10 +165,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Auth::user()->notifications()->where('id', $notificationId)->delete();
             return redirect()->back()->with('success', 'Notification deleted');
         })->name('notifications.delete');
-
-        // Messages (if you have a messaging system)
-        Route::get('/messages', function () {
-            return view('dashboard.account.messages');
-        })->name('messages');
     });
 });

@@ -30,15 +30,15 @@ class MessageController extends Controller
 
     public function markAsRead(Message $message)
     {
-        $message->update(['read' => true]);
-
+        $message->read = true;
+        $message->update();
         return response()->json(['success' => true]);
     }
 
     public function markAsUnread(Message $message)
     {
-        $message->update(['read' => false]);
-
+        $message->read = false;
+        $message->update();
         return response()->json(['success' => true]);
     }
 
