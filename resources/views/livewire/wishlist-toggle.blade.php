@@ -1,0 +1,20 @@
+@php
+    $isWishlisted = auth()->check() && $product->isWishlistedBy(auth()->id());
+@endphp
+
+<button wire:click="toggleWishList" wire:loading.attr="disabled"
+    class="
+        border-2 px-4 py-3 rounded-lg transition transform hover:-translate-y-1
+        flex items-center gap-2
+        {{ $isWishlisted
+            ? 'bg-green-600 border-green-600 text-white'
+            : 'border-gray-300 hover:border-green-500 text-gray-700' }}
+    ">
+    <svg class="w-5 h-5 {{ $isWishlisted ? 'text-white fill-white' : 'text-red-600' }}"
+        fill="{{ $isWishlisted ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+    </svg>
+
+    {{ $isWishlisted ? 'Remove' : 'Wishlist' }}
+</button>

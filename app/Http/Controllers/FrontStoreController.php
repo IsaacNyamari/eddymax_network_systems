@@ -106,11 +106,14 @@ class FrontStoreController extends Controller
         $grandchildCategories = Category::whereIn('parent_id', $childCategories->pluck('id'))->get();
         $categoryIds = $categoryIds->merge($grandchildCategories->pluck('id'));
 
-        // Get all products from these categories
-        $products = Product::whereIn('category_id', $categoryIds)
-            ->with(['category'])
-            ->paginate(12); // Adjust pagination as needed
+        // Get all products from these categories in random order
+        $seed = session()->get('product_seed');
+        if (!$seed) {
+            $seed = rand();
+            session()->put('product_seed', $seed);
+        }
 
+        $products = Product::whereIn('category_id', $categoryIds)->orderByRaw("RAND($seed)")->with(['category'])->paginate(20);
         return view('layouts.front-end.products.show', compact('products'));
     }
 }

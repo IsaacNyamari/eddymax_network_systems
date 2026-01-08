@@ -149,4 +149,21 @@ class Product extends Model
     {
         return $this->hasMany(ProductRating::class, 'product_id');
     }
+
+    public function unitable()
+    {
+        return $this->morphOne(Unit::class, 'unitable');
+    }
+    public function wishlists()
+    {
+        return $this->hasMany(WishList::class);
+    }
+
+    public function isWishlistedBy($userId)
+    {
+        return $this->wishlists()
+            ->where('user_id', $userId)
+            ->whereNull('deleted_at')
+            ->exists();
+    }
 }

@@ -7,8 +7,8 @@
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
             <h1 class="text-3xl font-bold text-gray-900">{{ $product->name }}</h1>
             <a href="{{ route('store.shop') }}"
-                class="text-red-600 hover:text-red-500 font-semibold flex items-center mt-4 sm:mt-0">
-                Back to Products
+                class="text-red-600 hover:text-red-500 font-semibold flex items-center mt-32 sm:mt-0">
+                Back
                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -116,10 +116,13 @@
                         <span class="px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 font-semibold text-sm">
                             {{ $product->category->name }}
                         </span>
+                        @if ($product->unitable)
+                            <span class="px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 font-semibold text-sm">
+                                {{ $product->unitable?->name }}
+                            </span>
+                        @endif
                     </div>
                 </div>
-
-                <!-- Short Description -->
                 <!-- Short Description -->
                 @if ($product->short_description)
                     <div class="bg-white rounded-lg shadow p-4 mb-6">
@@ -141,14 +144,7 @@
                                 Out of Stock
                             </button>
                         @endif
-                        <button
-                            class="border-2 border-gray-300 hover:border-red-500 px-4 py-3 rounded-lg transition transform hover:-translate-y-1 flex items-center">
-                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                            Wishlist
-                        </button>
+                        <livewire:wishlist-toggle :product="$product" />
                     </div>
                 </div>
 

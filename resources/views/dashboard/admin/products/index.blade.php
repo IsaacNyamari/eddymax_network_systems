@@ -59,7 +59,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
-                                    <a href="{{ route('products.show', $product->slug) }}" wire:navigate
+                                    <a href="{{ route('admin.products.show', $product->slug) }}" wire:navigate
                                         class="text-white px-4 py-2 rounded bg-green-500 hover:text-white mr-3">View</a>
                                     @if (Str::limit($product->description, 3, '...'))
                                         <a href="{{ route('admin.products.edit', $product->id) }}" wire:navigate

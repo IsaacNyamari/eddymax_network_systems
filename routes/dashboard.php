@@ -12,10 +12,8 @@ use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Customer\AddressController as CustomerAddressController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\TrashController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -47,14 +45,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // filter orders
         Route::get('/orders/filter/{filter}', [CustomerOrderController::class, 'filterOrders'])->name('orders.filter');
-
-
-
-
-        // Wishlist (if you have this feature)
-        Route::get('/wishlist', function () {
-            return view('dashboard.customer.wishlist');
-        })->name('wishlist');
+        // wishlist routes
+        Route::resource('/my-wishlist', WishlistController::class);
     });
 
     /*
@@ -119,17 +111,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // brands
         Route::resource('/brands', BrandsController::class);
-        // Route::get('/brands', [BrandsController::class, 'index'])->name('brands');
-
-        // // System
-        // Route::get('/system/logs', function () {
-        //     return view('dashboard.admin.system.logs');
-        // })->name('system.logs');
-
-        // Route::get('/system/backup', function () {
-        //     return view('dashboard.admin.system.backup');
-        // })->name('system.backup');
-        // Dashboard-specific 404 fallback (must be last)
 
         // messages 
         // Messages (if you have a messaging system)

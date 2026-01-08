@@ -22,6 +22,9 @@ class CreateProduct extends Component
     #[Validate('required|string|max:255')]
     public $name;
 
+    #[Validate('nullable|string')]
+    public $unit;
+
     #[Validate('required|numeric|min:0')]
     public $price;
 
@@ -93,7 +96,9 @@ class CreateProduct extends Component
             'category_id' => $this->category_id,
             'slug' => Str::slug($this->name),
         ]);
-
+        // create product unit
+      
+        $product->unitable ? $product->unitable()->update(['name' => $this->unit]) : $product->unitable()->create(['name' => $this->unit]);
         // Handle multiple images upload
         if (!empty($this->images)) {
             foreach ($this->images as $uploadedImage) {

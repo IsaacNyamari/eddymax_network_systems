@@ -18,6 +18,14 @@
             @enderror
         </div>
         <div class="mt-4">
+            <label for="unit" class="block text-sm font-medium text-gray-700">Unit</label>
+            <input type="text" id="unit" wire:model.live="unit"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
+            @error('unit')
+                <span class="text-red-600 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="mt-4">
             <label class="block text-sm font-medium text-gray-700 mb-3">Select Category</label>
 
             <div class="border border-gray-300 rounded-lg p-4 max-h-96 overflow-y-auto bg-gray-50">
@@ -217,8 +225,8 @@
         </div>
 
         <div class="mt-4">
-            <label for="editor" class="block text-sm font-medium text-gray-700">Short Description</label>
-            <textarea id="editor" wire:model.live="short_description"
+            <label for="editor-1" class="block text-sm font-medium text-gray-700">Short Description</label>
+            <textarea id="editor-1" wire:model.live="short_description"
                 class="mt-0 block w-full border border-gray-300 rounded-bl-lg  rounded-br-lg shadow-sm p-2 focus:ring-red-500"
                 rows="5"></textarea>
             @error('short_description')

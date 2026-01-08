@@ -76,6 +76,11 @@
 
                         <!-- Customer Links -->
                         @hasrole('customer')
+                            <a href="{{ route('customer.my-wishlist.index') }}" wire:navigate
+                                class="{{ request()->routeIs('customer.my-wishlist.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
+                                <i class="fa fa-heart mr-3 h-5 w-5" aria-hidden="true"></i>
+                                My Wishlist
+                            </a>
                             <a href="{{ route('customer.orders.index') }}" wire:navigate
                                 class="{{ request()->routeIs('customer.orders.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

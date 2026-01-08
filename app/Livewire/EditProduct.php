@@ -20,9 +20,12 @@ class EditProduct extends Component
     // Change validation to exists:brands,id since it should be an ID
     #[Validate('required|exists:brands,id')]
     public $brandInputData; // This should be the brand ID
-    
+
     #[Validate('required|string|max:255|min:3')]
     public $name;
+    #[Validate('nullable|string')]
+    public $unit;
+    public $productUnit;
 
     #[Validate('required|numeric|min:0')]
     public $price;
@@ -57,10 +60,10 @@ class EditProduct extends Component
         $this->existingImage = $product->image;
         $this->description = $product->description;
         $this->category_id = $product->category_id;
-        
+        $this->unit = $product->unitable?->name ?? '';
         // FIX: Get just the brand ID, not the entire model
         $this->brandInputData = $product->brand_id; // Changed from $product->brand
-        
+
         $this->model = $product->model;
         $this->stock = $product->stock_quantity;
         $this->stock_status = $product->stock_status ?? 'in_stock';
@@ -83,7 +86,6 @@ class EditProduct extends Component
 
             $imagePath = $this->image->store('products', 'public');
         }
-
         // FIX: Use brandInputData directly (it should be an ID now)
         $this->product->update([
             'name' => $this->name,
@@ -97,6 +99,8 @@ class EditProduct extends Component
             'stock_status' => $this->stock_status,
             'slug' => Str::slug($this->name),
         ]);
+        // Update product units
+        $this->product->unitable ? $this->product->unitable()->update(['name' => $this->unit]) : $this->product->unitable()->create(['name' => $this->unit]);
 
         // Refresh existing image if new one was uploaded
         if ($this->image) {
