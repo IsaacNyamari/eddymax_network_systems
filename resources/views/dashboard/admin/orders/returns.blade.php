@@ -4,7 +4,7 @@
 @section('content')
     <div class="space-y-6">
 
-        <a href="{{ route('admin.orders.index') }}" wire:navigate >
+        <a href="{{ route('admin.orders.index') }}" >
             <h2
                 class="text-xl font-semibold bg-red-400 w-fit px-4 py-2 rounded cursor-pointer text-gray-900 hover:text-white">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>Back
@@ -28,7 +28,7 @@
                     </div>
                     <div>
                         <a class="text-white px-4 bg-blue-800 py-2 rounded-xl"
-                            href="{{ route('admin.orders.returns.show', $return) }}" wire:navigate>View Return Details</a>
+                            href="{{ route('admin.orders.returns.show', $return) }}">View Return Details</a>
                     </div>
                 </div>
 

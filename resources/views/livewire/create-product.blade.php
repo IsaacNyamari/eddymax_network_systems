@@ -142,7 +142,7 @@
         </div>
         <div class="mt-4">
             <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
-               <select name="" wire:model.live='brand'
+            <select name="" wire:model.live='brand'
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
                 @foreach ($brands as $brandInput)
                     <option value="{{ $brandInput->id }}">{{ $brandInput->name }}</option>
@@ -233,18 +233,7 @@
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
         </div>
-        <div class="mt-4">
-            <label for="editor" class="block text-sm font-medium text-gray-700">Description</label>
-            <textarea id="editor" wire:model.live="description"
-                class="mt-0 block w-full border border-gray-300 rounded-bl-lg  rounded-br-lg shadow-sm p-2 focus:ring-red-500"
-                rows="15"></textarea>
-            @error('description')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
-            @enderror
-        </div>
-
-
-
+        <livewire:description-input />
         <div class="mt-6">
             <button type="submit"
                 class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold shadow transition">
@@ -259,3 +248,13 @@
         @endif
     </form>
 </div>
+@script
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new WysiwygEditor('editor-description-container', {
+                height: 200,
+                placeholder: 'Enter description...'
+            });
+        });
+    </script>
+@endscript

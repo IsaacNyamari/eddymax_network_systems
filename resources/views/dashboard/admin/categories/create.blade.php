@@ -8,7 +8,7 @@
                 <h1 class="text-2xl font-bold text-gray-900">Create New Category</h1>
                 <p class="text-gray-600 mt-1">Add a new product category to organize your products</p>
             </div>
-            <a href="{{ route('admin.categories.index') }}" wire:navigate
+            <a href="{{ route('admin.categories.index') }}" 
                 class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 shadow-sm hover:shadow-md transition-all duration-200 group">
                 <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">

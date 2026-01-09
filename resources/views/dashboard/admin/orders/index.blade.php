@@ -15,7 +15,7 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900"> Orders</h2>
-                    <a href="{{ route('admin.orders.returns') }}" wire:navigate
+                    <a href="{{ route('admin.orders.returns') }}" 
                         class="text-sm bg-green-400 px-4 py-2 text-black rounded-2xl hover:text-white font-medium">
                         View Returns →
                     </a>
@@ -91,7 +91,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('admin.orders.show', $order->order_number) }}" wire:navigate
+                                    <a href="{{ route('admin.orders.show', $order->order_number) }}" 
                                         class="text-red-600 hover:text-red-900 mr-3">
                                         View
                                     </a>
@@ -126,7 +126,7 @@
                                     @else
                                         @foreach ($nextActions as $actionRoute => $actionLabel)
                                             <a href="{{ route('admin.orders.status.' . $actionRoute, $order->order_number) }}"
-                                                wire:navigate class="text-green-600 px-2 py-1 hover:text-green-900">
+                                                 class="text-green-600 px-2 py-1 hover:text-green-900">
                                                 {{ $actionLabel }}
                                             </a>
                                         @endforeach

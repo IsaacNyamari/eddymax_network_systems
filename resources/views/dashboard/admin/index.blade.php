@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a wire:navigate href="{{ route('admin.orders.index') }}"
+                <a href="{{ route('admin.orders.index') }}"
                     class="text-sm text-blue-600 hover:text-blue-800 font-medium">
                     View Orders →
                 </a>
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a wire:navigate href="{{ route('admin.reports') }}"
+                <a href="{{ route('admin.reports') }}"
                     class="text-sm text-green-600 hover:text-green-800 font-medium">
                     Sales Report →
                 </a>
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a wire:navigate href="{{ route('admin.products.index') }}"
+                <a href="{{ route('admin.products.index') }}"
                     class="text-sm text-purple-600 hover:text-purple-800 font-medium">
                     Manage Products →
                 </a>
@@ -93,7 +93,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a wire:navigate href="{{ route('admin.users.index') }}"
+                <a href="{{ route('admin.users.index') }}"
                     class="text-sm text-pink-600 hover:text-pink-800 font-medium">
                     View Customers →
                 </a>
@@ -119,7 +119,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a wire:navigate href="{{ route('admin.reports') }}"
+                <a href="{{ route('admin.reports') }}"
                     class="text-sm text-yellow-600 hover:text-yellow-800 font-medium">
                     Analytics →
                 </a>
@@ -145,7 +145,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a wire:navigate href="{{ route('admin.settings') }}"
+                <a href="{{ route('admin.settings') }}"
                     class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
                     Settings →
                 </a>
@@ -198,7 +198,7 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Recent Orders</h2>
-                    <a wire:navigate href="{{ route('admin.orders.index') }}"
+                    <a href="{{ route('admin.orders.index') }}"
                         class="text-sm text-red-600 hover:text-red-800 font-medium">
                         View all →
                     </a>
@@ -224,7 +224,7 @@
                         @forelse($recentOrders as $order)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <a wire:navigate href="{{ route('admin.orders.show', $order->order_number) }}"
+                                    <a href="{{ route('admin.orders.show', $order->order_number) }}"
                                         class="text-red-600 hover:text-red-800 font-medium">
                                         {{ $order->order_number }}
                                     </a>
@@ -265,7 +265,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a wire:navigate href="{{ route('admin.orders.show', $order->order_number) }}"
+                                    <a href="{{ route('admin.orders.show', $order->order_number) }}"
                                         class="text-red-600 hover:text-red-900 mr-3">View</a>
                                     @if ($order->status === 'pending')
                                         <a href="#" class="text-green-600 hover:text-green-900">Process</a>
@@ -294,7 +294,7 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Top Selling Products</h2>
-                    <a wire:navigate href="{{ route('admin.products.index') }}"
+                    <a href="{{ route('admin.products.index') }}"
                         class="text-sm text-red-600 hover:text-red-800 font-medium">
                         View all →
                     </a>

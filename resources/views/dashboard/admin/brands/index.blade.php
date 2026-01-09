@@ -10,7 +10,7 @@
                 <p class="text-gray-600 mt-1">Manage your product brands and manufacturers</p>
             </div>
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.brands.create') }}" wire:navigate
+                <a href="{{ route('admin.brands.create') }}" 
                     class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 shadow-sm hover:shadow-md transition-all duration-200 group">
                     <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
@@ -247,7 +247,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
                                         <!-- view Button -->
-                                        <a href="{{ route('admin.brands.show', $brand) }}" wire:navigate
+                                        <a href="{{ route('admin.brands.show', $brand) }}" 
                                             class="p-2 text-gray-600 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors duration-200 group"
                                             title="View Brand">
                                         <i class="fa fa-eye" aria-hidden="true"></i>

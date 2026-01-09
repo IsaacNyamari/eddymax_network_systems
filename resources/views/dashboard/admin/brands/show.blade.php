@@ -9,7 +9,7 @@
                 <p class="text-gray-600 mt-1">Brand details and associated products</p>
             </div>
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.brands.edit', $brand) }}" wire:navigate
+                <a href="{{ route('admin.brands.edit', $brand) }}"
                     class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-lg hover:from-yellow-700 hover:to-yellow-800 shadow-sm hover:shadow-md transition-all duration-200 group">
                     <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
@@ -18,7 +18,7 @@
                     </svg>
                     Edit Brand
                 </a>
-                <a href="{{ route('admin.brands.index') }}" wire:navigate
+                <a href="{{ route('admin.brands.index') }}"
                     class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 shadow-sm hover:shadow-md transition-all duration-200 group">
                     <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@
                             <code class="px-3 py-1.5 bg-gray-800 text-gray-100 rounded text-sm font-mono">
                                 {{ $brand->slug }}
                             </code>
-                            <a href="{{ route('store.filter.category', $brand->slug) }}" wire:navigate target="_blank"
+                            <a href="{{ route('store.filter.category', $brand->slug) }}" target="_blank"
                                 class="ml-2 text-blue-600 hover:text-blue-800 text-sm flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -159,7 +159,7 @@
                     </div>
 
                     <div class="pt-4 border-t border-blue-100">
-                        <a href="{{ route('store.filter.category', $brand->slug) }}" wire:navigate
+                        <a href="{{ route('store.filter.category', $brand->slug) }}"
                             class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 group">
                             <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">

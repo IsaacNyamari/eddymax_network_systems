@@ -12,7 +12,7 @@
 
         <!-- Print and Export Buttons -->
         <div class="flex flex-wrap gap-3">
-            <a href="{{ route('admin.reports.print') }}" wire:navigate
+            <a href="{{ route('admin.reports.print') }}" 
                 class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 shadow-sm hover:shadow-md transition-all duration-200 group">
                 <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">

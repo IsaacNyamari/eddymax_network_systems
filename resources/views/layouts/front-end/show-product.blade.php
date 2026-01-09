@@ -128,7 +128,7 @@
                     <div class="bg-white rounded-lg shadow p-4 mb-6">
                         <h3 class="font-bold text-lg text-gray-800 mb-2">Product Overview</h3>
                         <p class="text-gray-700">
-                            {{ Str::limit(strip_tags($product->short_description), 75, '...') }}
+                            {{ strip_tags($product->short_description) }}
                         </p>
                     </div>
                 @endif

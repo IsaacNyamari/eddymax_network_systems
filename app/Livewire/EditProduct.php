@@ -70,6 +70,10 @@ class EditProduct extends Component
         $this->categories = Category::all();
         $this->brands = Brands::all();
     }
+    
+    public function loadEditor(){
+        $this->dispatch('load-editor',['message'=> 'true']);
+    }
 
     public function saveProduct()
     {

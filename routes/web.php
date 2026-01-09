@@ -119,6 +119,10 @@ Route::get('/navigation', function () {
 // });
 
 // Dashboard 
+
+Route::get('/editor',function(){
+    return view('editor');
+});
 require __DIR__ . '/dashboard.php';
 // Authentication Routes (Laravel Breeze/Jetstream)
 require __DIR__ . '/auth.php';

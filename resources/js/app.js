@@ -1,7 +1,7 @@
 // resources/js/app.js
 import './bootstrap';
 import 'flowbite';
-
+import './editor';
 // Import Alpine
 import Alpine from 'alpinejs';
 

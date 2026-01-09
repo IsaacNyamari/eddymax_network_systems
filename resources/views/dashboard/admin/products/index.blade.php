@@ -10,11 +10,11 @@
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Active Products</h2>
                     <div class="float-end flex gap-3">
-                        <a href="{{ route('admin.product.trash') }}" wire:navigate
+                        <a href="{{ route('admin.product.trash') }}"
                             class="text-sm text-white bg-red-600 px-4 rounded py-2 hover:text-white font-medium">
                             <i class="fas fa-trash-alt"></i> Trash
                         </a>
-                        <a href="{{ route('admin.products.create') }}" wire:navigate
+                        <a href="{{ route('admin.products.create') }}"
                             class="text-sm text-white bg-green-600 px-4 rounded py-2 hover:text-white font-medium">
                             + New
                         </a>
@@ -59,10 +59,10 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
-                                    <a href="{{ route('admin.products.show', $product->slug) }}" wire:navigate
+                                    <a href="{{ route('admin.products.show', $product->slug) }}"
                                         class="text-white px-4 py-2 rounded bg-green-500 hover:text-white mr-3">View</a>
                                     @if (Str::limit($product->description, 3, '...'))
-                                        <a href="{{ route('admin.products.edit', $product->id) }}" wire:navigate
+                                        <a href="{{ route('admin.products.edit', $product->id) }}"
                                             class="text-white px-4 py-2 rounded bg-orange-500 hover:text-white">Edit</a>
                                     @endif
                                     <form method="POST" action="{{ route('admin.products.destroy', $product) }}">

@@ -130,7 +130,7 @@
                                     <div class="p-4 flex flex-col flex-grow">
                                         <!-- Product Name -->
                                         <a href="{{ route('products.show', $product->slug) }}" 
-                                           wire:navigate
+                                           
                                            class="mb-2 flex-grow">
                                             <h3
                                                 class="font-semibold text-gray-900 group-hover:text-red-600 transition-colors duration-200 line-clamp-2">

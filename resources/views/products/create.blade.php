@@ -39,7 +39,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="float-right m-3 flex gap-2">
                     <a class="px-4 py-2 bg-green-500 text-white rounded-lg mb-1" href="{{ route('admin.products.index') }}"
-                        wire:navigate><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back</a>
+                        ><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back</a>
                     <a class="px-4 py-2 bg-orange-500 text-white rounded-lg mb-1"
                         href="{{ route('admin.products.create') }}"><i class="fa fa-plus" aria-hidden="true"></i> New</a>
                 </div>

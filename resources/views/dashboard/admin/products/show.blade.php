@@ -6,7 +6,7 @@
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
             <h1 class="text-3xl font-bold text-gray-900">{{ $product->name }}</h1>
             <a onclick="window.history.back()" href="#"
-                class="text-red-600 hover:text-red-500 font-semibold flex items-center mt-32 sm:mt-0">
+                class="text-white bg-red-600 hover:text-white px-4 py-2 rounded-lg font-semibold flex items-center mt-32 sm:mt-0">
                 Back
                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -127,7 +127,7 @@
                     <div class="bg-white rounded-lg shadow p-4 mb-6">
                         <h3 class="font-bold text-lg text-gray-800 mb-2">Product Overview</h3>
                         <p class="text-gray-700">
-                            {{ Str::limit(strip_tags($product->short_description), 75, '...') }}
+                            {{ strip_tags($product->short_description) }}
                         </p>
                     </div>
                 @endif
