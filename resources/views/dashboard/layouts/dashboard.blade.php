@@ -28,6 +28,7 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
     <!-- Additional Dashboard CSS -->
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <style>
         .sidebar-active {
             background-color: #f3f4f6;
@@ -50,6 +51,7 @@
 </head>
 
 <body class="font-sans antialiased bg-gray-100" x-data="{ mobileMenuOpen: false, notificationsOpen: false }">
+    <x-loader-component />
     <div class="min-h-screen flex">
         <!-- Sidebar -->
         <div class="hidden md:flex md:w-64 md:flex-col">
@@ -76,12 +78,12 @@
 
                         <!-- Customer Links -->
                         @hasrole('customer')
-                            <a href="{{ route('customer.my-wishlist.index') }}" 
+                            <a href="{{ route('customer.my-wishlist.index') }}"
                                 class="{{ request()->routeIs('customer.my-wishlist.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <i class="fa fa-heart mr-3 h-5 w-5" aria-hidden="true"></i>
                                 My Wishlist
                             </a>
-                            <a href="{{ route('customer.orders.index') }}" 
+                            <a href="{{ route('customer.orders.index') }}"
                                 class="{{ request()->routeIs('customer.orders.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -90,7 +92,7 @@
                                 My Orders
                             </a>
 
-                            <a href="{{ route('customer.profile.edit') }}" 
+                            <a href="{{ route('customer.profile.edit') }}"
                                 class="{{ request()->routeIs('customer.profile.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -108,7 +110,7 @@
                                 </h3>
                             </div>
 
-                            <a href="{{ route('admin.orders.index') }}" 
+                            <a href="{{ route('admin.orders.index') }}"
                                 class="{{ request()->routeIs('admin.orders.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -117,7 +119,7 @@
                                 Orders
                             </a>
 
-                            <a href="{{ route('admin.products.index') }}" 
+                            <a href="{{ route('admin.products.index') }}"
                                 class="{{ request()->routeIs('admin.products.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -126,7 +128,7 @@
                                 Products
                             </a>
                             <!-- Brands Menu Item -->
-                            <a href="{{ route('admin.brands.index') }}" 
+                            <a href="{{ route('admin.brands.index') }}"
                                 class="{{ request()->routeIs('admin.brands.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -134,7 +136,7 @@
                                 </svg>
                                 Brands
                             </a>
-                            <a href="{{ route('admin.users.index') }}" 
+                            <a href="{{ route('admin.users.index') }}"
                                 class="{{ request()->routeIs('admin.users.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -143,7 +145,7 @@
                                 Customers
                             </a>
 
-                            <a href="{{ route('admin.categories.index') }}" 
+                            <a href="{{ route('admin.categories.index') }}"
                                 class="{{ request()->routeIs('admin.categories.*') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
                                 <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -188,8 +190,8 @@
                             @yield('title', 'Dashboard')
                         </h1>
                         <a class="px-4 py-2 bg-green-500 hover:bg-green-600 hover:text-white capitalize rounded-lg"
-                            href="{{ route('store.shop') }}" ><i class="fa fa-globe"
-                                aria-hidden="true"></i> website</a>
+                            href="{{ route('store.shop') }}"><i class="fa fa-globe" aria-hidden="true"></i>
+                            website</a>
                     </div>
 
                     <!-- User Dropdown -->
@@ -338,7 +340,7 @@
                                     </a>
                                 @endhasrole
                                 @hasrole('admin')
-                                    <a href="{{ route('admin.settings') }}" 
+                                    <a href="{{ route('admin.settings') }}"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         Admin Settings
                                     </a>
@@ -420,17 +422,16 @@
         </div>
     </div>
     @livewireScripts
-    <!-- Additional Scripts -->
 
-    <!-- Initialize the editor -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('editor-description-container') ? document.addEventListener('DOMContentLoaded', function() {
             new WysiwygEditor('editor-description-container', {
                 height: 200, // Optional: custom height
                 placeholder: 'Enter description...' // Optional: placeholder
             });
-        });
+        }) : '';
     </script>
+    <script src="{{ asset('js/loader.js') }}"></script>
     @stack('scripts')
 </body>
 

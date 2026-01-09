@@ -5,7 +5,7 @@
 
         <!-- Product Hero / Breadcrumb -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">{{ $product->name }}</h1>
+            <h1 class="text-xl font-bold text-gray-900">{{ $product->name }}</h1>
             <a href="{{ route('store.shop') }}"
                 class="text-red-600 hover:text-red-500 font-semibold flex items-center mt-32 sm:mt-0">
                 Back
@@ -21,10 +21,10 @@
             <!-- Product Images with Gallery -->
             <div class="space-y-4">
                 <!-- Main Image with Zoom -->
-                <div class="rounded-xl bg-blue-800 hover:bg-blue-800 overflow-hidden shadow-lg relative group cursor-zoom-in"
+                <div class="rounded-xl bg-white hover:bg-white overflow-hidden shadow-lg relative group cursor-zoom-in"
                     id="zoom-container">
                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                        class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
+                        class="w-full h-96 object-contain transition-transform duration-300 group-hover:scale-105"
                         loading="lazy" id="main-product-image"
                         onerror="this.src='https://via.placeholder.com/600x400?text=Product+Image'">
                 </div>
@@ -35,7 +35,7 @@
                     <div class="rounded-lg overflow-hidden shadow cursor-pointer hover:shadow-lg transition border-2 border-red-500"
                         onclick="changeMainImage('{{ asset('storage/' . $product->image) }}', this)">
                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }} Thumbnail"
-                            class="w-full h-24 object-cover" loading="lazy"
+                            class="w-full h-24 object-contain" loading="lazy"
                             onerror="this.src='https://via.placeholder.com/150?text=Thumbnail'">
                     </div>
 
@@ -54,7 +54,7 @@
 
                     <!-- If no additional images, show placeholders -->
                     @if (!$product->productImages || $product->productImages->count() == 0)
-                        @for ($i = 1; $i <= 3; $i++)
+                        @for ($i = 1; $i <= $product->productImages->count(); $i++)
                             <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition opacity-50">
                                 <img src="https://via.placeholder.com/150?text=Image+{{ $i }}"
                                     alt="Thumbnail {{ $i }}" class="w-full h-24 object-cover grayscale"

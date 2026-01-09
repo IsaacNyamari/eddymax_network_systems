@@ -77,7 +77,7 @@
                             </a>
                         </div>
                         <!-- Products Grid -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6 mb-4">
                             @foreach ($allProducts as $product)
                                 <div
                                     class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
@@ -91,7 +91,7 @@
                                             @endphp
                                             <img src="{{ $imageSrc }}" 
                                                  alt="{{ $product['name'] ?? 'Product Image' }}"
-                                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                 class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                                                  loading="lazy"
                                                  onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
                                         </div>

@@ -19,7 +19,7 @@
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Scripts -->
-   
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css"
         integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -28,8 +28,9 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     @livewireStyles
- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <style>
         /* Ensure dropdown stays centered */
         .lg\\:fixed {
@@ -126,6 +127,7 @@
 </head>
 
 <body class="font-sans antialiased text-gray-900 bg-gray-50">
+    <x-loader-component />
     <!-- Cart Alert Notification -->
     <div id="cartAlert"
         class="alert bg-gradient-to-r from-blue-600 to-indigo-600 text-white hidden border-l-4 border-blue-800 shadow-lg px-4 py-3 fixed z-50 transition-all duration-300 transform -translate-y-full right-0 left-0 mx-4 top-4 rounded-xl md:w-96 md:left-auto md:right-4 md:mx-0 md:top-6"
@@ -186,7 +188,7 @@
     </div>
 
     @livewireScripts
-
+    <script src="{{ asset('js/loader.js') }}"></script>
     <script>
         // Cart Alert Management
         const cartAlert = document.getElementById('cartAlert');

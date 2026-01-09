@@ -59,7 +59,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-green-600">Category Status</p>
-                        <h3 class="text-2xl font-bold text-gray-900 mt-2">{{ $category->is_active ? 'Active' : 'Inactive' }}</h3>
+                        <h3 class="text-2xl font-bold text-gray-900 mt-2">{{ $category->is_active ? 'Inctive' : 'Active' }}</h3>
                         <p class="text-sm text-gray-500 mt-1">Visibility status</p>
                     </div>
                     <div class="bg-green-500 p-3 rounded-lg">

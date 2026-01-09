@@ -309,7 +309,7 @@
                                     class="block aspect-square overflow-hidden rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
                                     @if ($isImage)
                                         <img src="{{ asset('storage/' . $image->path) }}" alt="Proof image"
-                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200">
+                                            class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200">
                                     @elseif($isVideo)
                                         <div class="w-full h-full bg-gray-800 flex flex-col items-center justify-center">
                                             <svg class="w-12 h-12 text-white mb-2" fill="none" stroke="currentColor"
@@ -403,7 +403,7 @@
                                 class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                                 @if (isset($product['image']))
                                     <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}"
-                                        class="w-24 h-24 object-cover rounded-lg border border-gray-200">
+                                        class="w-24 h-24 object-contain rounded-lg border border-gray-200">
                                 @else
                                     <div
                                         class="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">

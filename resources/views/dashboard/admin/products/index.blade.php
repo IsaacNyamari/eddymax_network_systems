@@ -54,8 +54,7 @@
                                         {{ Str::limit($product->name, 15, '...') }}</p>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <p class="text-sm font-medium text-gray-900">KES
-                                        {{ number_format($product->price, 2) }}</p>
+                                    <livewire:update-price-input :product="$product" />
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">

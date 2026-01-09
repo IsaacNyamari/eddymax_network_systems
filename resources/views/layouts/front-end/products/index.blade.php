@@ -55,7 +55,7 @@
                 <div class="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
                     @if (!isset($productsSorted))
                         <!-- Grid Container -->
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
                             @foreach ($products as $product)
                                 <div
                                     class="group bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
@@ -164,6 +164,7 @@
                                                 <span class="text-xs text-gray-500">
                                                     ({{ $ratingCount }})
                                                 </span>
+
                                             </div>
                                         @else
                                             <!-- No ratings yet -->
@@ -180,6 +181,9 @@
                                                 <span class="text-xs text-gray-400">No reviews</span>
                                             </div>
                                         @endif
+                                        <div class="mt-2">
+                                            <livewire:add-to-cart-button class=" w-full" :product="$product" />
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -227,7 +231,6 @@
     </div>
 @endsection
 @section('overlay')
-    <!-- FILTER RESULT OVERLAY -->
     <!-- FILTER RESULT OVERLAY -->
     <div id="filter-overlay" class="fixed inset-0 z-[9999] hidden bg-black/70 backdrop-blur-sm">
         <div class="min-h-screen flex items-center justify-center p-4">

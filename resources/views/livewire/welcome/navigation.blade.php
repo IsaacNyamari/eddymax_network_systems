@@ -93,7 +93,7 @@
                                         <div class="row mt-4 pt-3 border-top">
                                             <div class="col-12">
                                                 <a href="{{ route('store.filter.category', $category->slug) }}"
-                                                    class="btn btn-outline-primary btn-sm">
+                                                    class="">
                                                     View All {{ $category->name }}
                                                     <svg class="w-4 h-4 ms-1" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -237,7 +237,7 @@
                 display: none;
                 position: absolute;
                 background: white;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                /* box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); */
                 border: 1px solid #e5e7eb;
                 border-top: none;
                 z-index: 1050;
@@ -284,13 +284,14 @@
                 font-size: 0.95rem;
             }
 
-            .dropdown-header a:hover {
+            /* .dropdown-header a:hover {
                 color: #2563eb;
-            }
+            } */
 
             /* Grandchildren list */
             .grandchildren-list {
-                border-color: #3b82f6 !important;
+                border: none !important;
+                /* border-color: #3b82f6 !important; */
             }
 
             .grandchildren-list .dropdown-item {
@@ -304,15 +305,15 @@
             }
 
             /* View all button */
-            .btn-outline-primary {
+            /* .btn-outline-primary {
                 border-color: #3b82f6;
                 color: #3b82f6;
-            }
+            } */
 
-            .btn-outline-primary:hover {
+            /* .btn-outline-primary:hover {
                 background-color: #3b82f6;
                 color: white;
-            }
+            } */
         }
 
         /* Mobile Styles */
@@ -399,13 +400,13 @@
         }
 
         /* Better focus styles for accessibility */
-        .nav-link:focus,
+        /* .nav-link:focus,
         .dropdown-item:focus,
         .btn:focus,
         .list-group-item-action:focus {
             outline: 2px solid #3b82f6;
             outline-offset: 2px;
-        }
+        } */
 
         /* Smooth transitions */
         .nav-link,

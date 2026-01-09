@@ -203,10 +203,10 @@
                                     <div class="inline-flex items-center">
                                         <span class="relative flex h-3 w-3 mr-2">
                                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ $category->is_active ? 'bg-green-400' : 'bg-gray-400' }} opacity-75"></span>
-                                            <span class="relative inline-flex rounded-full h-3 w-3 {{ $category->is_active ? 'bg-green-500' : 'bg-gray-500' }}"></span>
+                                            <span class="relative inline-flex rounded-full h-3 w-3 {{ !$category->is_active ? 'bg-green-500' : 'bg-gray-500' }}"></span>
                                         </span>
                                         <span class="text-sm {{ $category->is_active ? 'text-green-700' : 'text-gray-700' }}">
-                                            {{ $category->is_active ? 'Active' : 'Inactive' }}
+                                            {{ !$category->is_active ? 'Active' : 'Inactive' }}
                                         </span>
                                     </div>
                                 </td>

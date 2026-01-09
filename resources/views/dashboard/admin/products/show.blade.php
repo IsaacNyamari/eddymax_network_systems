@@ -3,8 +3,8 @@
 @section('content')
     <div class="max-w-7xl bg-gray-200 rounded-lg mx-auto px-4 sm:px-6 lg:px-8 p-3 space-y-12">
         <!-- Product Hero / Breadcrumb -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">{{ $product->name }}</h1>
+        <div class="flex flex-row sm:flex-row items-start sm:items-center justify-between mb-8">
+            <h1 class="text-xl w-50 font-bold text-gray-900">{{ $product->name }}</h1>
             <a onclick="window.history.back()" href="#"
                 class="text-white bg-red-600 hover:text-white px-4 py-2 rounded-lg font-semibold flex items-center mt-32 sm:mt-0">
                 Back
@@ -53,7 +53,7 @@
 
                     <!-- If no additional images, show placeholders -->
                     @if (!$product->productImages || $product->productImages->count() == 0)
-                        @for ($i = 1; $i <= 3; $i++)
+                        @for ($i = 1; $i <= $product->productImages->count(); $i++)
                             <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition opacity-50">
                                 <img src="https://via.placeholder.com/150?text=Image+{{ $i }}"
                                     alt="Thumbnail {{ $i }}" class="w-full h-24 object-cover grayscale"
@@ -133,20 +133,21 @@
                 @endif
 
                 <!-- Product Options -->
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-4">
-                        @if ($product->stock_status == 'in_stock' || $product->stock_status == 'backorder')
-                            <livewire:add-to-cart-button :product="$product" />
-                        @else
-                            <button disabled
-                                class="px-6 py-3 bg-gray-300 text-gray-500 rounded-lg font-semibold cursor-not-allowed">
-                                Out of Stock
-                            </button>
-                        @endif
-                        <livewire:wishlist-toggle :product="$product" />
+                @hasrole('customer')
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            @if ($product->stock_status == 'in_stock' || $product->stock_status == 'backorder')
+                                <livewire:add-to-cart-button :product="$product" />
+                            @else
+                                <button disabled
+                                    class="px-6 py-3 bg-gray-300 text-gray-500 rounded-lg font-semibold cursor-not-allowed">
+                                    Out of Stock
+                                </button>
+                            @endif
+                            <livewire:wishlist-toggle :product="$product" />
+                        </div>
                     </div>
-                </div>
-
+                @endhasrole
                 <!-- Product Reviews -->
                 <div class="mt-4" wire:poll.5s>
                     <h3 class="text-lg font-bold text-gray-900 mb-2">Reviews</h3>
