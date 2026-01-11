@@ -2,7 +2,7 @@
     <form wire:submit.prevent="save">
         <div>
             <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
-            <input type="text" id="name" wire:model.live="name"
+            <input type="text" id="name" wire:model="name"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
             @error('name')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -11,7 +11,7 @@
 
         <div class="mt-4">
             <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-            <input type="number" id="price" wire:model.live="price"
+            <input type="number" id="price" wire:model="price"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
             @error('price')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -19,7 +19,7 @@
         </div>
         <div class="mt-4">
             <label for="unit" class="block text-sm font-medium text-gray-700">Unit</label>
-            <input type="text" id="unit" wire:model.live="unit"
+            <input type="text" id="unit" wire:model="unit"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
             @error('unit')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -37,7 +37,7 @@
                                 <!-- This parent category has no children, so it's selectable -->
                                 <label
                                     class="flex items-center space-x-3 p-2 bg-white rounded shadow-sm mb-2 hover:bg-gray-50 cursor-pointer">
-                                    <input type="radio" name="category_id" wire:model.live="category_id"
+                                    <input type="radio" name="category_id" wire:model="category_id"
                                         value="{{ $parentCategory->id }}" class="text-red-600 focus:ring-red-500">
                                     <span class="font-semibold text-gray-800">{{ $parentCategory->name }}</span>
                                     <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">Parent
@@ -59,7 +59,7 @@
                                         <!-- This child category has no children, so it's selectable -->
                                         <label
                                             class="flex items-center space-x-3 p-2 bg-white rounded shadow-sm mb-1 hover:bg-gray-50 cursor-pointer">
-                                            <input type="radio" name="category_id" wire:model.live="category_id"
+                                            <input type="radio" name="category_id" wire:model="category_id"
                                                 value="{{ $childCategory->id }}"
                                                 class="text-red-600 focus:ring-red-500">
                                             <span class="text-gray-700 font-medium">{{ $childCategory->name }}</span>
@@ -80,7 +80,7 @@
                                     @foreach ($childCategory->children as $grandchildCategory)
                                         <label
                                             class="flex items-center space-x-3 ml-8 p-2 hover:bg-gray-100 rounded cursor-pointer">
-                                            <input type="radio" name="category_id" wire:model.live="category_id"
+                                            <input type="radio" name="category_id" wire:model="category_id"
                                                 value="{{ $grandchildCategory->id }}"
                                                 class="text-red-600 focus:ring-red-500">
                                             <span class="text-gray-600">
@@ -96,7 +96,7 @@
                                         @foreach ($grandchildCategory->children as $greatGrandchild)
                                             <label
                                                 class="flex items-center space-x-3 ml-12 p-2 hover:bg-gray-100 rounded cursor-pointer">
-                                                <input type="radio" name="category_id" wire:model.live="category_id"
+                                                <input type="radio" name="category_id" wire:model="category_id"
                                                     value="{{ $greatGrandchild->id }}"
                                                     class="text-red-600 focus:ring-red-500">
                                                 <span class="text-sm text-gray-500">{{ $greatGrandchild->name }}</span>
@@ -107,7 +107,7 @@
                                                 <label
                                                     class="flex items-center space-x-3 ml-16 p-2 hover:bg-gray-100 rounded cursor-pointer">
                                                     <input type="radio" name="category_id"
-                                                        wire:model.live="category_id" value="{{ $level5Category->id }}"
+                                                        wire:model="category_id" value="{{ $level5Category->id }}"
                                                         class="text-red-600 focus:ring-red-500">
                                                     <span
                                                         class="text-xs text-gray-500">{{ $level5Category->name }}</span>
@@ -142,7 +142,7 @@
         </div>
         <div class="mt-4">
             <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
-            <select name="" wire:model.live='brand'
+            <select name="" wire:model='brand'
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500">
                 @foreach ($brands as $brandInput)
                     <option value="{{ $brandInput->id }}">{{ $brandInput->name }}</option>
@@ -156,7 +156,7 @@
             <label for="model" class="block text-sm font-medium text-gray-700 capitalize">model</label>
             <input type="text" id="model"
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-red-500 focus:border-red-500"
-                wire:model.live='model'>
+                wire:model='model'>
             @error('model')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
@@ -226,14 +226,27 @@
 
         <div class="mt-4">
             <label for="editor-1" class="block text-sm font-medium text-gray-700">Short Description</label>
-            <textarea id="editor-1" wire:model.live="short_description"
+            <textarea id="editor-1" wire:model="short_description"
                 class="mt-0 block w-full border border-gray-300 rounded-bl-lg  rounded-br-lg shadow-sm p-2 focus:ring-red-500"
                 rows="5"></textarea>
             @error('short_description')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
         </div>
-        <livewire:description-input />
+        {{-- <livewire:description-input /> --}}
+        <div>
+            <x-input-label for="description">Description</x-input-label>
+
+            <div id="editor-description-container" data-wysiwyg data-height="200"
+                data-placeholder="Enter product description...">
+                <textarea wire:model="description" id="description" rows="3" class="hidden">{{ old('description', $description ?? '') }}</textarea>
+            </div>
+
+            @error('description')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+
+        </div>
         <div class="mt-6">
             <button type="submit"
                 class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold shadow transition">
@@ -250,11 +263,112 @@
 </div>
 @script
     <script>
+        // Initialize editor when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
-            new WysiwygEditor('editor-description-container', {
-                height: 200,
-                placeholder: 'Enter description...'
-            });
+            // Check if WysiwygEditor is available
+            if (typeof WysiwygEditor !== 'undefined') {
+                // Initialize the editor for description
+                if (document.getElementById('editor-description-container')) {
+                    // Destroy existing instance if any
+                    if (window.wysiwygEditors && window.wysiwygEditors['editor-description-container']) {
+                        window.wysiwygEditors['editor-description-container'].destroy();
+                    }
+
+                    // Create new editor instance
+                    new WysiwygEditor('editor-description-container', {
+                        height: 200,
+                        placeholder: 'Enter product description...'
+                    });
+                }
+            } else {
+                console.warn('WysiwygEditor not loaded yet. Will retry after Livewire loads.');
+            }
+        });
+
+        // Listen for Livewire initialization
+        document.addEventListener('livewire:init', () => {
+            console.log('Livewire initialized, setting up WYSIWYG editor...');
+            initializeEditor();
+        });
+
+        // Listen for Livewire updates (after form submission)
+        document.addEventListener('livewire:after-update', () => {
+            console.log('Livewire updated, reinitializing editor...');
+            // Small delay to ensure DOM is fully updated
+            setTimeout(initializeEditor, 100);
+        });
+
+        // Function to initialize/reinitialize the editor
+        function initializeEditor() {
+            if (typeof WysiwygEditor !== 'undefined' && document.getElementById('editor-description-container')) {
+                // Check if editor already exists
+                const container = document.getElementById('editor-description-container');
+                const existingEditor = container.querySelector('.wysiwyg-editor-container');
+
+                if (existingEditor) {
+                    // Save current content before removing
+                    const editor = window.wysiwygEditors['editor-description-container'];
+                    if (editor) {
+                        const currentContent = editor.getContent();
+                        editor.destroy();
+
+                        // Create new editor with saved content
+                        const newEditor = new WysiwygEditor('editor-description-container', {
+                            height: 200,
+                            placeholder: 'Enter product description...'
+                        });
+
+                        // Restore content
+                        setTimeout(() => {
+                            if (currentContent && currentContent !== 'Enter product description...') {
+                                newEditor.setContent(currentContent);
+                            }
+                        }, 50);
+                    }
+                } else {
+                    // Create new editor
+                    new WysiwygEditor('editor-description-container', {
+                        height: 200,
+                        placeholder: 'Enter product description...'
+                    });
+                }
+            } else {
+                console.warn('WysiwygEditor or container not found');
+            }
+        }
+
+        // Handle the product-edit event
+        let editAlert = document.getElementById('editAlert');
+
+        $wire.on('load-editor', (event) => {
+            setTimeout(initializeEditor, 300);
+        });
+        $wire.on('product-edit', (event) => {
+            let message = event[0]?.message || 'Product updated successfully!';
+            editAlert.innerHTML = message;
+            editAlert.classList.remove('hidden');
+
+            // Add animation class
+            editAlert.classList.add('animate-slide-in');
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                editAlert.classList.remove('animate-slide-in');
+                editAlert.classList.add('hidden');
+            }, 3000);
+
+            // Reinitialize editor after successful update
+            console.log('Product edit successful, reinitializing editor...');
+            setTimeout(initializeEditor, 300);
+        });
+
+        // Also handle any Livewire errors that might cause editor to disappear
+        document.addEventListener('livewire:request-finished', (event) => {
+            // If the request was successful (not an error)
+            if (!event.detail.rejected) {
+                // Reinitialize editor after any successful request
+                setTimeout(initializeEditor, 200);
+            }
         });
     </script>
 @endscript

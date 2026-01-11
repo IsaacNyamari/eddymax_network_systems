@@ -44,7 +44,7 @@ class EditProduct extends Component
     #[Validate('nullable|image|max:4096')]
     public $image;
 
-    #[Validate('nullable|string|max:10000')]
+    #[Validate('nullable|string')]
     public $description;
 
     #[Validate('required|exists:categories,id')]

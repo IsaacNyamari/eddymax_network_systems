@@ -1,7 +1,7 @@
 @extends('layouts.front-end.app')
 
 @section('content')
-    <section class="relative py-16 px-4 sm:px-6 lg:px-8 mb-2">
+    {{-- <section class="relative py-16 px-4 sm:px-6 lg:px-8 mb-2">
         <!-- Background Image -->
         <div class="absolute inset-0 z-0">
             <img src="{{ asset('images/products-banner (1).png') }}" 
@@ -14,7 +14,7 @@
         <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
             <!-- Optional content -->
         </div>
-    </section>
+    </section> --}}
 
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
         <!-- Debug: Check if we have categories -->

@@ -8,7 +8,8 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-semibold text-gray-900">Active Products</h2>
+                    <h2 class="text-lg font-semibold text-gray-900">Active Products
+                        ({{ App\Models\Product::all()->count() }})</h2>
                     <div class="float-end flex gap-3">
                         <a href="{{ route('admin.product.trash') }}"
                             class="text-sm text-white bg-red-600 px-4 rounded py-2 hover:text-white font-medium">
@@ -60,10 +61,10 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
                                     <a href="{{ route('admin.products.show', $product->slug) }}"
                                         class="text-white px-4 py-2 rounded bg-green-500 hover:text-white mr-3">View</a>
-                                    @if (Str::limit($product->description, 3, '...'))
-                                        <a href="{{ route('admin.products.edit', $product->id) }}"
-                                            class="text-white px-4 py-2 rounded bg-orange-500 hover:text-white">Edit</a>
-                                    @endif
+
+                                    <a href="{{ route('admin.products.edit', $product->id) }}"
+                                        class="text-white px-4 py-2 rounded bg-orange-500 hover:text-white">Edit</a>
+
                                     <form method="POST" action="{{ route('admin.products.destroy', $product) }}">
                                         @csrf
                                         @method('DELETE')

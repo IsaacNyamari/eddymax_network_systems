@@ -28,12 +28,13 @@ class CreateProduct extends Component
     #[Validate('required|numeric|min:0')]
     public $price;
 
-    #[Validate('nullable|image|max:1024')]
+    #[Validate('nullable|image')]
     public $image;
 
     public $images = [];
 
-    #[Validate('nullable|string|max:10000|min:10')]
+    #[Validate('required|string|min:10')]
+    
     public $description;
     #[Validate('nullable|string|max:2000|min:10')]
     public $short_description;
@@ -44,8 +45,6 @@ class CreateProduct extends Component
     public $categories = [];
 
     public $brands = [];
-    // In your Livewire component
-    // In your Livewire component
     public function mount()
     {
         $this->categories = $this->getNestedCategories();
@@ -97,7 +96,7 @@ class CreateProduct extends Component
             'slug' => Str::slug($this->name),
         ]);
         // create product unit
-      
+
         $product->unitable ? $product->unitable()->update(['name' => $this->unit]) : $product->unitable()->create(['name' => $this->unit]);
         // Handle multiple images upload
         if (!empty($this->images)) {

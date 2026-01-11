@@ -2,7 +2,7 @@
     <x-input-label for="description">Description</x-input-label>
 
     <div id="editor-description-container" data-wysiwyg data-height="200" data-placeholder="Enter product description...">
-        <textarea wire:model="description" id="description" rows="3" class="hidden">{{ old('description', $description ?? '') }}</textarea>
+        <textarea wire:model.live="description" id="description" rows="3" class="hidden">{{ old('description', $description ?? '') }}</textarea>
     </div>
 
     @error('description')
