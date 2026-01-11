@@ -114,9 +114,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // messages 
         // Messages (if you have a messaging system)
-        Route::get('/messages/index', function () {
-            return view('dashboard.account.messages');
-        })->name('messages');
+       
         Route::resource('/messages', controller: MessageController::class);
         Route::post('/messages/mark/read/{message}/',  [MessageController::class, 'markAsRead'])->name('mark.messages.read');
         Route::post('/messages/mark/unread/{message}/',  [MessageController::class, 'markAsUnread'])->name('mark.messages.unread');

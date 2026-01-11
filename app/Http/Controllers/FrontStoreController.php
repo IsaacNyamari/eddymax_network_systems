@@ -43,6 +43,14 @@ class FrontStoreController extends Controller
     {
         return view('layouts.front-end.return');
     }
+    public function privacyPolicy()
+    {
+        return view('layouts.front-end.privacy-policy');
+    }
+    public function termsConditions()
+    {
+        return view('layouts.front-end.terms-conditions');
+    }
 
     /**
      * Show the form for editing the specified resource.

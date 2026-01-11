@@ -1,5 +1,5 @@
 @extends('layouts.front-end.app')
-
+@section('title','Shop')
 @section('content')
     <!-- Add this section to your shop page -->
     <section class="relative py-16 px-4 sm:px-6 lg:px-8">

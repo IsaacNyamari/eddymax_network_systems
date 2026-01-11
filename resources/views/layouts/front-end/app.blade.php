@@ -9,7 +9,7 @@
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <meta name="theme-color" content="#6777ef">
 
-    <title>{{ config('app.name', 'Edymax Systems & Networks') }}</title>
+    <title>@hasSection('title'){{ config('app.name', 'Edymax Systems & Networks') }} - @yield('title')@else{{ config('app.name', 'Edymax Systems & Networks') }}@endif</title>
     <link rel="shortcut icon" href="{{ asset('images/edymax-logo-bg.jpeg') }}" type="image/*">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

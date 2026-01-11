@@ -1,5 +1,5 @@
 @extends('layouts.front-end.app')
-
+@section('title','Contact Us')
 @section('content')
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
 

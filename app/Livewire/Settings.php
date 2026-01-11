@@ -106,7 +106,7 @@ class Settings extends Component
         $this->instagram = $this->cleanValue($envVars['INSTAGRAM_LINK'] ?? '');
         $this->twitter = $this->cleanValue($envVars['X_LINK'] ?? '');
         $this->location = $this->cleanValue($envVars['LOCATION'] ?? '');
-        $this->support_email = $this->cleanValue($envVars['SUPPORT_EMAIL'] ?? 'support@example.com');
+        $this->support_email = $this->cleanValue($envVars['SUPPORT_EMAIL'] ?? 'info@edymaxsystemsltd.co.ke');
 
         // Mail Settings
         $this->mail_mailer = $this->cleanValue($envVars['MAIL_MAILER'] ?? 'smtp');

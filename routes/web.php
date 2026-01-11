@@ -48,6 +48,8 @@ Route::get('/sitemap-products-{page}.xml', [SitemapController::class, 'products'
 Route::prefix('pages')->name('pages.')->group(function () {
     Route::get('/contact', [FrontStoreController::class, 'contact'])->name('contact');
     Route::get('/return-refund', [FrontStoreController::class, 'returnRefund'])->name('return-refund');
+    Route::get('/privacy-policy', [FrontStoreController::class, 'privacyPolicy'])->name('privacy-policy');
+    Route::get('/terms-conditions', [FrontStoreController::class, 'termsConditions'])->name('terms-conditions');
 });
 
 // User Account Routes

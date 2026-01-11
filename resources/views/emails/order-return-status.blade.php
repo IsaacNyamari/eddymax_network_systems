@@ -250,7 +250,7 @@
 
             <p style="color: #6b7280; font-size: 14px; text-align: center;">
                 Need help? Contact our support team at
-                {{-- <a href="mailto:support@{{ config('app.domain', 'example.com') }}" style="color: #3b82f6;">support@{{ config('app.domain', 'example.com') }}</a> --}}
+                <a href="mailto:{{ env('SUPPORT_EMAIL') }}" style="color: #3b82f6;">{{ env('SUPPORT_EMAIL') }}</a>
                 @if (config('app.phone'))
                     or call us at {{ getenv('PHONE') }}.
                 @endif
