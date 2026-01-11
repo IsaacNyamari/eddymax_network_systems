@@ -8,6 +8,7 @@ use App\Http\Controllers\SitemapController;
 use App\Livewire\SiteSettings;
 use App\Models\Brands;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\ProductRating;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
@@ -120,9 +121,10 @@ Route::get('/navigation', function () {
 
 // Dashboard 
 
-Route::get('/editor',function(){
-    return view('editor');
+Route::get('/editor', function () {
+    $brand  = Brands::where('name', 'like', '%acc%')->first()->id;
+    $products = Product::where('price', '<=', 10)->get();
+    dd($products);
 });
 require __DIR__ . '/dashboard.php';
-// Authentication Routes (Laravel Breeze/Jetstream)
 require __DIR__ . '/auth.php';

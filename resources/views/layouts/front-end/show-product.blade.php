@@ -17,32 +17,29 @@
 
         <!-- Product Details Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
             <!-- Product Images with Gallery -->
             <div class="space-y-4">
                 <!-- Main Image with Zoom -->
-                <div class="rounded-xl bg-white hover:bg-white overflow-hidden shadow-lg relative group cursor-zoom-in"
-                    id="zoom-container">
+                <div class="rounded-xl bg-white hover:bg-white shadow-lg relative cursor-zoom-in" data-action="zoom">
                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                        class="w-full h-96 object-contain transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy" id="main-product-image"
-                        onerror="this.src='https://via.placeholder.com/600x400?text=Product+Image'">
+                        class="w-full h-96 object-contain transition-transform duration-300 hover:scale-103" loading="lazy"
+                        id="main-product-image" onerror="this.src='https://via.placeholder.com/600x400?text=Product+Image'">
                 </div>
 
                 <!-- Gallery Thumbnails -->
                 <div class="grid grid-cols-4 gap-3">
                     <!-- Main Image Thumbnail -->
-                    <div class="rounded-lg overflow-hidden shadow cursor-pointer hover:shadow-lg transition border-2 border-red-500"
+                    <div class="rounded-lg shadow cursor-pointer hover:shadow-lg transition border-2 border-red-500"
                         onclick="changeMainImage('{{ asset('storage/' . $product->image) }}', this)">
                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }} Thumbnail"
                             class="w-full h-24 object-contain" loading="lazy"
                             onerror="this.src='https://via.placeholder.com/150?text=Thumbnail'">
                     </div>
 
-                    <!-- Additional Images Gallery -->
+                    <!-- Additional Images -->
                     @if ($product->productImages && $product->productImages->count() > 0)
                         @foreach ($product->productImages as $image)
-                            <div class="rounded-lg overflow-hidden cursor-pointer shadow hover:shadow-lg transition border-2 border-gray-200 hover:border-red-500"
+                            <div class="rounded-lg shadow cursor-pointer hover:shadow-lg transition border-2 border-gray-200 hover:border-red-500"
                                 onclick="changeMainImage('{{ asset('storage/' . $image->path) }}', this)">
                                 <img src="{{ asset('storage/' . $image->path) }}"
                                     alt="Product Image {{ $loop->iteration + 1 }}" class="w-full h-24 object-cover"
@@ -51,20 +48,8 @@
                             </div>
                         @endforeach
                     @endif
-
-                    <!-- If no additional images, show placeholders -->
-                    @if (!$product->productImages || $product->productImages->count() == 0)
-                        @for ($i = 1; $i <= $product->productImages->count(); $i++)
-                            <div class="rounded-lg overflow-hidden shadow hover:shadow-lg transition opacity-50">
-                                <img src="https://via.placeholder.com/150?text=Image+{{ $i }}"
-                                    alt="Thumbnail {{ $i }}" class="w-full h-24 object-cover grayscale"
-                                    loading="lazy">
-                            </div>
-                        @endfor
-                    @endif
                 </div>
             </div>
-
             <!-- Product Info -->
             <div class="space-y-6">
                 <!-- Price & Stock Status -->
@@ -201,30 +186,6 @@
             </div>
         </div>
 
-        <!-- Add some CSS for the zoom effect -->
-        <style>
-            #zoom-container {
-                position: relative;
-                overflow: hidden;
-            }
-
-            .zoomable-image {
-                transition: transform 0.3s ease;
-                cursor: zoom-in;
-            }
-
-            .zoomable-image:hover {
-                transform: scale(1.5);
-                cursor: zoom-out;
-            }
-
-            .thumbnail-active {
-                border-color: #dc2626 !important;
-                /* red-600 */
-                box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3);
-            }
-        </style>
-
         <!-- Product Description / Details -->
         <div class="bg-gray-50 p-8 rounded-xl shadow-lg">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Product Details</h2>
@@ -323,24 +284,6 @@
             clickedElement.classList.remove('border-gray-200');
             clickedElement.classList.add('border-red-500', 'thumbnail-active');
         }
-
-        // Add click-to-zoom functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const zoomContainer = document.getElementById('zoom-container');
-            const mainImage = document.getElementById('main-product-image');
-
-            zoomContainer.addEventListener('click', function() {
-                if (mainImage.classList.contains('zoomable-image')) {
-                    mainImage.classList.remove('zoomable-image');
-                    zoomContainer.classList.remove('cursor-zoom-out');
-                    zoomContainer.classList.add('cursor-zoom-in');
-                } else {
-                    mainImage.classList.add('zoomable-image');
-                    zoomContainer.classList.remove('cursor-zoom-in');
-                    zoomContainer.classList.add('cursor-zoom-out');
-                }
-            });
-        });
     </script>
 @endsection
 
