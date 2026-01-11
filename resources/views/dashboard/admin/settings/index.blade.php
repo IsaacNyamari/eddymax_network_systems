@@ -21,8 +21,8 @@
                     {{ session('warning') }}
                 </div>
             @endif
-          
-            <div id="settingsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+
+            <div id="settingsContainer" class="grid grid-cols-1 mb-2 sm:grid-cols-1 gap-3 sm:gap-4 md:gap-6">
                 <!-- Settings Card -->
                 <div
                     class="text-center shadow-sm bg-white py-3 sm:py-4 md:py-5 rounded-lg transition-all duration-200 hover:shadow-md">
@@ -37,116 +37,115 @@
                 </div>
 
                 <!-- Backup Card -->
-                <div
-                    class="text-center shadow-sm bg-white py-3 sm:py-4 md:py-5 rounded-lg transition-all duration-200 hover:shadow-md">
-                    <h3 class="pb-2 text-blue-500 font-medium text-sm sm:text-base md:text-lg lg:text-xl">
-                        Back Up
-                    </h3>
-                    <p class="text-gray-500 text-xs sm:text-sm hidden sm:block">
-                        Create / download database backups
-                    </p>
-                    <hr>
 
-                    @if ($backups->count() < 1)
-                        <form action="{{ route('admin.settings.backup.database') }}" method="POST" class="p-4">
+            </div>
+            <div
+                class="text-center shadow-sm bg-white py-3 sm:py-4 md:py-5 rounded-lg transition-all duration-200 hover:shadow-md">
+                <h3 class="pb-2 text-blue-500 font-medium text-sm sm:text-base md:text-lg lg:text-xl">
+                    Back Up
+                </h3>
+                <p class="text-gray-500 text-xs sm:text-sm hidden sm:block">
+                    Create / download database backups
+                </p>
+                <hr>
+
+                @if ($backups->count() < 1)
+                    <form action="{{ route('admin.settings.backup.database') }}" method="POST" class="p-4">
+                        @csrf
+                        <button type="submit"
+                            class="px-4 py-2 bg-slate-800 text-white rounded-lg hover:-translate-y-1 transition-all duration-200">
+                            Create Backup
+                        </button>
+                        <p class="text-xs text-gray-500 mt-2">
+                            Creates a compressed SQL backup
+                        </p>
+                    </form>
+                @else
+                    <div class="p-4">
+                        <!-- Create New Backup Form -->
+                        <form action="{{ route('admin.settings.backup.database') }}" method="POST" class="mb-4">
                             @csrf
                             <button type="submit"
-                                class="px-4 py-2 bg-slate-800 text-white rounded-lg hover:-translate-y-1 transition-all duration-200">
-                                Create Backup
+                                class="w-full px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-all duration-200">
+                                Create New Backup
                             </button>
-                            <p class="text-xs text-gray-500 mt-2">
-                                Creates a compressed SQL backup
-                            </p>
                         </form>
-                    @else
-                        <div class="p-4">
-                            <!-- Create New Backup Form -->
-                            <form action="{{ route('admin.settings.backup.database') }}" method="POST" class="mb-4">
-                                @csrf
-                                <button type="submit"
-                                    class="w-full px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-all duration-200">
-                                    Create New Backup
-                                </button>
-                            </form>
 
-                            <!-- Latest Backup Info -->
-                            @php
-                                $latestBackup = $backups->first();
-                            @endphp
+                        <!-- Latest Backup Info -->
+                        @php
+                            $latestBackup = $backups->first();
+                        @endphp
 
-                            <div class="bg-gray-50 rounded-lg p-3 mb-4">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-sm font-medium text-gray-700">Latest Backup:</span>
-                                    <span class="text-xs text-gray-500">{{ $latestBackup->formatted_date }}</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600">{{ $latestBackup->file }}</span>
-                                    <span
-                                        class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{{ $latestBackup->size }}</span>
-                                </div>
+                        <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-gray-700">Latest Backup:</span>
+                                <span class="text-xs text-gray-500">{{ $latestBackup->formatted_date }}</span>
                             </div>
-
-                            <!-- Action Buttons -->
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <form action="{{ route('admin.settings.backup.download', $latestBackup->file) }}"
-                                    method="POST" class="flex-1">
-                                    @csrf
-                                    <button type="submit"
-                                        class="w-full px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all duration-200">
-                                        Download Latest
-                                    </button>
-                                </form>
-                                <form action="{{ route('admin.settings.backup.delete', $latestBackup->file) }}"
-                                    method="POST" class="flex-1"
-                                    onsubmit="return confirm('Are you sure you want to delete this backup?')">
-                                    @csrf
-                                    <button type="submit"
-                                        class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200">
-                                        Delete Latest
-                                    </button>
-                                </form>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">{{ $latestBackup->file }}</span>
+                                <span
+                                    class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{{ $latestBackup->size }}</span>
                             </div>
                         </div>
 
-                        <!-- Additional Backups (if more than 1) -->
-                        @if ($backups->count() > 1)
-                            <div class="border-t border-gray-200 pt-4 px-4">
-                                <h4 class="text-sm font-semibold text-gray-700 mb-2">Other Backups
-                                    ({{ $backups->count() - 1 }})</h4>
-                                <div class="space-y-2 max-h-40 overflow-y-auto">
-                                    @foreach ($backups->slice(1) as $backup)
-                                        <div class="flex items-center justify-between bg-gray-50 p-2 rounded text-xs">
-                                            <div class="truncate">
-                                                <div class="font-medium truncate">{{ $backup->file }}</div>
-                                                <div class="text-gray-500">{{ $backup->formatted_date }}</div>
-                                            </div>
-                                            <div class="flex gap-1">
-                                                <form action="{{ route('admin.settings.backup.download', $backup->file) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="px-2 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">
-                                                        ↓
-                                                    </button>
-                                                </form>
-                                                <form action="{{ route('admin.settings.backup.delete', $backup->file) }}"
-                                                    method="POST" onsubmit="return confirm('Delete this backup?')">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="px-2 py-1 bg-red-100 text-red-600 rounded hover:bg-red-200">
-                                                        ×
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-                    @endif
-                </div>
-            </div>
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <form action="{{ route('admin.settings.backup.download', $latestBackup->file) }}" method="POST"
+                                class="flex-1">
+                                @csrf
+                                <button type="submit"
+                                    class="w-full px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all duration-200">
+                                    Download Latest
+                                </button>
+                            </form>
+                            <form action="{{ route('admin.settings.backup.delete', $latestBackup->file) }}" method="POST"
+                                class="flex-1" onsubmit="return confirm('Are you sure you want to delete this backup?')">
+                                @csrf
+                                <button type="submit"
+                                    class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200">
+                                    Delete Latest
+                                </button>
+                            </form>
+                        </div>
+                    </div>
 
+                    <!-- Additional Backups (if more than 1) -->
+                    @if ($backups->count() > 1)
+                        <div class="border-t border-gray-200 pt-4 px-4">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">Other Backups
+                                ({{ $backups->count() - 1 }})</h4>
+                            <div class="space-y-2 max-h-40 overflow-y-auto">
+                                @foreach ($backups->slice(1) as $backup)
+                                    <div class="flex items-center justify-between bg-gray-50 p-2 rounded text-xs">
+                                        <div class="truncate">
+                                            <div class="font-medium truncate">{{ $backup->file }}</div>
+                                            <div class="text-gray-500">{{ $backup->formatted_date }}</div>
+                                        </div>
+                                        <div class="flex gap-1">
+                                            <form action="{{ route('admin.settings.backup.download', $backup->file) }}"
+                                                method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="px-2 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">
+                                                    ↓
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.settings.backup.delete', $backup->file) }}"
+                                                method="POST" onsubmit="return confirm('Delete this backup?')">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="px-2 py-1 bg-red-100 text-red-600 rounded hover:bg-red-200">
+                                                    ×
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                @endif
+            </div>
             <!-- Backup Statistics -->
             @if ($backups->count() > 0)
                 <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">

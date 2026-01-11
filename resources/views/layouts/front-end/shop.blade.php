@@ -1,25 +1,21 @@
 @extends('layouts.front-end.app')
 
 @section('content')
-    {{-- <section class="relative py-16 px-4 sm:px-6 lg:px-8 mb-2">
-        <!-- Background Image -->
-        <div class="absolute inset-0 z-0">
-            <img src="{{ asset('images/products-banner (1).png') }}" 
-                 alt="{{ config('app.name') }} - Technology Solutions"
-                 class="w-fit h-full lg:object-contain md:object-cover object-center" 
-                 loading="lazy"
-                 onerror="this.style.display='none'">
-        </div>
+    @if (env('SHOW_BANNER') ?? true)
+        <section class="relative py-16 px-4 sm:px-6 lg:px-8 mb-2">
+            <!-- Background Image -->
+            <div class="absolute inset-0 z-0">
+                <img src="{{ asset('images/products-banner (1).png') }}" alt="{{ config('app.name') }} - Technology Solutions"
+                    class="w-fit h-full lg:object-contain md:object-cover object-center" loading="lazy"
+                    onerror="this.style.display='none'">
+            </div>
 
-        <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
-            <!-- Optional content -->
-        </div>
-    </section> --}}
-
+            <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
+                <!-- Optional content -->
+            </div>
+        </section>
+    @endif
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
-        <!-- Debug: Check if we have categories -->
-        {{-- @dd($parent_categories) --}}
-
         @php
             // Define the custom sort order
             $order = [
@@ -34,7 +30,7 @@
             ];
 
             // Sort the parent_categories collection
-            if(isset($parent_categories) && $parent_categories) {
+            if (isset($parent_categories) && $parent_categories) {
                 $sortedParentCategories = $parent_categories->sortBy(function ($category) use ($order) {
                     return $order[$category->name] ?? 999;
                 });
@@ -43,7 +39,7 @@
             }
         @endphp
 
-        @if($sortedParentCategories->count() > 0)
+        @if ($sortedParentCategories->count() > 0)
             @foreach ($sortedParentCategories as $category)
                 @php
                     try {
@@ -85,15 +81,15 @@
                                     <div class="relative overflow-hidden flex-shrink-0">
                                         <div class="aspect-square bg-gray-100">
                                             @php
-                                                $imageSrc = isset($product['image']) && !empty($product['image']) 
-                                                    ? asset('storage/' . $product['image'])
-                                                    : asset('images/no-image-icon-23492.png');
+                                                $imageSrc =
+                                                    isset($product['image']) && !empty($product['image'])
+                                                        ? asset('storage/' . $product['image'])
+                                                        : asset('images/no-image-icon-23492.png');
                                             @endphp
-                                            <img src="{{ $imageSrc }}" 
-                                                 alt="{{ $product['name'] ?? 'Product Image' }}"
-                                                 class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                                                 loading="lazy"
-                                                 onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
+                                            <img src="{{ $imageSrc }}" alt="{{ $product['name'] ?? 'Product Image' }}"
+                                                class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                                                loading="lazy"
+                                                onerror="this.src='{{ asset('images/no-image-icon-23492.png') }}'">
                                         </div>
 
                                         <!-- Cart Button Overlay -->
@@ -109,8 +105,11 @@
                                         @if (isset($product['stock_status']) && $product['stock_status'])
                                             <div
                                                 class="absolute top-3 left-3 px-3 py-1.5 rounded-full text-xs font-bold text-white 
-                                                {{ $product['stock_status'] == 'Sale' ? 'bg-red-600' : 
-                                                   ($product['stock_status'] == 'New' ? 'bg-green-600' : 'bg-blue-600') }}">
+                                                {{ $product['stock_status'] == 'Sale'
+                                                    ? 'bg-red-600'
+                                                    : ($product['stock_status'] == 'New'
+                                                        ? 'bg-green-600'
+                                                        : 'bg-blue-600') }}">
                                                 {{ Str::replace('_', ' ', $product['stock_status']) }}
                                             </div>
                                         @endif
@@ -129,9 +128,7 @@
                                     <!-- Content Section -->
                                     <div class="p-4 flex flex-col flex-grow">
                                         <!-- Product Name -->
-                                        <a href="{{ route('products.show', $product->slug) }}" 
-                                           
-                                           class="mb-2 flex-grow">
+                                        <a href="{{ route('products.show', $product->slug) }}" class="mb-2 flex-grow">
                                             <h3
                                                 class="font-semibold text-gray-900 group-hover:text-red-600 transition-colors duration-200 line-clamp-2">
                                                 {{ $product['name'] ?? 'Product Name' }}
@@ -167,8 +164,8 @@
                                                         @elseif ($i - 0.5 == $roundedRating)
                                                             <!-- Half star -->
                                                             <div class="relative w-4 h-4">
-                                                                <svg class="w-4 h-4 text-gray-300 absolute" fill="currentColor"
-                                                                    viewBox="0 0 20 20">
+                                                                <svg class="w-4 h-4 text-gray-300 absolute"
+                                                                    fill="currentColor" viewBox="0 0 20 20">
                                                                     <path
                                                                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                                 </svg>
@@ -182,8 +179,8 @@
                                                             </div>
                                                         @else
                                                             <!-- Empty star -->
-                                                            <svg class="w-4 h-4 text-gray-300 flex-shrink-0" fill="currentColor"
-                                                                viewBox="0 0 20 20">
+                                                            <svg class="w-4 h-4 text-gray-300 flex-shrink-0"
+                                                                fill="currentColor" viewBox="0 0 20 20">
                                                                 <path
                                                                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                             </svg>
@@ -235,19 +232,23 @@
 
         <!-- Why Choose Us Section -->
         <div class="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 shadow-xl">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Why Choose {{ config('app.name', 'Edymax Systems and Networks') }}?</h2>
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Why Choose
+                {{ config('app.name', 'Edymax Systems and Networks') }}?</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @php
                     $features = [
                         [
-                            'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+                            'icon' =>
+                                'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
                             'title' => 'Genuine Products',
                             'desc' => '100% authentic branded networking equipment with original manufacturer warranty',
                         ],
                         [
-                            'icon' => 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
+                            'icon' =>
+                                'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
                             'title' => 'Secure Payments',
-                            'desc' => 'Safe transactions with M-Pesa, cards, and bank transfers. SSL encrypted checkout',
+                            'desc' =>
+                                'Safe transactions with M-Pesa, cards, and bank transfers. SSL encrypted checkout',
                         ],
                         [
                             'icon' => 'M5 13l4 4L19 7',
@@ -263,8 +264,10 @@
                 @endphp
 
                 @foreach ($features as $feature)
-                    <div class="group bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-red-100">
-                        <div class="w-14 h-14 bg-gradient-to-br from-red-50 to-red-100 rounded-2xl flex items-center justify-center mb-4 group-hover:from-red-100 group-hover:to-red-200 transition">
+                    <div
+                        class="group bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-red-100">
+                        <div
+                            class="w-14 h-14 bg-gradient-to-br from-red-50 to-red-100 rounded-2xl flex items-center justify-center mb-4 group-hover:from-red-100 group-hover:to-red-200 transition">
                             <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="{{ $feature['icon'] }}" />

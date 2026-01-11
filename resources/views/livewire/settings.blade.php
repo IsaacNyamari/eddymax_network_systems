@@ -18,6 +18,13 @@
                 @enderror
             </div>
             <div class="mb-4">
+                <x-input-label for="show_banner" class="mb-2">Banner Toggle</x-input-label>
+                <input id="show_banner" type="checkbox" wire:model.live="show_banner" />
+                @error('show_banner')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mb-4">
                 <x-input-label for="instagram" class="mb-2">Instagram Page</x-input-label>
                 <x-text-input id="instagram" class="w-full" wire:model.live="instagram" placeholder="My Application" />
                 @error('instagram')
@@ -186,6 +193,14 @@
                     <x-text-input id="paystack_public_key" class="w-full" wire:model.live="paystack_public_key"
                         placeholder="pk_live_..." />
                     @error('paystack_public_key')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <x-input-label for="paystack_secret_key" class="mb-2">Paystack Secret Key</x-input-label>
+                    <x-text-input id="paystack_secret_key" class="w-full" wire:model.live="paystack_secret_key"
+                        placeholder="sk_live_..." />
+                    @error('paystack_secret_key')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>

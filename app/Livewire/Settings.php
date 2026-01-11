@@ -12,35 +12,37 @@ class Settings extends Component
     // General Settings
     #[Validate("string|required|min:1")]
     public $app_name;
-    
+
     #[Validate("string|required|timezone")]
     public $app_timezone;
-    
+
     #[Validate("string|required|in:en,fr,es,de,sw")]
     public $app_locale;
-    
+
     #[Validate("string|required|in:local,production,staging,testing")]
     public $app_env;
-    
+
     #[Validate("boolean")]
     public $app_debug = false;
 
     // Social Media
     #[Validate("nullable|url")]
     public $facebook;
-    
+
     #[Validate("nullable|string|min:1")]
     public $phone;
-    
+    #[Validate("boolean")]
+    public $show_banner;
+
     #[Validate("nullable|url")]
     public $instagram;
-    
+
     #[Validate("nullable|url")]
     public $twitter;
-    
+
     #[Validate("nullable|string")]
     public $location;
-    
+
     #[Validate("required|email")]
     public $support_email;
 
@@ -75,7 +77,7 @@ class Settings extends Component
 
     #[Validate("required|string")]
     public $paystack_public_key;
-    
+
     #[Validate("nullable|string")]
     public $paystack_secret_key;
 
@@ -97,7 +99,7 @@ class Settings extends Component
         $this->app_locale = $this->cleanValue($envVars['APP_LOCALE'] ?? 'en');
         $this->app_env = $this->cleanValue($envVars['APP_ENV'] ?? 'local');
         $this->app_debug = filter_var($this->cleanValue($envVars['APP_DEBUG'] ?? 'false'), FILTER_VALIDATE_BOOLEAN);
-
+        $this->show_banner = filter_var($this->cleanValue($envVars['SHOW_BANNER'] ?? 'true'), FILTER_VALIDATE_BOOLEAN);
         // Social Media
         $this->facebook = $this->cleanValue($envVars['FACEBOOK_LINK'] ?? '');
         $this->phone = $this->cleanValue($envVars['PHONE'] ?? '');
@@ -119,7 +121,7 @@ class Settings extends Component
         // Paystack Settings
         $this->paystack_mode = $this->cleanValue($envVars['PAYSTACK_MODE'] ?? 'live');
         $this->paystack_public_key = $this->cleanValue($envVars['PAYSTACK_PUBLIC_KEY'] ?? '');
-        $this->paystack_secret_key = ''; // Don't load secret key
+        $this->paystack_secret_key = $this->cleanValue($envVars['PAYSTACK_SECRET_KEY'] ?? ''); // Don't load secret key
         $this->paystack_payment_url = $this->cleanValue($envVars['PAYSTACK_PAYMENT_URL'] ?? 'https://api.paystack.co');
     }
 
@@ -130,7 +132,7 @@ class Settings extends Component
         }
 
         $value = trim($value);
-        
+
         // Remove inline comments
         if (strpos($value, '#') !== false) {
             $parts = explode('#', $value);
@@ -146,7 +148,7 @@ class Settings extends Component
     public function saveSiteSetting()
     {
         $this->validate();
-        
+
         // Validate timezone is correct
         if (!in_array($this->app_timezone, timezone_identifiers_list())) {
             $this->addError('app_timezone', 'Invalid timezone. Use format like: Africa/Nairobi');
@@ -160,6 +162,7 @@ class Settings extends Component
             'APP_LOCALE' => $this->app_locale,
             'APP_ENV' => $this->app_env,
             'APP_DEBUG' => $this->app_debug ? 'true' : 'false',
+            'SHOW_BANNER' => $this->show_banner ? 'true' : 'false',
 
             // Social Media
             'FACEBOOK_LINK' => $this->facebook,
@@ -203,7 +206,7 @@ class Settings extends Component
         }
 
         session()->flash('success', 'Settings updated successfully!');
-        
+
         // Reload settings to show updated values
         $this->loadSettings();
     }
@@ -211,10 +214,10 @@ class Settings extends Component
     public function getTimezonesProperty()
     {
         return collect(timezone_identifiers_list())
-            ->groupBy(function($tz) {
+            ->groupBy(function ($tz) {
                 return explode('/', $tz)[0] ?? 'Other';
             })
-            ->mapWithKeys(function($group, $continent) {
+            ->mapWithKeys(function ($group, $continent) {
                 return [$continent => $group->sort()->values()->toArray()];
             })
             ->toArray();
