@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\OrderUpdate;
 use App\Http\Controllers\Controller;
 use App\Mail\OrderStatusUpdated;
 use App\Models\Order;
@@ -65,6 +66,8 @@ class OrderController extends Controller
         $userName = $order->user->name;
         $userPhone = $order->user->addresses->first()->phone;
         $smsMessage = "Hi $userName, your order: #$order_number has been delivered.\n Track your order at:" . route('customer.orders.show', $order_number);
+        $eventMessage = "Hi $userName, your order: #$order_number has been delivered.";
+        broadcast(new OrderUpdate($order, $eventMessage));
         $this->sms->send($userPhone, $smsMessage);
         return back()->with('success', "Order #{$order_number} marked as delivered! Email sent to customer.");
     }
@@ -80,11 +83,12 @@ class OrderController extends Controller
         $order->save();
         $userName = $order->user->name;
         $userPhone = $order->user->addresses->first()->phone;
-        $smsMessage = "Hi $userName, your order: #$order_number has been dispatched.\n Track your order at:" . route('customer.orders.show', $order_number);
+        $smsMessage = "Hi $userName, your order: #$order_number has been shipped.\n Track your order at:" . route('customer.orders.show', $order_number);
         $this->sms->send($userPhone, $smsMessage);
+        $eventMessage = "Hi $userName, your order: #$order_number has been shipped.";
+        broadcast(new OrderUpdate($order, $eventMessage));
         Mail::to($order->user->email)
             ->send(new OrderStatusUpdated($order, 'SHIPPED', 'Order Shipped'));
-
         return back()->with('success', "Order #{$order_number} marked as shipped! Email sent to customer.");
     }
 
@@ -112,10 +116,11 @@ class OrderController extends Controller
 
         $order->status = OrderStatus::PROCESSING->value;
         $order->save();
-
+        $smsMessage = "Hi " . $order->user->name . ", your order: #$order_number is being processed.\n Track your order at:" . route('customer.orders.show', $order_number);
         Mail::to($order->user->email)
             ->send(new OrderStatusUpdated($order, 'PROCESSING', 'Order Processing Started'));
-
+        $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number is now processing!";
+        broadcast(new OrderUpdate($order, $eventMessage));
         return back()->with('success', "Order #{$order_number} is now processing! Email sent to customer.");
     }
 
@@ -131,7 +136,8 @@ class OrderController extends Controller
 
         Mail::to($order->user->email)
             ->send(new OrderStatusUpdated($order, 'PENDING', 'Order Marked as Pending'));
-
+        $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number is pending!.";
+        broadcast(new OrderUpdate($order, $eventMessage));
         return back()->with('success', "Order #{$order_number} marked as pending! Email sent to customer.");
     }
 
@@ -145,8 +151,8 @@ class OrderController extends Controller
     //     $order->status = OrderStatus::CONFIRMED->value;
     //     $order->save();
 
-    //     Mail::to($order->user->email)
-    //         ->send(new OrderStatusUpdated($order, 'CONFIRMED', 'Order Confirmed'));
+    // Mail::to($order->user->email)
+    // ->send(new OrderStatusUpdated($order, 'CONFIRMED', 'Order Confirmed'));
 
     //     return back()->with('success', "Order #{$order_number} confirmed! Email sent to customer.");
     // }
@@ -161,8 +167,8 @@ class OrderController extends Controller
     //     $order->status = OrderStatus::READY_FOR_PICKUP->value;
     //     $order->save();
 
-    //     Mail::to($order->user->email)
-    //         ->send(new OrderStatusUpdated($order, 'READY FOR PICKUP', 'Order Ready for Pickup'));
+    // Mail::to($order->user->email)
+    // ->send(new OrderStatusUpdated($order, 'READY FOR PICKUP', 'Order Ready for Pickup'));
 
     //     return back()->with('success', "Order #{$order_number} ready for pickup! Email sent to customer.");
     // }
@@ -183,6 +189,8 @@ class OrderController extends Controller
         $userPhone = $order->user->addresses->first()->phone;
         $smsMessage = "Hi $userName, your order: #$order_number has been returned.\n Track your order at:" . route('customer.orders.show', $order_number);
         $this->sms->send($userPhone, $smsMessage);
+        $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number has been returned.";
+        broadcast(new OrderUpdate($order, $eventMessage));
         return back()->with('success', "Order #{$order_number} marked as returned! Email sent to customer.");
     }
 
@@ -196,8 +204,8 @@ class OrderController extends Controller
     //     $order->status = OrderStatus::REFUNDED->value;
     //     $order->save();
 
-    //     Mail::to($order->user->email)
-    //         ->send(new OrderStatusUpdated($order, 'REFUNDED', 'Order Refunded'));
+    // Mail::to($order->user->email)
+    // ->send(new OrderStatusUpdated($order, 'REFUNDED', 'Order Refunded'));
 
     //     return back()->with('success', "Order #{$order_number} refunded! Email sent to customer.");
     // }
@@ -212,8 +220,8 @@ class OrderController extends Controller
     //     $order->status = OrderStatus::ON_HOLD->value;
     //     $order->save();
 
-    //     Mail::to($order->user->email)
-    //         ->send(new OrderStatusUpdated($order, 'ON HOLD', 'Order Placed on Hold'));
+    // Mail::to($order->user->email)
+    // ->send(new OrderStatusUpdated($order, 'ON HOLD', 'Order Placed on Hold'));
 
     //     return back()->with('success', "Order #{$order_number} placed on hold! Email sent to customer.");
     // }

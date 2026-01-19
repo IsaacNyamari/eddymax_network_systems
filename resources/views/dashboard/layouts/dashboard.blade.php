@@ -46,6 +46,20 @@
             max-height: 120px;
             overflow-y: auto;
         }
+
+        .alert {
+            animation: slideIn 1s forwards linear;
+        }
+
+        @keyframes slideIn {
+            0% {
+                right: -600px
+            }
+
+            100% {
+                right: 10px
+            }
+        }
     </style>
 
 </head>
@@ -53,6 +67,12 @@
 <body class="font-sans antialiased bg-gray-100" x-data="{ mobileMenuOpen: false, notificationsOpen: false }">
     <x-loader-component />
     <div class="min-h-screen flex">
+        <div class="alertDiv fixed flex flex-column z-50 right-10 top-10">
+            <x-info-alert />
+            <x-success-alert />
+            <x-error-alert />
+        </div><!-- Add this to your main layout file, before closing body tag -->
+        <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-3 w-80 sm:w-96"></div>
         <!-- Sidebar -->
         <div class="hidden md:flex md:w-64 md:flex-col">
             <div class="flex flex-col flex-grow pt-5 bg-white overflow-y-auto border-r">
@@ -169,7 +189,7 @@
                             </a>
                             <a href="{{ route('admin.settings') }}"
                                 class="{{ request()->routeIs('admin.settings') ? 'sidebar-active' : '' }} group flex items-center px-2 py-2 text-sm font-medium rounded-md sidebar-hover">
-                            <i class="fas fa-cogs mr-3"></i>
+                                <i class="fas fa-cogs mr-3"></i>
                                 Settings
                             </a>
                         @endhasrole
@@ -435,14 +455,94 @@
         </div>
     </div>
     @livewireScripts
-
+    <script src="{{ asset('js/toast.js') }}"></script>
     <script>
-        document.getElementById('editor-description-container') ? document.addEventListener('DOMContentLoaded', function() {
-            new WysiwygEditor('editor-description-container', {
-                height: 200, // Optional: custom height
-                placeholder: 'Enter description...' // Optional: placeholder
-            });
-        }) : '';
+        let alertDiv = document.querySelectorAll('.alertDiv');
+        let alertSuccess = document.getElementById('alertSuccess');
+        let messageSuccess = document.getElementById('messageSuccess');
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.Echo) {
+                console.error('Echo is not loaded!');
+                return;
+            }
+            document.getElementById('editor-description-container') ? document.addEventListener('DOMContentLoaded',
+                function() {
+                    new WysiwygEditor('editor-description-container', {
+                        height: 200, // Optional: custom height
+                        placeholder: 'Enter description...' // Optional: placeholder
+                    });
+                }) : '';
+            // window.Echo.private('login-user.' + {{ auth()->id() }})
+            //     .listen('.user.login', (e) => {
+
+            //         alertSuccess.classList.remove('hidden')
+            //         // alertDiv.appendChild(alertSuccess)
+            //         messageSuccess.textContent = e.message;
+            //         setTimeout(() => {
+            //             alertSuccess.classList.add('hidden')
+            //         }, 3000)
+            //     });
+            // Minimal version
+            Echo.private('order-update.' + {{ auth()->id() }})
+                .listen('.order.update', (e) => {
+                    console.log('Order Update:', e.message);
+                    console.log('Order ID:', e.order_id);
+                    console.log('Order Status:', e.order_status);
+
+                    // Simple toast call
+                    simpleToast(`${e.message}`);
+                });
+
+            function simpleToast(text) {
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-4 right-4 z-50 bg-white p-4 rounded shadow-lg border w-fit';
+                toast.innerHTML = `
+        <div class="flex items-center w-fit">
+            <div class="text-blue-500 mr-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <p class="text-gray-800 w-fit text-wrap">${text}</p>
+            <button class="ml-4 text-gray-400" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
+    `;
+
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    if (toast.parentElement) toast.remove();
+                }, 4000);
+            }
+            window.Echo.private('admin.orders')
+                .listen('.new.order', (e) => {
+                    // e.order_id, e.customer_name, etc.
+
+                    // Show notification
+
+                    let message = `New order #${e.order_number} from ${e.customer_name}`;
+
+                    if (!("Notification" in window)) {
+                        // Check if the browser supports notifications
+                        alert("This browser does not support desktop notification");
+                    } else if (Notification.permission === "granted") {
+                        // Check whether notification permissions have already been granted;
+                        // if so, create a notification
+                        const notification = new Notification(message);
+                        // …
+                    } else if (Notification.permission !== "denied") {
+                        // We need to ask the user for permission
+                        Notification.requestPermission().then((permission) => {
+                            // If the user accepts, let's create a notification
+                            if (permission === "granted") {
+                                const notification = new Notification(message);
+                                // …
+                            }
+                        });
+                    }
+                })
+
+        })
     </script>
     <script src="{{ asset('js/loader.js') }}"></script>
     @stack('scripts')

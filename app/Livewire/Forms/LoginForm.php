@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Events\LoginEvent;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -37,7 +38,9 @@ class LoginForm extends Form
                 'form.email' => trans('auth.failed'),
             ]);
         }
-
+        $user = Auth::user()->role('customer')->first();
+        $message = $user->name . " has been logged in!";
+        broadcast(new LoginEvent($message))->toOthers();
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -67,6 +70,6 @@ class LoginForm extends Form
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }

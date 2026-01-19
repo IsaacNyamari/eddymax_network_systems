@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\NewOrder;
 use App\Models\Counties;
 use App\Models\User;
 use App\Models\Address;
@@ -284,7 +285,7 @@ class CheckoutPage extends Component
 
         // Send SMS notification
         $this->sendOrderSms($order);
-
+        broadcast(new NewOrder($order));
         // ✅ Clear cart after order is created
         session()->forget('cart');
         $this->dispatch('cart-updated');

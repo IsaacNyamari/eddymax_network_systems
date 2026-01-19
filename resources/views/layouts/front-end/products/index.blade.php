@@ -1,5 +1,5 @@
 @extends('layouts.front-end.app')
-@section('title','Shop')
+@section('title', 'Shop')
 @section('content')
     <!-- Add this section to your shop page -->
     <section class="relative py-16 px-4 sm:px-6 lg:px-8">
@@ -22,7 +22,7 @@
 
     <!-- Additional SEO Content (Hidden from users, visible to search engines) -->
     <div class="hidden" aria-hidden="true">
-        <h2>Shop {{ config('app.name') }} - Best Technology Store</h2>
+        <h2>Shop at {{ config('app.name') }} - Best Technology Store</h2>
         <p>
             {{ config('app.name') }} offers wide range of networking products including routers, switches, cables, and
             wireless
