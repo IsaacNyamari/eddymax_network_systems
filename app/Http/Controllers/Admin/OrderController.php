@@ -126,7 +126,7 @@ class OrderController extends Controller
         $order->save();
         $smsMessage = "Hi " . $order->user->name . ", your order: #$order_number is being processed.\n Track your order at:" . route('customer.orders.show', $order_number);
         Mail::to($order->user->email)
-        ->send(new OrderStatusUpdated($order, 'PROCESSING', 'Order Processing Started'));
+            ->send(new OrderStatusUpdated($order, 'PROCESSING', 'Order Processing Started'));
         $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number is now processing!";
         // broadcast(new OrderUpdate($order, $eventMessage));
         $order->user->notifications()->create([
