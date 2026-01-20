@@ -703,7 +703,7 @@
                     <div class="flex justify-between items-start mb-3">
                         <div>
                             <div class="stat-label">Today's Revenue</div>
-                            <div class="stat-value text-2xl">Kshs. {{ number_format($data['todayRevenue'], 2) }}</div>
+                            <div class="stat-value text-2xl">Kshs. {{ number_format(App\Models\Payment::whereDate('created_at', today())->sum('amount') ?? 0, 2) }}</div>
                         </div>
                         <div class="stat-icon bg-blue">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6"

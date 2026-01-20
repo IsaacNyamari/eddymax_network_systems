@@ -17,7 +17,7 @@
                     class="flex px-4 py-3 hover:bg-gray-50 border-b border-gray-100  @if (is_null($notification->read_at)) border-l-emerald-600 bg-blue-200 border-l-4 @endif }}">
                     <div class="flex-shrink-0">
                         <div
-                            class="w-8 h-8 rounded-full 
+                            class="w-8 capitalize h-8 rounded-full 
                             @switch($notification->type)
                                 @case('order') bg-green-100 @break
                                 @case('payment') bg-blue-100 @break
@@ -58,7 +58,7 @@
                     </div>
                     <div class="ml-3 flex-1">
                         <div class="flex justify-between items-start">
-                            <p class="text-sm font-medium text-gray-900">
+                            <p class="text-sm capitalize font-medium text-gray-900">
                                 {{ $notification->type }}</p>
                             <div class="flex space-x-2">
                                 @if (is_null($notification->read_at))

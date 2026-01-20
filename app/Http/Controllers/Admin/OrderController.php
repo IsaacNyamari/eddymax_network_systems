@@ -62,7 +62,7 @@ class OrderController extends Controller
         $order->save();
 
         Mail::to($order->user->email)
-            ->send(new OrderStatusUpdated($order, 'DELIVERED', 'Order Delivered'));
+            ->queue(new OrderStatusUpdated($order, 'DELIVERED', 'Order Delivered'));
         $userName = $order->user->name;
         $userPhone = $order->user->addresses->first()->phone;
         $smsMessage = "Hi $userName, your order: #$order_number has been delivered.\n Track your order at:" . route('customer.orders.show', $order_number);
@@ -96,7 +96,7 @@ class OrderController extends Controller
             'message' => $eventMessage,
         ]);
         Mail::to($order->user->email)
-            ->send(new OrderStatusUpdated($order, 'SHIPPED', 'Order Shipped'));
+            ->queue(new OrderStatusUpdated($order, 'SHIPPED', 'Order Shipped'));
         return back()->with('success', "Order #{$order_number} marked as shipped! Email sent to customer.");
     }
 
@@ -111,7 +111,7 @@ class OrderController extends Controller
         $order->save();
 
         Mail::to($order->user->email)
-            ->send(new OrderStatusUpdated($order, 'CANCELLED', 'Order Cancelled'));
+            ->queue(new OrderStatusUpdated($order, 'CANCELLED', 'Order Cancelled'));
         return back()->with('success', "Order #{$order_number} cancelled! Email sent to customer.");
     }
 
@@ -126,7 +126,7 @@ class OrderController extends Controller
         $order->save();
         $smsMessage = "Hi " . $order->user->name . ", your order: #$order_number is being processed.\n Track your order at:" . route('customer.orders.show', $order_number);
         Mail::to($order->user->email)
-            ->send(new OrderStatusUpdated($order, 'PROCESSING', 'Order Processing Started'));
+            ->queue(new OrderStatusUpdated($order, 'PROCESSING', 'Order Processing Started'));
         $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number is now processing!";
         // broadcast(new OrderUpdate($order, $eventMessage));
         $order->user->notifications()->create([
@@ -147,7 +147,7 @@ class OrderController extends Controller
         $order->save();
 
         Mail::to($order->user->email)
-            ->send(new OrderStatusUpdated($order, 'PENDING', 'Order Marked as Pending'));
+            ->queue(new OrderStatusUpdated($order, 'PENDING', 'Order Marked as Pending'));
         $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number is pending!.";
         $order->user->notifications()->create([
             "type" => "order",
@@ -200,7 +200,7 @@ class OrderController extends Controller
         $order->save();
 
         Mail::to($order->user->email)
-            ->send(new OrderStatusUpdated($order, 'RETURNED', 'Order Returned'));
+            ->queue(new OrderStatusUpdated($order, 'RETURNED', 'Order Returned'));
         $userName = $order->user->name;
         $userPhone = $order->user->addresses->first()->phone;
         $smsMessage = "Hi $userName, your order: #$order_number has been returned.\n Track your order at:" . route('customer.orders.show', $order_number);

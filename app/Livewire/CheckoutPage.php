@@ -64,6 +64,7 @@ class CheckoutPage extends Component
     public function mount()
     {
         $this->admins = User::role('admin')->get();
+
         $this->cart = session()->get('cart', []);
         $this->calculateTotal();
         $this->counties = Counties::all();
@@ -295,7 +296,7 @@ class CheckoutPage extends Component
             // You can implement notification logic here, e.g., send email or SMS to admin
             $message = "New order #{$order->order_number} placed by {$order->user->name} at {$orderTime}. Track order at {$url}.";
             $this->smsService->send($admin->phone, $message);
-            $this->admin->notifications()->create([
+            $admin->notifications()->create([
                 'type' => 'order',
                 'message' => $message,
             ]);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -40,10 +41,10 @@ class DashboardController extends Controller
             'pendingOrders' => Order::where('status', 'pending')->count(),
             'processingOrders' => Order::where('status', 'processing')->count(),
             'todayOrders' => Order::whereDate('created_at', today())->count(),
-            'totalRevenue' => Order::where('status', 'delivered')->sum('total_amount'),
-            'todayRevenue' => Order::where('status', 'delivered')
+            'totalRevenue' => Payment::where('status', 'paid')->sum('amount'),
+            'todayRevenue' => Payment::where('status', 'paid')
                 ->whereDate('created_at', today())
-                ->sum('total_amount'),
+                ->sum('amount'),
             'totalProducts' => Product::count(),
             'lowStockProducts' => Product::where('stock_quantity', '<', 10)->count(),
             'outOfStockProducts' => Product::where('stock_status',  'out_of_stock')->count(),

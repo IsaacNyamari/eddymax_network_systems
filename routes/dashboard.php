@@ -124,7 +124,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/notifications', function () {
             return view('dashboard.admin.notifications.index');
         })->name('notifications');
-
+        // add payments page
+        Route::get('/payments', function () {
+            return view('dashboard.admin.payments.index');
+        })->name('payments');
         Route::fallback(function () {
             return response()->view('dashboard.errors.404', [], 404);
         });

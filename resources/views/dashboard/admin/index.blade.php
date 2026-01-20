@@ -21,8 +21,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a href="{{ route('admin.orders.index') }}"
-                    class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                <a href="{{ route('admin.orders.index') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
                     View Orders →
                 </a>
             </div>
@@ -33,9 +32,11 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-500 font-medium">Total Revenue</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">KES {{ number_format($stats['totalRevenue'] ?? 0, 2) }}
+                    <p class="text-2xl font-bold text-gray-900 mt-1">KES
+                        {{ number_format(App\Models\Payment::sum('amount') ?? 0, 2) }}
                     </p>
-                    <p class="text-xs text-green-600 mt-1">Today: KES {{ number_format($stats['todayRevenue'] ?? 0, 2) }}
+                    <p class="text-xs text-green-600 mt-1">Today: KES
+                        {{ number_format(App\Models\Payment::whereDate('created_at', today())->sum('amount') ?? 0, 2) }}
                     </p>
                 </div>
                 <div class="p-3 bg-green-50 rounded-xl">
@@ -46,8 +47,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a href="{{ route('admin.reports') }}"
-                    class="text-sm text-green-600 hover:text-green-800 font-medium">
+                <a href="{{ route('admin.reports') }}" class="text-sm text-green-600 hover:text-green-800 font-medium">
                     Sales Report →
                 </a>
             </div>
@@ -93,8 +93,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a href="{{ route('admin.users.index') }}"
-                    class="text-sm text-pink-600 hover:text-pink-800 font-medium">
+                <a href="{{ route('admin.users.index') }}" class="text-sm text-pink-600 hover:text-pink-800 font-medium">
                     View Customers →
                 </a>
             </div>
@@ -119,8 +118,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a href="{{ route('admin.reports') }}"
-                    class="text-sm text-yellow-600 hover:text-yellow-800 font-medium">
+                <a href="{{ route('admin.reports') }}" class="text-sm text-yellow-600 hover:text-yellow-800 font-medium">
                     Analytics →
                 </a>
             </div>
@@ -145,8 +143,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a href="{{ route('admin.settings') }}"
-                    class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                <a href="{{ route('admin.settings') }}" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
                     Settings →
                 </a>
             </div>
@@ -352,7 +349,8 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                         </svg>
-                                        {{ $product->sold_count ?? 0 }} units sold
+                                        {{ App\Models\OrderItem::where('product_id', $product->id)->count('id') ?? 0 }}
+                                        units sold
                                     </span>
                                 </div>
                             </div>
