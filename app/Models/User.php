@@ -59,4 +59,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(WishList::class);
     }
+    public function notifications()
+    {
+        return $this->morphMany(Notifications::class, 'notifiable');
+    }
 }

@@ -54,7 +54,7 @@ class CheckoutPage extends Component
 
     // Store order reference temporarily between payment initiation and completion
     public $temporaryOrderReference = null;
-
+    public $admins = [];
     public function boot()
     {
         // Initialize SMS service using dependency injection
@@ -63,6 +63,7 @@ class CheckoutPage extends Component
 
     public function mount()
     {
+        $this->admins = User::role('admin')->get();
         $this->cart = session()->get('cart', []);
         $this->calculateTotal();
         $this->counties = Counties::all();
@@ -196,7 +197,7 @@ class CheckoutPage extends Component
             return null;
         }
         $message = "Thanks for registering on Edymax Systems and Networks. 
-        Your password is: " . $this->randomPassword . "
+        Your login password is: " . $this->randomPassword . "
         Please update your password on the dashboard for security purposes.";
         // send sms with the password and prompt to change password
         $this->smsService->send($this->phone, $message);
@@ -285,7 +286,21 @@ class CheckoutPage extends Component
 
         // Send SMS notification
         $this->sendOrderSms($order);
-        broadcast(new NewOrder($order));
+        // broadcast(new NewOrder($order));
+
+        // Notify admins about new order
+        foreach ($this->admins as $admin) {
+            $url = route('admin.orders.show', $order->order_number);
+            $orderTime = $order->created_at->diffForHumans();
+            // You can implement notification logic here, e.g., send email or SMS to admin
+            $message = "New order #{$order->order_number} placed by {$order->user->name} at {$orderTime}. Track order at {$url}.";
+            $this->smsService->send($admin->phone, $message);
+            $this->admin->notifications()->create([
+                'type' => 'order',
+                'message' => $message,
+            ]);
+        }
+
         // ✅ Clear cart after order is created
         session()->forget('cart');
         $this->dispatch('cart-updated');

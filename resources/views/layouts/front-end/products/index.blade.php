@@ -13,10 +13,10 @@
         </div>
 
         <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
-            <!-- SEO Optimized Description -->
-            {{-- <div class="prose prose-lg max-w-fit text-gray-100 mb-10 bg-black/40 p-8 rounded-xl backdrop-blur-sm"> --}}
-            {{-- <h2 class="text-white text-5xl">SHOP</h2> --}}
-            {{-- </div> --}}
+            {{-- <!-- SEO Optimized Description -->
+            <div class="prose prose-lg max-w-fit text-gray-100 mb-10 bg-black/40 p-8 rounded-xl backdrop-blur-sm">
+                <h2 class="text-white text-5xl">SHOP</h2>
+            </div> --}}
         </div>
     </section>
 

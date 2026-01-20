@@ -42,7 +42,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/orders/returns/page', [CustomerOrderController::class, 'return'])->name('orders.returns');
         Route::get('/orders/returns/page/order/{order}', [CustomerOrderController::class, 'showReturn'])->name('orders.returns.show');
         Route::post('/orders/{order}/track', [CustomerOrderController::class, 'track'])->name('orders.track');
-
+        Route::get('/notifications', function () {
+            return view('dashboard.customer.notifications.index');
+        })->name('notifications');
         // filter orders
         Route::get('/orders/filter/{filter}', [CustomerOrderController::class, 'filterOrders'])->name('orders.filter');
         // wishlist routes
@@ -112,12 +114,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // brands
         Route::resource('/brands', BrandsController::class);
 
-        // messages 
         // Messages (if you have a messaging system)
-       
+
         Route::resource('/messages', controller: MessageController::class);
         Route::post('/messages/mark/read/{message}/',  [MessageController::class, 'markAsRead'])->name('mark.messages.read');
         Route::post('/messages/mark/unread/{message}/',  [MessageController::class, 'markAsUnread'])->name('mark.messages.unread');
+
+        // admin notifications
+        Route::get('/notifications', function () {
+            return view('dashboard.admin.notifications.index');
+        })->name('notifications');
 
         Route::fallback(function () {
             return response()->view('dashboard.errors.404', [], 404);

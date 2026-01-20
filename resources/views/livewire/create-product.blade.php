@@ -237,7 +237,7 @@
         <div>
             <x-input-label for="description">Description</x-input-label>
 
-            <div id="editor-description-container" data-wysiwyg data-height="200"
+            <div id="editor-description-containers" data-wysiwyg data-height="200"
                 data-placeholder="Enter product description...">
                 <textarea wire:model="description" id="description" rows="3" class="hidden">{{ old('description', $description ?? '') }}</textarea>
             </div>

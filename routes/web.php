@@ -5,16 +5,10 @@ use App\Http\Controllers\FrontStoreController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
-use App\Livewire\SiteSettings;
 use App\Models\Brands;
-use App\Models\OrderItem;
 use App\Models\Product;
-use App\Models\ProductRating;
-use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,47 +80,6 @@ Route::get('/navigation', function () {
     return view('livewire.welcome.navigation');
 });
 
-// // Get columns for a specific table
-// Route::get('/tables/{tableName}', function ($tableName) {
-
-//     // Check if table exists - FIXED: Add quotes around table name
-//     $tableExists = DB::select("SHOW TABLES LIKE '{$tableName}'");
-
-//     if (empty($tableExists)) {
-//         return response()->json([
-//             'error' => 'Table not found',
-//             'message' => "Table '{$tableName}' does not exist in the database."
-//         ], 404);
-//     }
-
-//     // Get columns for the specified table
-//     $columns = DB::select("DESCRIBE `{$tableName}`");
-
-//     // Format columns data
-//     $columnList = array_map(function ($column) {
-//         return [
-//             'name' => $column->Field,
-//             'type' => $column->Type,
-//             'null' => $column->Null,
-//             'key' => $column->Key,
-//             'default' => $column->Default,
-//             'extra' => $column->Extra,
-//         ];
-//     }, $columns);
-
-//     return response()->json([
-//         'table' => $tableName,
-//         'columns' => $columnList,
-//         'column_count' => count($columns)
-//     ]);
-// });
-
 // Dashboard 
-
-Route::get('/editor', function () {
-    $brand  = Brands::where('name', 'like', '%acc%')->first()->id;
-    $products = Product::where('price', '<=', 10)->get();
-    dd($products);
-});
 require __DIR__ . '/dashboard.php';
 require __DIR__ . '/auth.php';

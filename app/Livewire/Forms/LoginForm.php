@@ -40,7 +40,7 @@ class LoginForm extends Form
         }
         $user = Auth::user()->role('customer')->first();
         $message = $user->name . " has been logged in!";
-        broadcast(new LoginEvent($message))->toOthers();
+        // broadcast(new LoginEvent($message))->toOthers();
         RateLimiter::clear($this->throttleKey());
     }
 
