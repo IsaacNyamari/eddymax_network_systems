@@ -16,11 +16,14 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->nullable()->unique();
             $table->decimal('price', 10, 2);
+            $table->integer('stock_quantity')->default(999);
+            $table->enum('stock_status', ['in_stock', 'out_of_stock', 'backorder'])->default('in_stock');
             $table->string('image')->nullable();
             $table->text('short_description')->nullable();
             $table->text('description')->nullable();
             $table->string('model')->nullable();
             $table->string('brand_id')->nullable();
+            $table->foreignId('brand_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
