@@ -2,20 +2,216 @@
 
 @section('content')
     @if (env('SHOW_BANNER') ?? true)
-        <section class="relative py-16 px-4 sm:px-6 lg:px-8 mb-2">
-            <!-- Background Image -->
-            <div class="absolute inset-0 z-0">
-                <img src="{{ asset('images/products-banner (1).png') }}" alt="{{ config('app.name') }} - Technology Solutions"
-                    class="w-fit h-full lg:object-contain md:object-cover object-center" loading="lazy"
-                    onerror="this.style.display='none'">
-            </div>
-
-            <div class="relative z-10 h-64 resize-x max-w-4xl mx-auto text-center flex justify-center">
-                <!-- Optional content -->
+        <!-- Hero Image Section -->
+        <section class="relative overflow-hidden mb-5">
+            <div class="w-full h-64 md:h-80 lg:h-96">
+                <img src="{{ asset('images/blue-banner.jpeg') }}"
+                    alt="Professional networking equipment and solutions from {{ config('app.name') }} - Routers, Switches, and Network Infrastructure"
+                    class="w-full h-full object-cover" loading="eager">
             </div>
         </section>
     @endif
+
+    <!-- Content Section with Image Overlay -->
+    <section class="relative py-16 px-4 sm:px-6 lg:px-8 overflow-hidden mb-5">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <!-- Background Image -->
+            {{-- <img src="{{ asset('images/banner.jpg') }}"
+                alt="Professional networking infrastructure - {{ config('app.name') }}" class="w-full h-full object-cover"
+                loading="lazy"> --}}
+
+            <!-- Blue & Maroon Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/40 to-maroon-900/80"></div>
+
+            <!-- Subtle Pattern Overlay -->
+            <div class="absolute inset-0 opacity-10">
+                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="circuit-pattern" x="0" y="0" width="80" height="80"
+                            patternUnits="userSpaceOnUse">
+                            <!-- Circuit board-like pattern -->
+                            <rect x="0" y="0" width="80" height="80" fill="none" stroke="currentColor"
+                                stroke-width="0.5" class="text-white" />
+                            <circle cx="20" cy="20" r="3" fill="currentColor" class="text-blue-300" />
+                            <circle cx="60" cy="20" r="3" fill="currentColor" class="text-maroon-300" />
+                            <circle cx="20" cy="60" r="3" fill="currentColor" class="text-maroon-300" />
+                            <circle cx="60" cy="60" r="3" fill="currentColor" class="text-blue-300" />
+                            <line x1="20" y1="20" x2="60" y2="20" stroke="currentColor"
+                                stroke-width="1" class="text-white/50" />
+                            <line x1="20" y1="20" x2="20" y2="60" stroke="currentColor"
+                                stroke-width="1" class="text-white/50" />
+                            <line x1="60" y1="20" x2="60" y2="60" stroke="currentColor"
+                                stroke-width="1" class="text-white/50" />
+                            <line x1="20" y1="60" x2="60" y2="60" stroke="currentColor"
+                                stroke-width="1" class="text-white/50" />
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#circuit-pattern)" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Content Container -->
+        <div class="relative z-10 max-w-7xl mx-auto">
+            <!-- Glass Effect Main Heading -->
+            <div class="text-center mb-12">
+                <div
+                    class="inline-block backdrop-blur-md bg-white/90 rounded-2xl p-8 md:p-10 shadow-2xl border border-white/40 mb-8">
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                        Welcome to <span
+                            class="bg-gradient-to-r from-blue-700 to-maroon-700 bg-clip-text text-transparent">{{ config('app.name') }}</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+                        Your premier destination for professional networking equipment
+                    </p>
+                </div>
+            </div>
+
+            <!-- Glass Effect Feature Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <!-- Router Products -->
+                <div
+                    class="backdrop-blur-lg bg-white/95 rounded-2xl p-8 border border-white/50 shadow-2xl hover:shadow-3xl hover:border-blue-400/60 transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-4 rounded-xl mr-4 shadow-lg">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">Routers & Switches</h3>
+                    </div>
+                    <p class="text-gray-700 mb-6 text-lg leading-relaxed">
+                        High-performance networking hardware for enterprise connectivity
+                    </p>
+                    <div class="pt-6 border-t border-gray-300/30">
+                        <span
+                            class="inline-flex items-center font-semibold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                            <svg class="w-5 h-5 mr-2 text-blue-700" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Enterprise-Grade Solutions
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Wireless Products -->
+                <div
+                    class="backdrop-blur-lg bg-white/95 rounded-2xl p-8 border border-white/50 shadow-2xl hover:shadow-3xl hover:border-maroon-400/60 transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-gradient-to-br from-maroon-600 to-maroon-800 p-4 rounded-xl mr-4 shadow-lg">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">Wireless Solutions</h3>
+                    </div>
+                    <p class="text-gray-700 mb-6 text-lg leading-relaxed">
+                        Advanced WiFi 6/6E systems and enterprise access points
+                    </p>
+                    <div class="pt-6 border-t border-gray-300/30">
+                        <span
+                            class="inline-flex items-center font-semibold bg-gradient-to-r from-maroon-600 to-maroon-800 bg-clip-text text-transparent">
+                            <svg class="w-5 h-5 mr-2 text-maroon-700" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Cutting-Edge Technology
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Security Products -->
+                <div
+                    class="backdrop-blur-lg bg-white/95 rounded-2xl p-8 border border-white/50 shadow-2xl hover:shadow-3xl hover:border-blue-500/60 transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-gradient-to-br from-blue-700 to-maroon-700 p-4 rounded-xl mr-4 shadow-lg">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">Network Security</h3>
+                    </div>
+                    <p class="text-gray-700 mb-6 text-lg leading-relaxed">
+                        Enterprise firewalls, VPNs, and comprehensive security suites
+                    </p>
+                    <div class="pt-6 border-t border-gray-300/30">
+                        <span
+                            class="inline-flex items-center font-semibold bg-gradient-to-r from-blue-700 to-maroon-700 bg-clip-text text-transparent">
+                            <svg class="w-5 h-5 mr-2 text-blue-700" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            24/7 Network Protection
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Glass Effect Value Proposition -->
+            <div class="backdrop-blur-xl bg-white/95 rounded-3xl p-10 md:p-12 border border-white/60 shadow-3xl mb-12">
+                <div class="max-w-5xl mx-auto text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-10">
+                        Why Trust <span
+                            class="bg-gradient-to-r from-blue-800 to-maroon-800 bg-clip-text text-transparent">{{ config('app.name') }}</span>?
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div
+                            class="backdrop-blur-sm bg-gradient-to-br from-blue-50/80 to-white/90 rounded-2xl p-8 border border-blue-200/50 hover:border-blue-300 transition-all duration-300 hover:shadow-xl">
+                            <div
+                                class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-2xl mb-6 shadow-lg">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Certified Products</h3>
+                            <p class="text-gray-700">Industry-certified networking equipment with warranty</p>
+                        </div>
+                        <div
+                            class="backdrop-blur-sm bg-gradient-to-br from-maroon-50/80 to-white/90 rounded-2xl p-8 border border-maroon-200/50 hover:border-maroon-300 transition-all duration-300 hover:shadow-xl">
+                            <div
+                                class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-maroon-600 to-maroon-800 text-white rounded-2xl mb-6 shadow-lg">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Expert Support</h3>
+                            <p class="text-gray-700">Network specialists available 24/7 for consultation</p>
+                        </div>
+                        <div
+                            class="backdrop-blur-sm bg-gradient-to-br from-blue-50/80 to-maroon-50/80 rounded-2xl p-8 border border-blue-200/50 hover:border-blue-400 transition-all duration-300 hover:shadow-xl">
+                            <div
+                                class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-700 to-maroon-700 text-white rounded-2xl mb-6 shadow-lg">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Fast Delivery</h3>
+                            <p class="text-gray-700">Same-day shipping on orders placed before 3 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
+        <h3 class="text-center text-3xl font-semibold border-t-2 border-b-2  py-2 border-gray-200">Shop by category</h3>
         @php
             // Define the custom sort order
             $order = [
@@ -170,8 +366,8 @@
                                                                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                                 </svg>
                                                                 <div class="absolute top-0 left-0 w-1/2 overflow-hidden">
-                                                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor"
-                                                                        viewBox="0 0 20 20">
+                                                                    <svg class="w-4 h-4 text-yellow-500"
+                                                                        fill="currentColor" viewBox="0 0 20 20">
                                                                         <path
                                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                                     </svg>
@@ -198,8 +394,8 @@
                                             <div class="flex items-center space-x-2 mb-3">
                                                 <div class="flex items-center">
                                                     @for ($i = 1; $i <= 5; $i++)
-                                                        <svg class="w-4 h-4 text-gray-300 flex-shrink-0" fill="currentColor"
-                                                            viewBox="0 0 20 20">
+                                                        <svg class="w-4 h-4 text-gray-300 flex-shrink-0"
+                                                            fill="currentColor" viewBox="0 0 20 20">
                                                             <path
                                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                         </svg>

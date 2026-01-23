@@ -16,17 +16,16 @@ export default {
             },
             colors: {
                 maroon: {
-                    50: 'var(--maroon-50)',
-                    100: 'var(--maroon-100)',
-                    200: 'var(--maroon-200)',
-                    300: 'var(--maroon-300)',
-                    400: 'var(--maroon-400)',
-                    500: 'var(--maroon-500)',
-                    600: 'var(--maroon-600)',
-                    700: 'var(--maroon-700)',
-                    800: 'var(--maroon-800)',
-                    900: 'var(--maroon-900)',
-                    950: 'var(--maroon-950)',
+                    50: '#fdf2f2',
+                    100: '#fce8e8',
+                    200: '#f9d5d5',
+                    300: '#f2b2b2',
+                    400: '#e88080',
+                    500: '#dc2626',
+                    600: '#c53030', // Standard maroon
+                    700: '#991b1b', // Dark maroon
+                    800: '#7f1d1d', // Very dark maroon
+                    900: '#63171b',
                 },
             },
         },
