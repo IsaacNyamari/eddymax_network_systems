@@ -1,35 +1,21 @@
 @extends('layouts.front-end.app')
 
 @section('content')
-    @if (env('SHOW_BANNER') ?? true)
-        <!-- Hero Image Section -->
-        <section class="relative overflow-hidden mb-5">
-            <div class="w-full h-64 md:h-80 lg:h-96">
-                <img src="{{ asset('images/blue-banner.jpeg') }}"
-                    alt="Professional networking equipment and solutions from {{ config('app.name') }} - Routers, Switches, and Network Infrastructure"
-                    class="w-full h-full object-cover" loading="eager">
-            </div>
-        </section>
-    @endif
+
 
     <!-- Content Section with Image Overlay -->
     <section class="relative py-16 px-4 sm:px-6 lg:px-8 overflow-hidden mb-5">
         <!-- Background Image with Overlay -->
         <div class="absolute inset-0 z-0">
-            <!-- Background Image -->
-            {{-- <img src="{{ asset('images/banner.jpg') }}"
-                alt="Professional networking infrastructure - {{ config('app.name') }}" class="w-full h-full object-cover"
-                loading="lazy"> --}}
-
+     
             <!-- Blue & Maroon Gradient Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/40 to-maroon-900/80"></div>
+            <div class="absolute inset-0 bg-maroon-600 rounded" style="background: #491916e1"></div>
 
             <!-- Subtle Pattern Overlay -->
             <div class="absolute inset-0 opacity-10">
                 <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <pattern id="circuit-pattern" x="0" y="0" width="80" height="80"
-                            patternUnits="userSpaceOnUse">
+                        <pattern id="circuit-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
                             <!-- Circuit board-like pattern -->
                             <rect x="0" y="0" width="80" height="80" fill="none" stroke="currentColor"
                                 stroke-width="0.5" class="text-white" />
@@ -209,7 +195,16 @@
 
         </div>
     </section>
-
+    @if (env('SHOW_BANNER') ?? true)
+        <!-- Hero Image Section -->
+        <section class="relative overflow-hidden mb-5">
+            <div class="w-full h-64 md:h-80 lg:h-96">
+                <img src="{{ asset('images/products-banner-edited.png') }}"
+                    alt="Professional networking equipment and solutions from {{ config('app.name') }} - Routers, Switches, and Network Infrastructure"
+                    class="w-full h-full object-contain" loading="eager">
+            </div>
+        </section>
+    @endif
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
         <h3 class="text-center text-3xl font-semibold border-t-2 border-b-2  py-2 border-gray-200">Shop by category</h3>
         @php

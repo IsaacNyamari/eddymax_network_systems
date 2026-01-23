@@ -79,7 +79,7 @@
 
     <!-- HEADER -->
     <header class="relative bg-white">
-        <div class="bg-indigo-600 text-white text-sm">
+        <div class="bg-maroon-600 text-white text-sm">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex flex-col sm:flex-row justify-between items-center h-10">
                     <!-- Left: Address -->
