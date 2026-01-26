@@ -66,7 +66,9 @@
 </head>
 
 <body class="font-sans antialiased bg-gray-100" x-data="{ mobileMenuOpen: false, notificationsOpen: false }">
-    <x-loader-component />
+    @if (!request()->routeIs('dashboard'))
+        <x-loader-component />
+    @endif
     <div class="min-h-screen flex">
         <div class="alertDiv fixed flex flex-column z-50 right-10 top-10">
             <x-info-alert />
@@ -349,7 +351,7 @@
     </div>
     @livewireScripts
     <script src="{{ asset('js/toast.js') }}"></script>
-    <script>
+    {{-- <script>
         let alertDiv = document.querySelectorAll('.alertDiv');
         let alertSuccess = document.getElementById('alertSuccess');
         let messageSuccess = document.getElementById('messageSuccess');
@@ -365,16 +367,16 @@
                         placeholder: 'Enter description...' // Optional: placeholder
                     });
                 }) : '';
-            // window.Echo.private('login-user.' + {{ auth()->id() }})
-            //     .listen('.user.login', (e) => {
+            window.Echo.private('login-user.' + {{ auth()->id() }})
+                .listen('.user.login', (e) => {
 
-            //         alertSuccess.classList.remove('hidden')
-            //         // alertDiv.appendChild(alertSuccess)
-            //         messageSuccess.textContent = e.message;
-            //         setTimeout(() => {
-            //             alertSuccess.classList.add('hidden')
-            //         }, 3000)
-            //     });
+                    alertSuccess.classList.remove('hidden')
+                    // alertDiv.appendChild(alertSuccess)
+                    messageSuccess.textContent = e.message;
+                    setTimeout(() => {
+                        alertSuccess.classList.add('hidden')
+                    }, 3000)
+                });
             // Minimal version
             Echo.private('order-update.' + {{ auth()->id() }})
                 .listen('.order.update', (e) => {
@@ -436,7 +438,7 @@
                 })
 
         })
-    </script>
+    </script> --}}
     <script src="{{ asset('js/loader.js') }}"></script>
     @stack('scripts')
 </body>

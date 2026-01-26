@@ -25,17 +25,20 @@
                     <!-- MOBILE ECOMMERCE LINKS -->
                     <div class="space-y-6 border-t border-gray-200 px-4 py-6">
                         <div class="flow-root">
-                            <a href="{{ route('store.home') }}" class="-m-2 block p-2 font-medium text-gray-900">Home</a>
+                            <a href="{{ route('store.home') }}"
+                                class="-m-2 block p-2 font-medium text-gray-900">Home</a>
                         </div>
                         <div class="flow-root">
-                            <a href="{{ route("store.shop") }}" class="-m-2 block p-2 font-medium text-gray-900">Shop</a>
+                            <a href="{{ route('store.shop') }}"
+                                class="-m-2 block p-2 font-medium text-gray-900">Shop</a>
                         </div>
                         <div class="flow-root">
-                            <a href="{{ route("store.cart") }}" class="-m-2 block p-2 font-medium text-gray-900">Cart
+                            <a href="{{ route('store.cart') }}" class="-m-2 block p-2 font-medium text-gray-900">Cart
                                 <livewire:cart-count /> </a>
                         </div>
                         <div class="flow-root">
-                            <a href="{{ route("store.checkout") }}" class="-m-2 block p-2 font-medium text-gray-900">Checkout</a>
+                            <a href="{{ route('store.checkout') }}"
+                                class="-m-2 block p-2 font-medium text-gray-900">Checkout</a>
                         </div>
                     </div>
 
@@ -79,63 +82,69 @@
 
     <!-- HEADER -->
     <header class="relative bg-white">
-        <div class="bg-maroon-600 text-white text-sm">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col sm:flex-row justify-between items-center h-10">
+            <div class="mx-auto max-w-7xl sm:pt-3 text-white px-3 sm:px-4 md:px-6 lg:px-8" style="background-color: #5E3431">
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-center min-h-[2.5rem] sm:h-10 py-1.5 sm:py-0">
                     <!-- Left: Address -->
-                    <div class="flex items-center space-x-4">
-                        <span class="hidden sm:inline"><i class="fa fa-location" aria-hidden="true"></i> {{ config('settings.location') }}</span>
-                        <span><i class="fa fa-envelope" aria-hidden="true"></i> {{ config('settings.support_email') }}</span>
+                    <div
+                        class="flex flex-wrap justify-center sm:justify-start items-center gap-x-4 gap-y-1 text-xs sm:text-sm w-full sm:w-auto">
+                        <span><i class="fa fa-location" aria-hidden="true"></i> {{ config('settings.location') }}</span>
+                        <span><i class="fa fa-envelope" aria-hidden="true"></i>
+                            {{ config('settings.support_email') }}</span>
                         <span><i class="fa fa-phone" aria-hidden="true"></i> {{ config('settings.phone') }}</span>
                     </div>
 
                     <!-- Right: Optional social links -->
-                    <div class="mt-1 sm:mt-0 flex items-center space-x-4">
-                        <a target="_blank" href="{{ config('settings.facebook') }}" class="text-white"><i class="fa-brands fa-facebook"></i></a>
-                        <a target="_blank" class="text-black" href="{{ config('settings.twitter') }}" ><i class="fa-brands fa-x-twitter"></i></a>
-                        <a target="_blank" href="{{ config('settings.instagram') }}" ><i class="fa-brands fa-instagram"></i></a>
+                    <div class="flex items-center space-x-4 mt-1.5 sm:mt-0">
+                        <a target="_blank" href="{{ config('settings.facebook') }}" class="text-white"><i
+                                class="fa-brands fa-facebook"></i></a>
+                        <a target="_blank" class="text-white" href="{{ config('settings.twitter') }}"><i
+                                class="fa-brands fa-x-twitter"></i></a>
+                        <a target="_blank" href="{{ config('settings.instagram') }}"><i
+                                class="fa-brands fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
-        </div>
 
-
-        <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <nav class="mx-auto max-w-7xl px-3 sm:px-4 md:px-6 lg:px-8">
             <div class="border-b border-gray-200">
-                <div class="flex h-16 items-center ">
+                <div class="flex h-16 items-center">
 
                     <!-- Mobile menu button -->
                     <button type="button" command="show-modal" commandfor="mobile-menu"
-                        class="rounded-md p-2 flex text-gray-400 lg:hidden">
+                        class="rounded-md p-2 flex items-center text-gray-400 lg:hidden mr-2">
                         <span class="sr-only">Open menu</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-6">
                             <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round"
                                 stroke-linejoin="round" />
                         </svg>
-                        <span class="ml-1">Menu</span>
+                        <span class="ml-1 text-sm">Menu</span>
                     </button>
 
                     <!-- Logo -->
-                    <div class="ml-4 hidden lg:flex">
-                        <a href="{{ route('store.home') }}" >
-                            <img src="{{ asset('images/edymax-logo.png') }}" class="h-16 w-auto" alt="EdyMax Logo" />
+                    <div class="flex-1 lg:flex-none">
+                        <a href="{{ route('store.home') }}" class="inline-block">
+                            <img src="{{ asset('images/edymax-logo.png') }}" class="h-12 lg:h-16 w-auto"
+                                alt="EdyMax Logo" />
                         </a>
                     </div>
 
                     <!-- DESKTOP LEFT NAV (ECOMMERCE) -->
-                    <el-popover-group class="hidden lg:ml-8 lg:block lg:self-stretch">
+                    <div class="hidden lg:flex lg:flex-1 lg:justify-center lg:self-stretch lg:ml-8">
                         <div class="flex h-full space-x-8">
                             <a href="{{ route('store.home') }}"
                                 class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">Home</a>
-                            <a href="{{ route("store.shop") }}"
+                            <a href="{{ route('store.shop') }}"
                                 class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">Shop</a>
-                            <a href="{{ route("store.checkout") }}"
+                            <a href="{{ route('store.checkout') }}"
                                 class="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">Checkout</a>
                         </div>
-                    </el-popover-group>
-                    <!-- RIGHT SIDE AUTH LINKS -->
-                    <div class="ml-auto flex items-center">
-                        <div class="hidden lg:flex lg:space-x-6">
+                    </div>
+
+                    <!-- RIGHT SIDE AUTH LINKS & CART -->
+                    <div class="flex items-center space-x-4 lg:space-x-6">
+                        <!-- RIGHT SIDE AUTH LINKS (Desktop only) -->
+                        <div class="hidden lg:flex lg:items-center lg:space-x-6">
                             @guest
                                 <a href="{{ route('login') }}"
                                     class="text-sm font-medium text-gray-700 hover:text-gray-800">Sign in</a>
@@ -148,7 +157,7 @@
                                 <a href="{{ route('dashboard') }}"
                                     class="text-sm font-medium text-gray-700 hover:text-gray-800">Dashboard</a>
                                 <span class="h-6 w-px bg-gray-200"></span>
-                                <form method="POST" action="{{ route('logout') }}">
+                                <form method="POST" action="{{ route('logout') }}" class="inline">
                                     @csrf
                                     <button type="submit"
                                         class="text-sm font-medium text-gray-700 hover:text-gray-800">Logout</button>
@@ -157,31 +166,29 @@
                         </div>
 
                         <!-- Cart -->
-                        <div class="ml-4 lg:ml-6">
-                            <a href="{{ route("store.cart") }}" class="flex items-center p-2">
+                        <div class="lg:ml-4">
+                            <a href="{{ route('store.cart') }}" class="flex items-center p-2">
                                 <?xml version="1.0" encoding="iso-8859-1"?>
                                 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-                                <!DOCTYPE svg
-                                    PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/1999/xlink">
                                 <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                                     xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px"
                                     viewBox="0 0 395.025 395.025" xml:space="preserve">
                                     <g>
                                         <path d="M357.507,380.982L337.914,82.223c-0.431-6.572-5.887-11.682-12.473-11.682h-54.69V62.5c0-34.462-28.038-62.5-62.5-62.5
-                                            h-21.495c-34.462,0-62.5,28.038-62.5,62.5v8.041h-54.69c-6.586,0-12.042,5.11-12.473,11.682L37.45,381.709
-                                            c-0.227,3.449,0.986,6.838,3.35,9.361c2.364,2.525,5.666,3.955,9.124,3.955h295.159c0.007,0,0.013,0,0.02,0
-                                            c6.903,0,12.5-5.596,12.5-12.5C357.601,382.004,357.57,381.488,357.507,380.982z M149.255,62.5c0-20.678,16.822-37.5,37.5-37.5
-                                            h21.495c20.678,0,37.5,16.822,37.5,37.5v8.041h-96.495V62.5z M63.27,370.025L81.272,95.542h42.983v11.154
-                                            c-8.895,4.56-15,13.818-15,24.482c0,15.164,12.336,27.5,27.5,27.5s27.5-12.336,27.5-27.5c0-10.664-6.105-19.922-15-24.482V95.542
-                                            h96.495v11.154c-8.896,4.56-15,13.818-15,24.482c0,15.164,12.336,27.5,27.5,27.5s27.5-12.336,27.5-27.5
-                                            c0-10.664-6.105-19.922-15-24.482V95.542h42.983l18.002,274.483H63.27z" />
+                                        h-21.495c-34.462,0-62.5,28.038-62.5,62.5v8.041h-54.69c-6.586,0-12.042,5.11-12.473,11.682L37.45,381.709
+                                        c-0.227,3.449,0.986,6.838,3.35,9.361c2.364,2.525,5.666,3.955,9.124,3.955h295.159c0.007,0,0.013,0,0.02,0
+                                        c6.903,0,12.5-5.596,12.5-12.5C357.601,382.004,357.57,381.488,357.507,380.982z M149.255,62.5c0-20.678,16.822-37.5,37.5-37.5
+                                        h21.495c20.678,0,37.5,16.822,37.5,37.5v8.041h-96.495V62.5z M63.27,370.025L81.272,95.542h42.983v11.154
+                                        c-8.895,4.56-15,13.818-15,24.482c0,15.164,12.336,27.5,27.5,27.5s27.5-12.336,27.5-27.5c0-10.664-6.105-19.922-15-24.482V95.542
+                                        h96.495v11.154c-8.896,4.56-15,13.818-15,24.482c0,15.164,12.336,27.5,27.5,27.5s27.5-12.336,27.5-27.5
+                                        c0-10.664-6.105-19.922-15-24.482V95.542h42.983l18.002,274.483H63.27z" />
                                     </g>
                                 </svg>
                                 <sup><livewire:cart-count /></sup>
                             </a>
                         </div>
                     </div>
-
                 </div>
             </div>
         </nav>
