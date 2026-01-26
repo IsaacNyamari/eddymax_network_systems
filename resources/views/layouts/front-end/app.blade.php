@@ -421,7 +421,7 @@
         }
 
         /* Safe area insets for modern mobile devices */
-        @supports (padding: max(0px)) {
+        @supports (padding: max('0px')) {
             body {
                 padding-left: min(0px, env(safe-area-inset-left));
                 padding-right: min(0px, env(safe-area-inset-right));

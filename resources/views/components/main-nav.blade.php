@@ -82,29 +82,29 @@
 
     <!-- HEADER -->
     <header class="relative bg-white">
-            <div class="mx-auto max-w-7xl sm:pt-3 text-white px-3 sm:px-4 md:px-6 lg:px-8" style="background-color: #5E3431">
+        <div class="mx-auto max-w-7xl sm:pt-3 text-white px-3 sm:px-4 md:px-6 lg:px-8"
+            style="background-color: #5E3431">
+            <div class="flex flex-col sm:flex-row justify-between items-center min-h-[2.5rem] sm:h-10 py-1.5 sm:py-0">
+                <!-- Left: Address -->
                 <div
-                    class="flex flex-col sm:flex-row justify-between items-center min-h-[2.5rem] sm:h-10 py-1.5 sm:py-0">
-                    <!-- Left: Address -->
-                    <div
-                        class="flex flex-wrap justify-center sm:justify-start items-center gap-x-4 gap-y-1 text-xs sm:text-sm w-full sm:w-auto">
-                        <span><i class="fa fa-location" aria-hidden="true"></i> {{ config('settings.location') }}</span>
-                        <span><i class="fa fa-envelope" aria-hidden="true"></i>
-                            {{ config('settings.support_email') }}</span>
-                        <span><i class="fa fa-phone" aria-hidden="true"></i> {{ config('settings.phone') }}</span>
-                    </div>
+                    class="flex flex-wrap justify-center sm:justify-start items-center gap-x-4 gap-y-1 text-xs sm:text-sm w-full sm:w-auto">
+                    <span><i class="fa fa-location" aria-hidden="true"></i> {{ config('settings.location') }}</span>
+                    <span><i class="fa fa-envelope" aria-hidden="true"></i>
+                        {{ config('settings.support_email') }}</span>
+                    <span><i class="fa fa-phone" aria-hidden="true"></i> {{ config('settings.phone') }}</span>
+                </div>
 
-                    <!-- Right: Optional social links -->
-                    <div class="flex items-center space-x-4 mt-1.5 sm:mt-0">
-                        <a target="_blank" href="{{ config('settings.facebook') }}" class="text-white"><i
-                                class="fa-brands fa-facebook"></i></a>
-                        <a target="_blank" class="text-white" href="{{ config('settings.twitter') }}"><i
-                                class="fa-brands fa-x-twitter"></i></a>
-                        <a target="_blank" href="{{ config('settings.instagram') }}"><i
-                                class="fa-brands fa-instagram"></i></a>
-                    </div>
+                <!-- Right: Optional social links -->
+                <div class="flex items-center space-x-4 mt-1.5 sm:mt-0">
+                    <a target="_blank" href="{{ config('settings.facebook') }}" class="text-white"><i
+                            class="fa-brands fa-facebook"></i></a>
+                    <a target="_blank" class="text-white" href="{{ config('settings.twitter') }}"><i
+                            class="fa-brands fa-x-twitter"></i></a>
+                    <a target="_blank" href="{{ config('settings.instagram') }}"><i
+                            class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
+        </div>
 
         <nav class="mx-auto max-w-7xl px-3 sm:px-4 md:px-6 lg:px-8">
             <div class="border-b border-gray-200">
@@ -168,23 +168,7 @@
                         <!-- Cart -->
                         <div class="lg:ml-4">
                             <a href="{{ route('store.cart') }}" class="flex items-center p-2">
-                                <?xml version="1.0" encoding="iso-8859-1"?>
-                                <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-                                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/1999/xlink">
-                                <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px"
-                                    viewBox="0 0 395.025 395.025" xml:space="preserve">
-                                    <g>
-                                        <path d="M357.507,380.982L337.914,82.223c-0.431-6.572-5.887-11.682-12.473-11.682h-54.69V62.5c0-34.462-28.038-62.5-62.5-62.5
-                                        h-21.495c-34.462,0-62.5,28.038-62.5,62.5v8.041h-54.69c-6.586,0-12.042,5.11-12.473,11.682L37.45,381.709
-                                        c-0.227,3.449,0.986,6.838,3.35,9.361c2.364,2.525,5.666,3.955,9.124,3.955h295.159c0.007,0,0.013,0,0.02,0
-                                        c6.903,0,12.5-5.596,12.5-12.5C357.601,382.004,357.57,381.488,357.507,380.982z M149.255,62.5c0-20.678,16.822-37.5,37.5-37.5
-                                        h21.495c20.678,0,37.5,16.822,37.5,37.5v8.041h-96.495V62.5z M63.27,370.025L81.272,95.542h42.983v11.154
-                                        c-8.895,4.56-15,13.818-15,24.482c0,15.164,12.336,27.5,27.5,27.5s27.5-12.336,27.5-27.5c0-10.664-6.105-19.922-15-24.482V95.542
-                                        h96.495v11.154c-8.896,4.56-15,13.818-15,24.482c0,15.164,12.336,27.5,27.5,27.5s27.5-12.336,27.5-27.5
-                                        c0-10.664-6.105-19.922-15-24.482V95.542h42.983l18.002,274.483H63.27z" />
-                                    </g>
-                                </svg>
+                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
                                 <sup><livewire:cart-count /></sup>
                             </a>
                         </div>
