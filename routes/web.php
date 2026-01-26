@@ -5,9 +5,10 @@ use App\Http\Controllers\FrontStoreController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
-use App\Models\Brands;
 use App\Models\Product;
+use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -79,6 +80,47 @@ Route::get('/check/balance/', [CheckPayment::class, 'checkMyBalance'])->name('ch
 Route::get('/navigation', function () {
     return view('livewire.welcome.navigation');
 });
+
+Route::get('/compress-images', function () {
+    // Set unlimited time and memory
+    set_time_limit(0); // Unlimited execution time
+    ini_set('max_execution_time', 0);
+    ini_set('memory_limit', '2048M'); // 2GB memory
+
+    $products = Product::all();
+    $total = $products->count();
+    $optimized = 0;
+
+    Log::info("Starting optimization for {$total} products...");
+
+    foreach ($products as $index => $product) {
+        try {
+            $imagePath = public_path('storage/' . $product->image);
+
+            if (file_exists($imagePath)) {
+                ImageOptimizer::optimize($imagePath);
+                $optimized++;
+
+                // Log progress every 10 images
+                if (($index + 1) % 10 === 0) {
+                    Log::info("Progress: " . ($index + 1) . "/{$total} optimized");
+                }
+            } else {
+                Log::warning("Image not found: " . $imagePath);
+            }
+
+            // Add small delay every 20 images to prevent timeout
+            if (($index + 1) % 20 === 0) {
+                sleep(1);
+            }
+        } catch (\Exception $e) {
+            Log::error("Failed to optimize {$product->image}: " . $e->getMessage());
+        }
+    }
+
+    Log::info("Optimization completed! {$optimized}/{$total} images optimized");
+    return "Image optimization completed! {$optimized}/{$total} images optimized";
+})->name('compress.images');
 
 // Dashboard 
 require __DIR__ . '/dashboard.php';

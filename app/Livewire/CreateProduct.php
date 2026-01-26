@@ -10,11 +10,11 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 
 class CreateProduct extends Component
 {
     use WithFileUploads;
-
     #[Validate('required|int')]
     public $brand;
     #[Validate('required|string|max:255')]
@@ -34,7 +34,7 @@ class CreateProduct extends Component
     public $images = [];
 
     #[Validate('required|string|min:10')]
-    
+
     public $description;
     #[Validate('nullable|string|max:2000|min:10')]
     public $short_description;
@@ -81,6 +81,8 @@ class CreateProduct extends Component
         $imagePath = null;
         if ($this->image) {
             $imagePath = $this->image->store('products', 'public');
+            // Optimize the main image
+            ImageOptimizer::optimize(public_path('storage/' . $imagePath));
         }
 
         // Create product
@@ -102,7 +104,8 @@ class CreateProduct extends Component
         if (!empty($this->images)) {
             foreach ($this->images as $uploadedImage) {
                 $path = $uploadedImage->store('product-images', 'public');
-
+                // Optimize each additional image
+                ImageOptimizer::optimize(public_path('storage/' . $path));
                 ProductImages::create([
                     'path' => $path,
                     'imageable_id' => $product->id,

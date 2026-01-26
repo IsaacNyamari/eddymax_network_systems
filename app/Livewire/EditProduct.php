@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 
 class EditProduct extends Component
 {
@@ -70,9 +71,10 @@ class EditProduct extends Component
         $this->categories = Category::all();
         $this->brands = Brands::all();
     }
-    
-    public function loadEditor(){
-        $this->dispatch('load-editor',['message'=> 'true']);
+
+    public function loadEditor()
+    {
+        $this->dispatch('load-editor', ['message' => 'true']);
     }
 
     public function saveProduct()
@@ -91,18 +93,17 @@ class EditProduct extends Component
             $imagePath = $this->image->store('products', 'public');
         }
         // FIX: Use brandInputData directly (it should be an ID now)
-        $this->product->update([
-            'name' => $this->name,
-            'price' => $this->price,
-            'image' => $imagePath,
-            'description' => $this->description,
-            'category_id' => $this->category_id,
-            'model' => $this->model,
-            'brand_id' => $this->brandInputData, // Changed from $this->brandInputData->id
-            'stock_quantity' => $this->stock,
-            'stock_status' => $this->stock_status,
-            'slug' => Str::slug($this->name),
-        ]);
+        $this->product->name = $this->name;
+        $this->product->price = $this->price;
+        $this->product->image = $imagePath;
+        $this->product->description = $this->description;
+        $this->product->category_id = $this->category_id;
+        $this->product->model = $this->model;
+        $this->product->brand_id = $this->brandInputData; // Changed from $this->brandInputData->id
+        $this->product->stock_quantity = $this->stock;
+        $this->product->stock_status = $this->stock_status;
+        $this->product->slug = Str::slug($this->name);
+        $this->product->save();
         // Update product units
         $this->product->unitable ? $this->product->unitable()->update(['name' => $this->unit]) : $this->product->unitable()->create(['name' => $this->unit]);
 
@@ -123,8 +124,8 @@ class EditProduct extends Component
         if ($this->existingImage && file_exists(storage_path('app/public/' . $this->existingImage))) {
             unlink(storage_path('app/public/' . $this->existingImage));
         }
-
-        $this->product->update(['image' => null]);
+        $this->product->image = null;
+        $this->product->update();
         $this->existingImage = null;
 
         session()->flash('message', 'Product image removed.');
