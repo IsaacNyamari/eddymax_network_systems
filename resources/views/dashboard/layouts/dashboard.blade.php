@@ -439,7 +439,9 @@
 
         })
     </script> --}}
-    <script src="{{ asset('js/loader.js') }}"></script>
+    @if (!request()->routeIs('dashboard'))
+        <script src="{{ asset('js/loader.js') }}"></script>
+    @endif
     @stack('scripts')
 </body>
 
