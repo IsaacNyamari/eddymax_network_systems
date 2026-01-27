@@ -351,7 +351,7 @@
     </div>
     @livewireScripts
     <script src="{{ asset('js/toast.js') }}"></script>
-    {{-- <script>
+    <script>
         let alertDiv = document.querySelectorAll('.alertDiv');
         let alertSuccess = document.getElementById('alertSuccess');
         let messageSuccess = document.getElementById('messageSuccess');
@@ -367,16 +367,6 @@
                         placeholder: 'Enter description...' // Optional: placeholder
                     });
                 }) : '';
-            window.Echo.private('login-user.' + {{ auth()->id() }})
-                .listen('.user.login', (e) => {
-
-                    alertSuccess.classList.remove('hidden')
-                    // alertDiv.appendChild(alertSuccess)
-                    messageSuccess.textContent = e.message;
-                    setTimeout(() => {
-                        alertSuccess.classList.add('hidden')
-                    }, 3000)
-                });
             // Minimal version
             Echo.private('order-update.' + {{ auth()->id() }})
                 .listen('.order.update', (e) => {
@@ -438,7 +428,7 @@
                 })
 
         })
-    </script> --}}
+    </script>
     @if (!request()->routeIs('dashboard'))
         <script src="{{ asset('js/loader.js') }}"></script>
     @endif

@@ -15,7 +15,7 @@
             <div class="p-6 border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900"> Orders</h2>
-                    <a href="{{ route('admin.orders.returns') }}" 
+                    <a href="{{ route('admin.orders.returns') }}"
                         class="text-sm bg-green-400 px-4 py-2 text-black rounded-2xl hover:text-white font-medium">
                         View Returns →
                     </a>
@@ -91,7 +91,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('admin.orders.show', $order->order_number) }}" 
+                                    <a href="{{ route('admin.orders.show', $order->order_number) }}"
                                         class="text-red-600 hover:text-red-900 mr-3">
                                         View
                                     </a>
@@ -126,10 +126,22 @@
                                     @else
                                         @foreach ($nextActions as $actionRoute => $actionLabel)
                                             <a href="{{ route('admin.orders.status.' . $actionRoute, $order->order_number) }}"
-                                                 class="text-green-600 px-2 py-1 hover:text-green-900">
+                                                class="text-green-600 px-2 py-1 hover:text-green-900">
                                                 {{ $actionLabel }}
                                             </a>
                                         @endforeach
+                                    @endif
+                                    @if ($order->status === 'delivered')
+                                        <a href="{{ route('admin.orders.status.cancel', $order->order_number) }}"
+                                            class="text-red-600 px-2 py-1 hover:text-red-900">
+                                            {{ __('Cancel') }}
+                                        </a>
+                                    @endif
+                                    @if ($order->status === 'cancelled')
+                                        <a href="{{ route('admin.orders.status.process', $order->order_number) }}"
+                                            class="text-orange-600 px-2 py-1 hover:text-orange-900">
+                                            {{ __('Pend') }}
+                                        </a>
                                     @endif
                                 </td>
 
@@ -141,8 +153,8 @@
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 5H7a2 2 0 00-2 2v12a2 2
-                                                                                                                        0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
-                                                                                                                                5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                                                                                                                            0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
+                                                                                                                                                    5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
                                     <p class="mt-2">No orders yet</p>
                                 </td>

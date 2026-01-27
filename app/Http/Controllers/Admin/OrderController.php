@@ -67,7 +67,7 @@ class OrderController extends Controller
         $userPhone = $order->user->addresses->first()->phone;
         $smsMessage = "Hi $userName, your order: #$order_number has been delivered.\n Track your order at:" . route('customer.orders.show', $order_number);
         $eventMessage = "Hi $userName, your order: #$order_number has been delivered.";
-        // broadcast(new OrderUpdate($order, $eventMessage));
+        broadcast(new OrderUpdate($order, $eventMessage));
         $order->user->notifications()->create([
             "type" => "order",
             'message' => $eventMessage,
@@ -90,7 +90,7 @@ class OrderController extends Controller
         $smsMessage = "Hi $userName, your order: #$order_number has been shipped.\n Track your order at:" . route('customer.orders.show', $order_number);
         $this->sms->send($userPhone, $smsMessage);
         $eventMessage = "Hi $userName, your order: #$order_number has been shipped.";
-        // broadcast(new OrderUpdate($order, $eventMessage));
+        broadcast(new OrderUpdate($order, $eventMessage));
         $order->user->notifications()->create([
             "type" => "order",
             'message' => $eventMessage,
@@ -109,7 +109,8 @@ class OrderController extends Controller
 
         $order->status = OrderStatus::CANCELLED->value;
         $order->save();
-
+        $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number has been shipped.";
+        broadcast(new OrderUpdate($order, $eventMessage));
         Mail::to($order->user->email)
             ->queue(new OrderStatusUpdated($order, 'CANCELLED', 'Order Cancelled'));
         return back()->with('success', "Order #{$order_number} cancelled! Email sent to customer.");
@@ -128,7 +129,7 @@ class OrderController extends Controller
         Mail::to($order->user->email)
             ->queue(new OrderStatusUpdated($order, 'PROCESSING', 'Order Processing Started'));
         $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number is now processing!";
-        // broadcast(new OrderUpdate($order, $eventMessage));
+        broadcast(new OrderUpdate($order, $eventMessage));
         $order->user->notifications()->create([
             "type" => "order",
             'message' => $eventMessage,
@@ -153,7 +154,7 @@ class OrderController extends Controller
             "type" => "order",
             'message' => $eventMessage,
         ]);
-        // broadcast(new OrderUpdate($order, $eventMessage));
+        broadcast(new OrderUpdate($order, $eventMessage));
         return back()->with('success', "Order #{$order_number} marked as pending! Email sent to customer.");
     }
 
@@ -210,7 +211,7 @@ class OrderController extends Controller
             "type" => "order",
             'message' => $eventMessage,
         ]);
-        // broadcast(new OrderUpdate($order, $eventMessage));
+        broadcast(new OrderUpdate($order, $eventMessage));
         return back()->with('success', "Order #{$order_number} marked as returned! Email sent to customer.");
     }
 

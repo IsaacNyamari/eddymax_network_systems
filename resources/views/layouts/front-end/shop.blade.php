@@ -4,7 +4,7 @@
 
 
     <!-- Content Section with Image Overlay -->
-    <section class="relative py-16 px-4 sm:px-6 lg:px-8 overflow-hidden mb-5">
+    <section class="relative py-16 px-4 sm:px-6 lg:px-8 overflow-hidden mb-1">
         <!-- Background Image with Overlay -->
         <div class="absolute inset-0 z-0">
      
@@ -197,12 +197,22 @@
     </section>
     @if (env('SHOW_BANNER') ?? true)
         <!-- Hero Image Section -->
-        <section class="relative overflow-hidden mb-5">
-            <div class="w-full h-64 md:h-80 lg:h-96">
-                <img src="{{ asset('images/products-banner-edited.png') }}"
-                    alt="Professional networking equipment and solutions from {{ config('app.name') }} - Routers, Switches, and Network Infrastructure"
-                    class="w-full h-full object-contain" loading="eager">
-            </div>
+        <section class="relative overflow-hidden mb-1">
+            <div class="relative w-full bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="relative w-full pb-[25%] md:pb-[30%] lg:pb-[35%] overflow-hidden">
+        <img 
+            src="{{ asset('images/products-banner-edited.png') }}"
+            srcset="{{ asset('images/products-banner-edited.png') }} 2x"
+            alt="Professional networking equipment and solutions from {{ config('app.name') }} - Routers, Switches, and Network Infrastructure"
+            class="absolute inset-0 w-full h-full object-contain"
+            loading="eager"
+            decoding="async"
+            sizes="100vw"
+        >
+        <!-- Optional subtle gradient overlay for better contrast -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/5 to-transparent"></div>
+    </div>
+</div>
         </section>
     @endif
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-12 mt-2 mb-2">
