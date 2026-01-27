@@ -370,10 +370,6 @@
             // Minimal version
             Echo.private('order-update.' + {{ auth()->id() }})
                 .listen('.order.update', (e) => {
-                    console.log('Order Update:', e.message);
-                    console.log('Order ID:', e.order_id);
-                    console.log('Order Status:', e.order_status);
-
                     // Simple toast call
                     simpleToast(`${e.message}`);
                 });
