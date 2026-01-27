@@ -1,6 +1,6 @@
 <aside class="lg:col-span-1 relative">
     <!-- FILTER RESULT OVERLAY -->
-    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 space-y-8 sticky top-6">
+    <div class="bg-white border sticky top-0 border-gray-200 rounded-2xl shadow-sm p-6 space-y-8">
         <!-- Filter Header with Active Count -->
         <div class="flex items-center justify-between pb-4 border-b">
             <div class="flex items-center space-x-3">

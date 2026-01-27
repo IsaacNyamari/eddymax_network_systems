@@ -65,7 +65,7 @@ class FrontStoreController extends Controller
             session()->put('product_seed', $seed);
         }
 
-        $products = Product::orderByRaw("RAND($seed)")->paginate(20);
+        $products = Product::orderByRaw("RAND($seed)")->paginate(21);
 
         return view('layouts.front-end.products.index', compact('categories', 'products'));
     }
@@ -124,7 +124,7 @@ class FrontStoreController extends Controller
         $products = Product::whereIn('category_id', $categoryIds)
             ->orderByRaw("RAND($seed)")
             ->with(['category'])
-            ->paginate(20);
+            ->paginate(21);
 
         // Pass the category to the view
         return view('layouts.front-end.products.show', compact('products', 'category'));
