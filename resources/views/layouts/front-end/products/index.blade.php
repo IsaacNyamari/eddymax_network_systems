@@ -8,7 +8,7 @@
 
             <!-- Background Image -->
             <img src="{{ asset('images/Omada-SDN-Banner_High-Resolution.jpg') }}"
-                alt="{{ config('app.name') }} - Technology Solutions" class="w-full h-full object-cover object-center"
+                alt="{{ config('app.name') }} - Technology Solutions" class="w-full h-full object-contain object-center"
                 loading="lazy" onerror="this.style.display='none'">
         </div>
 
@@ -37,7 +37,7 @@
             and renewable energy systems.
         </p>
     </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8">
 
         <!-- Main Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -52,10 +52,10 @@
             <!-- MAIN CONTENT -->
             <main class="lg:col-span-3">
                 <!-- Products Container -->
-                <div class="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
+                <div class="bg-white rounded-lg p-1 md:p-6">
                     @if (!isset($productsSorted))
                         <!-- Grid Container -->
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-1 md:gap-6">
                             @foreach ($products as $product)
                                 <div
                                     class="group bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">

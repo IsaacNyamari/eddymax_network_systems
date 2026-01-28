@@ -22,7 +22,7 @@
         x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95"
         x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95"
-        class="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200">
+        class="fixed md:absolute top-16 md:top-auto md:right-0 left-1/2 md:left-auto transform -translate-x-1/2 md:translate-x-0 mt-2 w-[95vw] md:w-80 max-w-sm bg-white rounded-md shadow-lg py-1 z-20 border border-gray-200">
         <div class="px-4 py-2 border-b border-gray-100 flex justify-between items-center">
             <h3 class="text-sm font-semibold text-gray-900">Notifications</h3>
             @if ($notifications->whereNull('read_at')->count() > 0)

@@ -9,7 +9,12 @@
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <meta name="theme-color" content="#6777ef">
 
-    <title>@hasSection('title'){{ config('app.name', 'Edymax Systems & Networks') }} - @yield('title')@else{{ config('app.name', 'Edymax Systems & Networks') }}@endif</title>
+    <title>
+        @hasSection('title')
+            {{ config('app.name', 'Edymax Systems & Networks') }} -
+            @yield('title')@else{{ config('app.name', 'Edymax Systems & Networks') }}
+        @endif
+    </title>
     <link rel="shortcut icon" href="{{ asset('images/edymax-logo-bg.jpeg') }}" type="image/*">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -128,7 +133,7 @@
 </head>
 
 <body class="font-sans antialiased text-gray-900 bg-gray-50">
-    <x-loader-component />
+    {{-- <x-loader-component /> --}}
     <!-- Cart Alert Notification -->
     <div id="cartAlert"
         class="alert bg-gradient-to-r from-blue-600 to-indigo-600 text-white hidden border-l-4 border-blue-800 shadow-lg px-4 py-3 fixed z-50 transition-all duration-300 transform -translate-y-full right-0 left-0 mx-4 top-4 rounded-xl md:w-96 md:left-auto md:right-4 md:mx-0 md:top-6"

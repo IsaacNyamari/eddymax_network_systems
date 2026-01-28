@@ -109,7 +109,7 @@ class OrderController extends Controller
 
         $order->status = OrderStatus::CANCELLED->value;
         $order->save();
-        $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number has been shipped.";
+        $eventMessage = "Hi " . $order->user->name . ", your order: #$order_number has been cancelled.";
         broadcast(new OrderUpdate($order, $eventMessage));
         Mail::to($order->user->email)
             ->queue(new OrderStatusUpdated($order, 'CANCELLED', 'Order Cancelled'));
@@ -158,37 +158,7 @@ class OrderController extends Controller
         return back()->with('success', "Order #{$order_number} marked as pending! Email sent to customer.");
     }
 
-    /**
-     * Mark order as confirmed
-     */
-    // public function confirmOrder(string $order_number)
-    // {
-    //     $order = Order::where('order_number', $order_number)->firstOrFail();
 
-    //     $order->status = OrderStatus::CONFIRMED->value;
-    //     $order->save();
-
-    // Mail::to($order->user->email)
-    // ->send(new OrderStatusUpdated($order, 'CONFIRMED', 'Order Confirmed'));
-
-    //     return back()->with('success', "Order #{$order_number} confirmed! Email sent to customer.");
-    // }
-
-    // /**
-    //  * Mark order as ready for pickup
-    //  */
-    // public function readyForPickupOrder(string $order_number)
-    // {
-    //     $order = Order::where('order_number', $order_number)->firstOrFail();
-
-    //     $order->status = OrderStatus::READY_FOR_PICKUP->value;
-    //     $order->save();
-
-    // Mail::to($order->user->email)
-    // ->send(new OrderStatusUpdated($order, 'READY FOR PICKUP', 'Order Ready for Pickup'));
-
-    //     return back()->with('success', "Order #{$order_number} ready for pickup! Email sent to customer.");
-    // }
 
     /**
      * Mark order as returned

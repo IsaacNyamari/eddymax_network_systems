@@ -217,14 +217,31 @@
                         <h1 class="text-lg font-semibold text-gray-900">
                             @yield('title', 'Dashboard')
                         </h1>
-                        <a class="px-4 py-2 bg-green-500 hover:bg-green-600 hover:text-white capitalize rounded-lg"
-                            href="{{ route('store.shop') }}"><i class="fa fa-globe" aria-hidden="true"></i>
-                            website</a>
+                        <a class="px-4 py-2 bg-green-500 hover:bg-green-600 hover:text-white capitalize rounded-lg hidden md:inline-block"
+                            href="{{ route('store.shop') }}">
+                            <i class="fa fa-globe" aria-hidden="true"></i> website
+                        </a>
                     </div>
 
                     <!-- User Dropdown -->
                     <div class="flex items-center space-x-4">
-                        <livewire:notifications-widget />
+                        <a href="{{ route(Auth::user()->roles->first()->name . '.notifications') }}"
+                            class="relative p-2 text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full">
+                            <span class="sr-only">Open notifications</span>
+                            <i class="fa fa-bell fa-lg" aria-hidden="true"></i>
+
+                            @php $count = Auth::user()->notifications()->whereNull('read_at')->count(); @endphp
+
+                            @if ($count > 0)
+                                <span
+                                    class="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white bg-red-600 rounded-full shadow-md ring-2 ring-white transform-gpu will-change-transform animate-pulse">
+                                    {{ $count > 99 ? '99+' : $count }}
+                                </span>
+                            @else
+                                <span
+                                    class="absolute -top-1 -right-1 inline-block h-2 w-2 bg-gray-300 rounded-full ring-2 ring-white"></span>
+                            @endif
+                        </a>
 
                         <!-- User Menu -->
                         <div class="relative" x-data="{ open: false }">

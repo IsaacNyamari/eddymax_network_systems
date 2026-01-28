@@ -1,4 +1,4 @@
-<aside class="lg:col-span-1 relative">
+<aside class="lg:col-span-1 hidden lg:inline-block relative">
     <!-- FILTER RESULT OVERLAY -->
     <div class="bg-white border sticky top-0 border-gray-200 rounded-2xl shadow-sm p-6 space-y-8">
         <!-- Filter Header with Active Count -->
